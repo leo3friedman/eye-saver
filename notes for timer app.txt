@@ -1,0 +1,6 @@
+auto countdown
+dont require browsing history
+gradual reveal to avoid heart attack
+ding on 20 sec break end
+dont start timer until rest time is over
+snooze
