@@ -37,7 +37,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/Eye-Saver" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1lJgGdjxVskkbdQNaAoGmxLBsxc" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -143,7 +143,8 @@
       <workItem from="1608267901131" duration="209000" />
       <workItem from="1608268119065" duration="7333000" />
       <workItem from="1608478886113" duration="9463000" />
-      <workItem from="1608614803981" duration="887000" />
+      <workItem from="1608614803981" duration="1485000" />
+      <workItem from="1608616483564" duration="2541000" />
     </task>
     <servers />
   </component>
@@ -259,16 +260,5 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="1103" y="230" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1608615210991" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/main.js</url>
-          <line>160</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
