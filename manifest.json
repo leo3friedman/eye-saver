@@ -1,13 +1,33 @@
 {
   "name": "Eye Saver",
   "version": "0.1",
-  "permissions": ["storage","alarms","notifications"],
+  "permissions": ["storage","alarms","notifications","tabs"],
   "background": {
-    "scripts": ["background.js"],
+    "scripts": ["timer.js","background.js"],
     "persistent": false
   },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "run_at": "document_start",
+      "css": ["overlay.css"],
+      "js": ["overlay.js"]
+    }
+  ],
   "browser_action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "IMGs/16icon.png",
+      "32": "IMGs/32icon.png",
+      "48": "IMGs/64icon.png",
+      "128": "IMGs/128icon.png"
+    }
+  },
+  "icons": {
+    "16": "IMGs/16icon.png",
+    "32": "IMGs/32icon.png",
+    "48": "IMGs/64icon.png",
+    "128": "IMGs/128icon.png"
   },
   "manifest_version": 2
 }

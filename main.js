@@ -47,6 +47,7 @@ const defaultSettings = {
   pauseStartTimeInSeconds: 0,
   pauseEndTimeInSeconds: 0,
   hasBeenPausedOrPlayed: false,
+  isTimeToRestTheNextNotification: true,
 };
 
 let settings = defaultSettings;
@@ -163,23 +164,6 @@ function showAdjustTimerSettings() {
 function hideAdjustTimerSettings() {
   document.body.classList.remove("show-adjust-timer-settings");
 }
-function getTimeRemaining(nowInSeconds, options) {
-  let elapsedTime = nowInSeconds - options.startTimeInSeconds;
-  // if its paused and the first browser instance
-  if (!options.isCounting && !options.hasBeenPausedOrPlayed) {
-    elapsedTime = 0;
-  } else if (!options.isCounting) {
-    elapsedTime = options.pauseStartTimeInSeconds - options.startTimeInSeconds;
-  }
-  const timeRemaining =
-    options.screenTimeInSeconds -
-    (elapsedTime -
-      Math.floor(
-        elapsedTime / (options.screenTimeInSeconds + options.restTimeInSeconds)
-      ) *
-        (options.screenTimeInSeconds + options.restTimeInSeconds));
-  return timeRemaining;
-}
 function getStrokeDashOffset(timerLength, timeRemainingWithDecimal) {
   return 628 * ((timerLength - timeRemainingWithDecimal) / timerLength);
 }
@@ -224,8 +208,6 @@ function render(storageLocation) {
     animatedRing.style.strokeDashoffset = `${restTimeStrokeDashOffset}`;
   }
 }
-
-let timeNowInSeconds = () => Date.now() / 1000;
 
 window.onload = function () {
   chrome.storage.sync.get(defaultSettings, function (result) {
