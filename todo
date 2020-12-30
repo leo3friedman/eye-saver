@@ -1,24 +1,29 @@
 IN PROGRESS
 overlay persist when loading new tabs
-bug: the opacity is not changing at the right time
-correct whiteness on timer
+make it so user preferences determine what kind of notification is received
+
 
 TO DO (Product)
 overlay on all windows
 make the overlay timer animation show
-make it so user preferences determine what kind of notification is received
 add optional permissions
 make a page explaining the "learn more"
 add sound for audio notification
+
+
+DONE
+make desktop notification for when it is time to look back
+bug: when you update extension, it gets all wrong
+correct whiteness on timer
+bug: the opacity is not changing at the right time (** maybe fixed)
+Get rid of popup notification preference
+
 
 TO DO (Publishing)
 Write description, fix name...etc
 design store tile
 make screenshot
 
-DONE
-make desktop notification for when it is time to look back
-bug: when you update extension, it gets all wrong
 
 SET ASIDE
 get progress bar working on desktop notification *Kinda did it but looks bad

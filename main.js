@@ -24,7 +24,6 @@ const sixtySecRadio = document.getElementById("60-sec");
 const overlayNotificationRadio = document.getElementById(
   "overlay-notification"
 );
-const popupNotificationRadio = document.getElementById("popup-notification");
 const desktopNotificationRadio = document.getElementById(
   "desktop-notification"
 );
@@ -70,7 +69,6 @@ twentySecRadio.onclick = () => setRestTime(20);
 fortySecRadio.onclick = () => setRestTime(40);
 sixtySecRadio.onclick = () => setRestTime(60);
 overlayNotificationRadio.onclick = () => setVisualNotificationType("overlay");
-popupNotificationRadio.onclick = () => setVisualNotificationType("popup");
 desktopNotificationRadio.onclick = () => setVisualNotificationType("desktop");
 notificationsSettingsButton.onclick = showNotificationSettings;
 closeNotificationsSettingsButton.onclick = hideNotificationSettings;
@@ -223,7 +221,6 @@ window.onload = function () {
     sixtySecRadio.checked = result.restTimeInSeconds === 60;
     overlayNotificationRadio.checked =
       result.visualNotificationType === "overlay";
-    popupNotificationRadio.checked = result.visualNotificationType === "popup";
     desktopNotificationRadio.checked =
       result.visualNotificationType === "desktop";
     audioOnRestStartNotificationCheckbox.checked = result.isSoundOnRest;
