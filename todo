@@ -1,28 +1,29 @@
 IN PROGRESS
-overlay persist when loading new tabs
-make it so user preferences determine what kind of notification is received
+make the overlay timer animation show
+
 
 
 TO DO (Product)
-overlay on all windows
-make the overlay timer animation show
 add optional permissions
 make a page explaining the "learn more"
 add sound for audio notification
+make it so user preferences determine what kind of notification is received
 
 
 DONE
 make desktop notification for when it is time to look back
 bug: when you update extension, it gets all wrong
 correct whiteness on timer
-bug: the opacity is not changing at the right time (** maybe fixed)
+bug :alarm timing is off w/ animation (** maybe fixed)
 Get rid of popup notification preference
-
+overlay on all windows
+overlay persist when loading new tabs
 
 TO DO (Publishing)
 Write description, fix name...etc
 design store tile
 make screenshot
+when you open browser it is not resetting timer
 
 
 SET ASIDE

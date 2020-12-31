@@ -11,6 +11,7 @@ const defaultSettings = {
   pauseStartTimeInSeconds: 0,
   pauseEndTimeInSeconds: 0,
   hasBeenPausedOrPlayed: false,
+  showOverlay: false,
 };
 const notificationLookAway = {
   type: "basic",
@@ -46,31 +47,43 @@ function resetTimerToDefaults() {
 }
 function createNewAlarm(lookAway) {
   chrome.storage.sync.get(defaultSettings, function (result) {
+    const timeRemaining = getTimeRemaining(timeNowInSeconds(), result);
     chrome.alarms.create("alarm", {
       when:
         Date.now() +
-        (lookAway ? result.restTimeInSeconds : result.screenTimeInSeconds) *
+        (lookAway
+          ? result.restTimeInSeconds - Math.abs(timeRemaining)
+          : timeRemaining) *
           1000,
     });
     console.log(
       "notifyToLookAway: " +
         lookAway +
         " New alarm made for " +
-        (lookAway ? result.restTimeInSeconds : result.screenTimeInSeconds) *
+        (lookAway
+          ? result.restTimeInSeconds - Math.abs(timeRemaining)
+          : timeRemaining) *
           1000 +
         " milliseconds from now"
     );
   });
 }
 function sendMessageToOverlayJs(lookAway) {
-  chrome.tabs.query({}, function (tabs = []) {
-    tabs.forEach((tab) =>
-      chrome.tabs.sendMessage(tab.id, {
-        action: lookAway ? "show" : "hide",
-      })
-    );
-    console.log("sent to " + tabs.length + " tab(s)");
+  chrome.storage.sync.set({
+    showOverlay: lookAway,
   });
+  // chrome.windows.getAll({ populate: true }, (windows) => {
+  //   windows.forEach((win) => {
+  //     win.tabs.forEach((tab) => {
+  //       chrome.tabs.sendMessage(tab.id, {
+  //         action: lookAway ? "show" : "hide",
+  //       });
+  //       console.log(tab.id);
+  //     });
+  //     console.log("sent to " + win.tabs.length + " tab(s)");
+  //   });
+  //   console.log("sent to " + windows.length + " window(s)");
+  // });
 }
 function createAndClearDesktopNotifications(lookAway) {
   if (lookAway) {
@@ -81,8 +94,9 @@ function createAndClearDesktopNotifications(lookAway) {
     chrome.notifications.create("lookBack", notificationLookBack);
   }
 }
-chrome.runtime.onStartup.addListener(resetTimerToDefaults());
-chrome.runtime.onInstalled.addListener(resetTimerToDefaults());
+
+chrome.runtime.onStartup.addListener(resetTimerToDefaults);
+chrome.runtime.onInstalled.addListener(resetTimerToDefaults);
 chrome.storage.onChanged.addListener(function (changes, areaName) {
   if (changes.isCounting) {
     if (changes.isCounting.newValue) {
