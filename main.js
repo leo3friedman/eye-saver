@@ -40,8 +40,6 @@ const defaultSettings = {
   visualNotificationType: "popup",
   restTimeInSeconds: 20,
   screenTimeInSeconds: 1200,
-  screenTimeLeftInSeconds: 1200,
-  restTimeLeftInSeconds: 20,
   startTimeInSeconds: 0,
   pauseStartTimeInSeconds: 0,
   pauseEndTimeInSeconds: 0,
@@ -232,7 +230,6 @@ setInterval(() => {
   render(settings);
 }, 10);
 chrome.storage.onChanged.addListener(function (changes, areaName) {
-  return;
   console.log(changes);
   if (changes.startTimeInSeconds) {
     settings.startTimeInSeconds = changes.startTimeInSeconds.newValue;
@@ -250,12 +247,7 @@ chrome.storage.onChanged.addListener(function (changes, areaName) {
     sixtyMinRadio.checked = changes.screenTimeInSeconds.newValue === 3600;
     settings.screenTimeInSeconds = changes.screenTimeInSeconds.newValue;
   }
-  if (changes.screenTimeLeftInSeconds) {
-    timer.textContent = secondsToDigitalTime(
-      changes.screenTimeLeftInSeconds.newValue
-    );
-    settings.screenTimeLeftInSeconds = changes.screenTimeLeftInSeconds.newValue;
-  }
+
   if (changes.restTimeInSeconds) {
     twentySecRadio.checked = changes.restTimeInSeconds.newValue === 20;
     fortySecRadio.checked = changes.restTimeInSeconds.newValue === 40;

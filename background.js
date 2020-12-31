@@ -5,8 +5,6 @@ const defaultSettings = {
   visualNotificationType: "popup",
   restTimeInSeconds: 20,
   screenTimeInSeconds: 1200,
-  screenTimeLeftInSeconds: 1200,
-  restTimeLeftInSeconds: 20,
   startTimeInSeconds: 0,
   pauseStartTimeInSeconds: 0,
   pauseEndTimeInSeconds: 0,
@@ -72,18 +70,6 @@ function sendMessageToOverlayJs(lookAway) {
   chrome.storage.sync.set({
     showOverlay: lookAway,
   });
-  // chrome.windows.getAll({ populate: true }, (windows) => {
-  //   windows.forEach((win) => {
-  //     win.tabs.forEach((tab) => {
-  //       chrome.tabs.sendMessage(tab.id, {
-  //         action: lookAway ? "show" : "hide",
-  //       });
-  //       console.log(tab.id);
-  //     });
-  //     console.log("sent to " + win.tabs.length + " tab(s)");
-  //   });
-  //   console.log("sent to " + windows.length + " window(s)");
-  // });
 }
 function createAndClearDesktopNotifications(lookAway) {
   if (lookAway) {
@@ -112,6 +98,10 @@ chrome.storage.onChanged.addListener(function (changes, areaName) {
       chrome.alarms.clearAll();
       console.log("alarm cleared after pause");
     }
+  }
+  if (changes.screenTimeInSeconds) {
+    chrome.alarms.clearAll();
+    resetTimerToDefaults();
   }
 });
 

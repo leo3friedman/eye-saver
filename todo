@@ -1,13 +1,13 @@
 IN PROGRESS
 make the overlay timer animation show
-
+make it so user preferences determine what kind of notification is received
 
 
 TO DO (Product)
 add optional permissions
 make a page explaining the "learn more"
 add sound for audio notification
-make it so user preferences determine what kind of notification is received
+use refresh rate instead of setInterval
 
 
 DONE
@@ -18,6 +18,10 @@ bug :alarm timing is off w/ animation (** maybe fixed)
 Get rid of popup notification preference
 overlay on all windows
 overlay persist when loading new tabs
+make it so user preferences determine length of rest/screen time
+
+
+
 
 TO DO (Publishing)
 Write description, fix name...etc
