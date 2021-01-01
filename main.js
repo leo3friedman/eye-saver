@@ -1,4 +1,5 @@
 const timer = document.getElementById("timer");
+const closeRestTimer = document.getElementById("close-rest-timer-button");
 const lookAwayText = document.getElementById("look-away-text");
 const animation = document.querySelector(".toggle-animation");
 const startStopButton = document.getElementById("start-stop-timer");
@@ -21,10 +22,10 @@ const sixtyMinRadio = document.getElementById("60-min");
 const twentySecRadio = document.getElementById("20-sec");
 const fortySecRadio = document.getElementById("40-sec");
 const sixtySecRadio = document.getElementById("60-sec");
-const overlayNotificationRadio = document.getElementById(
+const overlayNotificationCheckbox = document.getElementById(
   "overlay-notification"
 );
-const desktopNotificationRadio = document.getElementById(
+const desktopNotificationCheckbox = document.getElementById(
   "desktop-notification"
 );
 const audioOnRestStartNotificationCheckbox = document.getElementById(
@@ -37,6 +38,8 @@ const defaultSettings = {
   isCounting: true,
   isSoundOnRest: true,
   isSoundOnRestEnd: true,
+  isOverlayOnRest: false,
+  isDesktopNotificationOnRest: true,
   visualNotificationType: "popup",
   restTimeInSeconds: 20,
   screenTimeInSeconds: 1200,
@@ -55,6 +58,9 @@ startStopButton.onclick = () => {
   renderPlayButton(settings.isCounting);
   updatePauseStartTimeInSeconds();
 };
+overlayNotificationCheckbox.onclick = () => toggleState("isOverlayOnRest");
+desktopNotificationCheckbox.onclick = () =>
+  toggleState("isDesktopNotificationOnRest");
 audioOnRestStartNotificationCheckbox.onclick = () =>
   toggleState("isSoundOnRest");
 audioOnRestEndNotificationCheckbox.onclick = () =>
@@ -66,8 +72,6 @@ sixtyMinRadio.onclick = () => setScreenTime(3600);
 twentySecRadio.onclick = () => setRestTime(20);
 fortySecRadio.onclick = () => setRestTime(40);
 sixtySecRadio.onclick = () => setRestTime(60);
-overlayNotificationRadio.onclick = () => setVisualNotificationType("overlay");
-desktopNotificationRadio.onclick = () => setVisualNotificationType("desktop");
 notificationsSettingsButton.onclick = showNotificationSettings;
 closeNotificationsSettingsButton.onclick = hideNotificationSettings;
 timerSettingsButton.onclick = showAdjustTimerSettings;
@@ -169,11 +173,13 @@ function showScreenTimeTimer(val) {
     notificationsSettingsButton.style.display = "block";
     timerSettingsButton.style.display = "block";
     lookAwayText.style.display = "none";
+    closeRestTimer.style.display = "none";
   } else {
     startStopButton.style.display = "none";
     notificationsSettingsButton.style.display = "none";
     timerSettingsButton.style.display = "none";
     lookAwayText.style.display = "block";
+    closeRestTimer.style.display = "block";
   }
 }
 function render(storageLocation) {
@@ -204,6 +210,9 @@ function render(storageLocation) {
     animatedRing.style.strokeDashoffset = `${restTimeStrokeDashOffset}`;
   }
 }
+setInterval(() => {
+  render(settings);
+}, 10);
 
 window.onload = function () {
   chrome.storage.sync.get(defaultSettings, function (result) {
@@ -217,18 +226,12 @@ window.onload = function () {
     twentySecRadio.checked = result.restTimeInSeconds === 20;
     fortySecRadio.checked = result.restTimeInSeconds === 40;
     sixtySecRadio.checked = result.restTimeInSeconds === 60;
-    overlayNotificationRadio.checked =
-      result.visualNotificationType === "overlay";
-    desktopNotificationRadio.checked =
-      result.visualNotificationType === "desktop";
+    overlayNotificationCheckbox.checked = result.isOverlayOnRest;
+    desktopNotificationCheckbox.checked = result.isDesktopNotificationOnRest;
     audioOnRestStartNotificationCheckbox.checked = result.isSoundOnRest;
     audioOnRestEndNotificationCheckbox.checked = result.isSoundOnRestEnd;
   });
 };
-
-setInterval(() => {
-  render(settings);
-}, 10);
 chrome.storage.onChanged.addListener(function (changes, areaName) {
   console.log(changes);
   if (changes.startTimeInSeconds) {
@@ -264,4 +267,10 @@ chrome.storage.onChanged.addListener(function (changes, areaName) {
       changes.isSoundOnRestEnd.newValue;
     settings.isSoundOnRestEnd = changes.isSoundOnRestEnd.newValue;
   }
+  if (changes.isOverlayOnRest) {
+    overlayNotificationCheckbox.checked = changes.isOverlayOnRest.newValue;
+  }
+  if (changes.isDesktopNotificationOnRest)
+    desktopNotificationCheckbox.checked =
+      changes.isDesktopNotificationOnRest.newValue;
 });

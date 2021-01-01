@@ -234,6 +234,7 @@
 
 <div id="clock-container">
     <div id="clock">
+        <button class="close-button" id="close-rest-timer-button"><img src="IMGs/close.svg"/></button>
         <svg id="top-svg-ring" width="208px" height="208px">
             <circle
                     id="animated-ring"
@@ -279,14 +280,14 @@
         <div class="settings-options">Visual Notifications</div>
         <form class="settings-form">
             <div class="radio-and-text">
-                <input type="radio" name="visual-notification" id="overlay-notification" value="overlay-notification">
+                <input type="checkbox" name="visual-notification" id="overlay-notification" value="overlay-notification">
                 <label for="overlay-notification">Overlay Notification</label>
 
                 <div class="description">Rest timer is displayed over browser window<br>Best Experience: Learn More
                 </div>
             </div>
             <div class="radio-and-text">
-                <input type="radio" name="visual-notification" id="desktop-notification" value="other">
+                <input type="checkbox" name="visual-notification" id="desktop-notification" value="other">
                 <label for="desktop-notification">Desktop Notification</label>
 
                 <div class="description">When screen timer ends a desktop notification is received<br>Privacy Focused:

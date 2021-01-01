@@ -2,7 +2,8 @@ const defaultSettings = {
   isCounting: true,
   isSoundOnRest: true,
   isSoundOnRestEnd: true,
-  visualNotificationType: "popup",
+  isOverlayOnRest: false,
+  isDesktopNotificationOnRest: true,
   restTimeInSeconds: 20,
   screenTimeInSeconds: 1200,
   startTimeInSeconds: 0,
@@ -67,18 +68,35 @@ function createNewAlarm(lookAway) {
   });
 }
 function sendMessageToOverlayJs(lookAway) {
-  chrome.storage.sync.set({
-    showOverlay: lookAway,
+  chrome.storage.sync.get(defaultSettings, (result) => {
+    console.log("lookAway: " + lookAway);
+    console.log("isOverlayOnRest: " + result.isOverlayOnRest);
+    if (result.isOverlayOnRest) {
+      chrome.storage.sync.set({
+        showOverlay: lookAway,
+      });
+    }
   });
 }
 function createAndClearDesktopNotifications(lookAway) {
-  if (lookAway) {
-    chrome.notifications.clear("lookBack");
-    chrome.notifications.create("lookAway", notificationLookAway);
-  } else {
-    chrome.notifications.clear("lookAway");
-    chrome.notifications.create("lookBack", notificationLookBack);
-  }
+  chrome.storage.sync.get(defaultSettings, (result) => {
+    if (result.isDesktopNotificationOnRest) {
+      if (lookAway) {
+        chrome.notifications.clear("lookBack");
+        chrome.notifications.create("lookAway", notificationLookAway);
+      } else {
+        chrome.notifications.clear("lookAway");
+        chrome.notifications.create("lookBack", notificationLookBack);
+      }
+    }
+  });
+  // if (lookAway) {
+  //   chrome.notifications.clear("lookBack");
+  //   chrome.notifications.create("lookAway", notificationLookAway);
+  // } else {
+  //   chrome.notifications.clear("lookAway");
+  //   chrome.notifications.create("lookBack", notificationLookBack);
+  // }
 }
 
 chrome.runtime.onStartup.addListener(resetTimerToDefaults);
@@ -106,8 +124,8 @@ chrome.storage.onChanged.addListener(function (changes, areaName) {
 });
 
 chrome.alarms.onAlarm.addListener(function () {
-  createAndClearDesktopNotifications(notifyToLookAway);
   sendMessageToOverlayJs(notifyToLookAway);
+  createAndClearDesktopNotifications(notifyToLookAway);
   createNewAlarm(notifyToLookAway);
   notifyToLookAway = !notifyToLookAway;
 });
