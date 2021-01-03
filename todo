@@ -1,5 +1,4 @@
 IN PROGRESS
-opacity not reverting when closing rest timer
 make the overlay timer animation show
 
 
@@ -8,7 +7,6 @@ TO DO (Product)
 add optional permissions
 make a page explaining the "learn more"
 add sound for audio notification
-use refresh rate instead of setInterval
 bug: close x button goes away sometimes when you click 40sec rest time
 make it so user preferences determine what kind of audio notification is received
 Bug: when you are in settings and the alarm goes off the close button goes away
@@ -27,7 +25,8 @@ get rid of checkboxes for notification type
 make it so user preferences determine what kind of visual notification is received
 rest timer close button shifts the timer number down
 Add close/ cancel option on rest timer
-
+use refresh rate instead of setInterval
+opacity not reverting when closing rest timer
 
 TO DO (Publishing)
 Write description, fix name...etc

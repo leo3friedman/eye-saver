@@ -213,9 +213,13 @@ function render(storageLocation) {
     animatedRing.style.strokeDashoffset = `${restTimeStrokeDashOffset}`;
   }
 }
-setInterval(() => {
+
+function renderLoop() {
   render(settings);
-}, 10);
+  window.requestAnimationFrame(renderLoop);
+}
+
+window.requestAnimationFrame(renderLoop);
 
 window.onload = function () {
   chrome.storage.sync.get(defaultSettings, function (result) {
