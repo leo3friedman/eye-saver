@@ -34,6 +34,7 @@ function resetTimerToDefaults() {
     startTimeInSeconds: Math.floor(Date.now() / 1000),
     hasBeenPausedOrPlayed: false,
     pauseStartTimeInSeconds: 0,
+    showOverlay: false,
   });
   chrome.storage.sync.get(defaultSettings, function (result) {
     //if it is counting on startup, set alarm for screenTimeInSeconds
