@@ -52,6 +52,9 @@ const defaultSettings = {
 
 let settings = defaultSettings;
 
+closeRestTimer.onclick = () => {
+  chrome.runtime.sendMessage({ action: "reset" });
+};
 startStopButton.onclick = () => {
   settings.isCounting = !settings.isCounting;
   toggleState("isCounting");

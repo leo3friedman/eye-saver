@@ -122,6 +122,11 @@ chrome.storage.onChanged.addListener(function (changes, areaName) {
     resetTimerToDefaults();
   }
 });
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "reset") {
+    resetTimerToDefaults();
+  }
+});
 
 chrome.alarms.onAlarm.addListener(function () {
   sendMessageToOverlayJs(notifyToLookAway);

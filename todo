@@ -1,6 +1,6 @@
 IN PROGRESS
 make the overlay timer animation show
-Add close/ cancel option on rest timer
+
 
 
 TO DO (Product)
@@ -10,21 +10,22 @@ add sound for audio notification
 use refresh rate instead of setInterval
 bug: close x button goes away sometimes when you click 40sec rest time
 make it so user preferences determine what kind of audio notification is received
-Bug: when you are in settings and the alarm goes off it gets bad
+Bug: when you are in settings and the alarm goes off the close button goes away
 
 
 DONE
 make desktop notification for when it is time to look back
 bug: when you update extension, it gets all wrong
 correct whiteness on timer
-bug :alarm timing is off w/ animation (** maybe fixed)
+bug: alarm timing is off w/ animation (** maybe fixed)
 Get rid of popup notification preference
 overlay on all windows
 overlay persist when loading new tabs
 make it so user preferences determine length of rest/screen time
 get rid of checkboxes for notification type
 make it so user preferences determine what kind of visual notification is received
-
+rest timer close button shifts the timer number down
+Add close/ cancel option on rest timer
 
 
 TO DO (Publishing)
