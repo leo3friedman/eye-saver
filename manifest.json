@@ -22,6 +22,7 @@
       "128": "IMGs/128icon.png"
     }
   },
+  "web_accessible_resources": ["templates/*"],
   "icons": {
     "16": "IMGs/16icon.png",
     "32": "IMGs/32icon.png",

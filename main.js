@@ -222,6 +222,8 @@ function renderLoop() {
 window.requestAnimationFrame(renderLoop);
 
 window.onload = function () {
+  let clockContainer = document.getElementById("dropzone");
+  eyeSaver.createClock(clockContainer);
   chrome.storage.sync.get(defaultSettings, function (result) {
     settings = result;
     renderPlayButton(result.isCounting);

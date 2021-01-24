@@ -7,7 +7,6 @@
     <title>Eye Popup</title>
 </head>
 <style>
-
     body {
         margin: 8px;
         height: 244px;
@@ -184,6 +183,10 @@
         padding-bottom: 12px;
         text-decoration: underline;
     }
+    .settings-button:hover{
+        color: #908282;
+    }
+
 #look-away-text{
     background-color: transparent;
     border: none;
@@ -197,9 +200,6 @@
     display: none;
 }
 
-    .settings-button:hover {
-        color: #fdfdfd;
-    }
 
     #clock-container {
         width: 232px;
@@ -235,6 +235,7 @@
 
 <div id="clock-container">
     <button class="close-button" id="close-rest-timer-button"><img src="IMGs/close.svg"/></button>
+    <div id="dropzone"></div>
     <div id="clock">
         <svg id="top-svg-ring" width="208px" height="208px">
             <circle
@@ -346,5 +347,6 @@
 </div>
 <script src="timer.js"></script>
 <script src="main.js"></script>
+<script src="templates/clock.js"></script>
 </body>
 </html>
