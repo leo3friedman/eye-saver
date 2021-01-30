@@ -9,8 +9,13 @@ eyeSaver.createClock = (clockContainer) => {
   xhr.open("GET", clockTemplateUrl);
   xhr.send();
 };
-eyeSaver.render = (storageLocation) => {
-  const timeRemaining = getTimeRemaining(timeNowInSeconds(), storageLocation);
+eyeSaver.renderClock = (clockContainer, options) => {
+  const timer = clockContainer.querySelector(".clock__timer");
+  const animatedRing = clockContainer.querySelector(".clock__animated-ring");
+  if (!timer) {
+    return;
+  }
+  const timeRemaining = getTimeRemaining(timeNowInSeconds(), options);
   //Timer
   if (timeRemaining >= 0) {
     timer.innerText = secondsToDigitalTime(timeRemaining);
@@ -18,19 +23,16 @@ eyeSaver.render = (storageLocation) => {
     timer.innerText = `${Math.floor(Math.abs(timeRemaining))}`;
   }
   //Animated Ring
-  if (
-    (storageLocation.isCounting && timeRemaining >= 0) ||
-    !storageLocation.isCounting
-  ) {
+  if ((options.isCounting && timeRemaining >= 0) || !options.isCounting) {
     const screenTimeStrokeDashOffset = getStrokeDashOffset(
-      storageLocation.screenTimeInSeconds,
+      options.screenTimeInSeconds,
       timeRemaining
     );
     showScreenTimeTimer(true);
     animatedRing.style.strokeDashoffset = `${screenTimeStrokeDashOffset}`;
-  } else if (storageLocation.isCounting && timeRemaining < 0) {
+  } else if (options.isCounting && timeRemaining < 0) {
     const restTimeStrokeDashOffset = getStrokeDashOffset(
-      storageLocation.restTimeInSeconds,
+      options.restTimeInSeconds,
       timeRemaining
     );
     showScreenTimeTimer(false);

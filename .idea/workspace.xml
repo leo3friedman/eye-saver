@@ -23,12 +23,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fdb5de83-9ad0-4024-af57-064983bdc454" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/clock.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/manifest.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/popup.html" beforeDir="false" afterPath="$PROJECT_DIR$/popup.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/todo" beforeDir="false" afterPath="$PROJECT_DIR$/todo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/clock.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/clock.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/clock.js" beforeDir="false" afterPath="$PROJECT_DIR$/templates/clock.js" afterDir="false" />
     </list>
     <list id="8015561d-b63d-4062-8bee-2670543cacc1" name="Changes by gregfriedman" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -170,7 +170,8 @@
       <workItem from="1609287892733" duration="100000" />
       <workItem from="1609372708556" duration="5750000" />
       <workItem from="1609442430526" duration="12053000" />
-      <workItem from="1611518590799" duration="19000" />
+      <workItem from="1611518590799" duration="58000" />
+      <workItem from="1612036283428" duration="3945000" />
     </task>
     <servers />
   </component>

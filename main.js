@@ -1,11 +1,11 @@
-const timer = document.getElementById("timer");
+const timer = document.querySelector(".clock__timer");
 const closeRestTimer = document.getElementById("close-rest-timer-button");
 const lookAwayText = document.getElementById("look-away-text");
 const animation = document.querySelector(".toggle-animation");
-const startStopButton = document.getElementById("start-stop-timer");
-const animatedRing = document.getElementById("animated-ring");
-const playSvg = document.getElementById("play-svg");
-const pauseSvg = document.getElementById("pause-svg");
+const startStopButton = document.querySelector(".clock__start-stop-timer");
+const animatedRing = document.querySelector(".clock__animated-ring");
+const playSvg = document.querySelector(".clock__play-svg");
+const pauseSvg = document.querySelector(".clock__pause-svg");
 const notificationsSettingsButton = document.getElementById(
   "notifications-button"
 );
@@ -216,6 +216,7 @@ function render(storageLocation) {
 
 function renderLoop() {
   render(settings);
+  eyeSaver.renderClock(document.getElementById("dropzone"), settings);
   window.requestAnimationFrame(renderLoop);
 }
 

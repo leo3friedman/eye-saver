@@ -21,7 +21,7 @@
     }
 
 
-    #timer {
+    .clock__timer {
         display: inline-block;
         text-align: center;
         width: 100%;
@@ -32,7 +32,7 @@
         color: #fdfdfd;
     }
 
-    #top-svg-ring {
+    .clock__top-svg-ring {
         position: absolute;
         transform: rotate(270deg);
         top: 0px;
@@ -49,7 +49,7 @@
         animation-play-state: paused;
     }
 
-    #bottom-svg-ring {
+    .clock__bottom-svg-ring {
         position: absolute;
         top: 0px;
         left: 0px;
@@ -64,7 +64,7 @@
         }
     }
 
-    #clock {
+    .clock {
         position: relative;
         width: 208px;
         height: 208px;
@@ -80,7 +80,7 @@
         opacity: 0;
     }
 
-    #start-stop-timer {
+    .clock__start-stop-timer {
         position: absolute;
         bottom: 5%;
         left: 50%;
@@ -95,11 +95,11 @@
 
     }
 
-    #pause-svg {
+    .clock__pause-svg {
         display: block;
     }
 
-    #play-svg {
+    .clock__play-svg {
         display: none;
     }
 
@@ -236,11 +236,10 @@
 <div id="clock-container">
     <button class="close-button" id="close-rest-timer-button"><img src="IMGs/close.svg"/></button>
     <div id="dropzone"></div>
-    <div id="clock">
-        <svg id="top-svg-ring" width="208px" height="208px">
+    <div class="clock">
+        <svg class="clock__top-svg-ring" width="208px" height="208px">
             <circle
-                    id="animated-ring"
-                    class=""
+                    class="clock__animated-ring"
                     cx="104"
                     cy="104"
                     r="100"
@@ -253,9 +252,9 @@
             />
         </svg
         >
-        <svg id="bottom-svg-ring" width="208px" height="208px">
+        <svg class="clock__bottom-svg-ring" width="208px" height="208px">
             <circle
-                    id="grey-circle"
+                    class="clock__grey-circle"
                     cx="104"
                     cy="104"
                     r="100"
@@ -266,10 +265,10 @@
                     stroke-dashoffset="0"
             />
         </svg>
-        <span id="timer">?</span>
-        <button id="start-stop-timer">
-            <img id="play-svg" src="IMGs/play.svg"/>
-            <img id="pause-svg" src="IMGs/pause.svg"/>
+        <span class="clock__timer">?</span>
+        <button class="clock__start-stop-timer">
+            <img class="clock__play-svg" src="IMGs/play.svg"/>
+            <img class="clock__pause-svg" src="IMGs/pause.svg"/>
         </button>
     </div>
     <button class="settings-button" id="notifications-button">NOTIFICATIONS</button>
