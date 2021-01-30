@@ -12,10 +12,16 @@ eyeSaver.createClock = (clockContainer) => {
 eyeSaver.renderClock = (clockContainer, options) => {
   const timer = clockContainer.querySelector(".clock__timer");
   const animatedRing = clockContainer.querySelector(".clock__animated-ring");
+  const playSvg = clockContainer.querySelector(".clock__play-svg");
+  const pauseSvg = clockContainer.querySelector(".clock__pause-svg");
+  const timeRemaining = getTimeRemaining(timeNowInSeconds(), options);
   if (!timer) {
     return;
   }
-  const timeRemaining = getTimeRemaining(timeNowInSeconds(), options);
+
+  playSvg.style.display = options.isCounting ? "none" : "block";
+  pauseSvg.style.display = options.isCounting ? "block" : "none";
+
   //Timer
   if (timeRemaining >= 0) {
     timer.innerText = secondsToDigitalTime(timeRemaining);

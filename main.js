@@ -186,6 +186,7 @@ function showScreenTimeTimer(val) {
   }
 }
 function render(storageLocation) {
+  renderPlayButton(storageLocation.isCounting);
   const timeRemaining = getTimeRemaining(timeNowInSeconds(), storageLocation);
   //Timer
   if (timeRemaining >= 0) {
@@ -227,7 +228,6 @@ window.onload = function () {
   eyeSaver.createClock(clockContainer);
   chrome.storage.sync.get(defaultSettings, function (result) {
     settings = result;
-    renderPlayButton(result.isCounting);
     render(settings);
 
     twentyMinRadio.checked = result.screenTimeInSeconds === 1200;
@@ -251,7 +251,6 @@ chrome.storage.onChanged.addListener(function (changes, areaName) {
     settings.hasBeenPausedOrPlayed = changes.hasBeenPausedOrPlayed.newValue;
   }
   if (changes.isCounting) {
-    renderPlayButton(changes.isCounting.newValue);
     settings.isCounting = changes.isCounting.newValue;
   }
   if (changes.screenTimeInSeconds) {
