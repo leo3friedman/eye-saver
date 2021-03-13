@@ -225,7 +225,14 @@ window.requestAnimationFrame(renderLoop);
 
 window.onload = function () {
   let clockContainer = document.getElementById("dropzone");
-  eyeSaver.createClock(clockContainer);
+  eyeSaver.createClock(clockContainer, {
+    onStartStopClicked: () => {
+      settings.isCounting = !settings.isCounting;
+      console.log("clicked");
+      toggleState("isCounting");
+      updatePauseStartTimeInSeconds();
+    },
+  });
   chrome.storage.sync.get(defaultSettings, function (result) {
     settings = result;
     render(settings);

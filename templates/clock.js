@@ -1,10 +1,15 @@
 const eyeSaver = {};
 
-eyeSaver.createClock = (clockContainer) => {
+eyeSaver.createClock = (clockContainer, { onStartStopClicked }) => {
   const clockTemplateUrl = chrome.runtime.getURL("templates/clock.html");
+  console.log(clockTemplateUrl);
   const xhr = new XMLHttpRequest();
   xhr.onload = () => {
-    clockContainer.innerHTML = xhr.response;
+    clockContainer.insertAdjacentHTML("afterbegin", xhr.response);
+    const startStopButton = clockContainer.querySelector(
+      ".clock__start-stop-timer"
+    );
+    startStopButton.onclick = onStartStopClicked;
   };
   xhr.open("GET", clockTemplateUrl);
   xhr.send();
@@ -14,6 +19,9 @@ eyeSaver.renderClock = (clockContainer, options) => {
   const animatedRing = clockContainer.querySelector(".clock__animated-ring");
   const playSvg = clockContainer.querySelector(".clock__play-svg");
   const pauseSvg = clockContainer.querySelector(".clock__pause-svg");
+  const startStopButton = clockContainer.querySelector(
+    ".clock__start-stop-timer"
+  );
   const timeRemaining = getTimeRemaining(timeNowInSeconds(), options);
   if (!timer) {
     return;
@@ -21,6 +29,10 @@ eyeSaver.renderClock = (clockContainer, options) => {
 
   playSvg.style.display = options.isCounting ? "none" : "block";
   pauseSvg.style.display = options.isCounting ? "block" : "none";
+  startStopButton.style.display =
+    (options.isCounting && timeRemaining >= 0) || !options.isCounting
+      ? "block"
+      : "none";
 
   //Timer
   if (timeRemaining >= 0) {
