@@ -1,3 +1,16 @@
-body.res-show-overlay{
-    opacity:.3;
+body.res-show-overlay #es-overlay{
+    opacity: 1;
+}
+#es-overlay{
+    opacity: 0;
+    background-color: rgba(0,0,0,.75);
+    position: fixed;
+    top: 0;
+    z-index: 999;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

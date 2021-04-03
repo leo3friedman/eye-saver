@@ -38,10 +38,8 @@ eyeSaver.renderClock = (clockContainer, options) => {
   );
   const timeRemaining = getTimeRemaining(timeNowInSeconds(), options);
   if (!timer) {
-    console.log("bailing");
     return;
   }
-  //console.log("didn't bail");
   playSvg.style.display = options.isCounting ? "none" : "block";
   pauseSvg.style.display = options.isCounting ? "block" : "none";
   startStopButton.style.display =
@@ -52,10 +50,8 @@ eyeSaver.renderClock = (clockContainer, options) => {
   //Timer
   //console.log(timeRemaining);
   if (timeRemaining >= 0) {
-    console.log("updating timer");
     timer.innerText = secondsToDigitalTime(timeRemaining);
   } else if (timeRemaining < 0) {
-    console.log("updating rest timer");
     timer.innerText = `${Math.floor(Math.abs(timeRemaining))}`;
   }
   //Animated Ring

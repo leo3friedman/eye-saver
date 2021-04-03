@@ -50,16 +50,26 @@ chrome.storage.onChanged.addListener(function (changes, areaName) {
 });
 
 function renderLoop() {
-  console.log(settings);
-  let elementById = document.getElementById("dropzone");
+  let elementById = document.getElementById("es-overlay");
   eyeSaver.renderClock(elementById, settings);
   window.requestAnimationFrame(renderLoop);
 }
 
 window.onload = () => {
-  const spotToDropClock = document.createElement("div");
-  spotToDropClock.id = "dropzone";
-  document.body.appendChild(spotToDropClock);
-  eyeSaver.createClock(spotToDropClock, {});
+  // background-color: rgba(0,0,0,.75);
+  // position: fixed;
+  // top: 0;
+  // z-index: 999;
+  // bottom: 0;
+  // left: 0;
+  // right: 0;
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  const overlay = document.createElement("div");
+  overlay.id = "es-overlay";
+
+  document.body.appendChild(overlay);
+  eyeSaver.createClock(overlay, {});
   window.requestAnimationFrame(renderLoop);
 };
