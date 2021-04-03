@@ -1,11 +1,6 @@
-const timer = document.querySelector(".clock__timer");
 const closeRestTimer = document.getElementById("close-rest-timer-button");
 const lookAwayText = document.getElementById("look-away-text");
 const animation = document.querySelector(".toggle-animation");
-const startStopButton = document.querySelector(".clock__start-stop-timer");
-const animatedRing = document.querySelector(".clock__animated-ring");
-const playSvg = document.querySelector(".clock__play-svg");
-const pauseSvg = document.querySelector(".clock__pause-svg");
 const notificationsSettingsButton = document.getElementById(
   "notifications-button"
 );
@@ -55,12 +50,12 @@ let settings = defaultSettings;
 closeRestTimer.onclick = () => {
   chrome.runtime.sendMessage({ action: "reset" });
 };
-startStopButton.onclick = () => {
-  settings.isCounting = !settings.isCounting;
-  toggleState("isCounting");
-  renderPlayButton(settings.isCounting);
-  updatePauseStartTimeInSeconds();
-};
+// startStopButton.onclick = () => {
+//   settings.isCounting = !settings.isCounting;
+//   toggleState("isCounting");
+//   renderPlayButton(settings.isCounting);
+//   updatePauseStartTimeInSeconds();
+// };
 overlayNotificationCheckbox.onclick = () => toggleState("isOverlayOnRest");
 desktopNotificationCheckbox.onclick = () =>
   toggleState("isDesktopNotificationOnRest");
@@ -137,15 +132,15 @@ function updatePauseStartTimeInSeconds() {
     chrome.storage.sync.set({ hasBeenPausedOrPlayed: true });
   }
 }
-function renderPlayButton(val) {
-  if (val) {
-    playSvg.style.display = "none";
-    pauseSvg.style.display = "block";
-  } else if (!val) {
-    playSvg.style.display = "block";
-    pauseSvg.style.display = "none";
-  }
-}
+// function renderPlayButton(val) {
+//   if (val) {
+//     playSvg.style.display = "none";
+//     pauseSvg.style.display = "block";
+//   } else if (!val) {
+//     playSvg.style.display = "block";
+//     pauseSvg.style.display = "none";
+//   }
+// }
 function secondsToDigitalTime(timeInSeconds) {
   let minutes = Math.floor(timeInSeconds / 60);
   let minTens = Math.floor(minutes / 10);
@@ -172,51 +167,50 @@ function getStrokeDashOffset(timerLength, timeRemainingWithDecimal) {
 }
 function showScreenTimeTimer(val) {
   if (val) {
-    startStopButton.style.display = "block";
+    //startStopButton.style.display = "block";
     notificationsSettingsButton.style.display = "block";
     timerSettingsButton.style.display = "block";
     lookAwayText.style.display = "none";
     closeRestTimer.style.display = "none";
   } else {
-    startStopButton.style.display = "none";
+    //startStopButton.style.display = "none";
     notificationsSettingsButton.style.display = "none";
     timerSettingsButton.style.display = "none";
     lookAwayText.style.display = "block";
     closeRestTimer.style.display = "block";
   }
 }
-function render(storageLocation) {
-  renderPlayButton(storageLocation.isCounting);
-  const timeRemaining = getTimeRemaining(timeNowInSeconds(), storageLocation);
-  //Timer
-  if (timeRemaining >= 0) {
-    timer.innerText = secondsToDigitalTime(timeRemaining);
-  } else if (timeRemaining < 0) {
-    timer.innerText = `${Math.floor(Math.abs(timeRemaining))}`;
-  }
-  //Animated Ring
-  if (
-    (storageLocation.isCounting && timeRemaining >= 0) ||
-    !storageLocation.isCounting
-  ) {
-    const screenTimeStrokeDashOffset = getStrokeDashOffset(
-      storageLocation.screenTimeInSeconds,
-      timeRemaining
-    );
-    showScreenTimeTimer(true);
-    animatedRing.style.strokeDashoffset = `${screenTimeStrokeDashOffset}`;
-  } else if (storageLocation.isCounting && timeRemaining < 0) {
-    const restTimeStrokeDashOffset = getStrokeDashOffset(
-      storageLocation.restTimeInSeconds,
-      timeRemaining
-    );
-    showScreenTimeTimer(false);
-    animatedRing.style.strokeDashoffset = `${restTimeStrokeDashOffset}`;
-  }
-}
+// function render(storageLocation) {
+//   renderPlayButton(storageLocation.isCounting);
+//   const timeRemaining = getTimeRemaining(timeNowInSeconds(), storageLocation);
+//   //Timer
+//   if (timeRemaining >= 0) {
+//     timer.innerText = secondsToDigitalTime(timeRemaining);
+//   } else if (timeRemaining < 0) {
+//     timer.innerText = `${Math.floor(Math.abs(timeRemaining))}`;
+//   }
+//   //Animated Ring
+//   if (
+//     (storageLocation.isCounting && timeRemaining >= 0) ||
+//     !storageLocation.isCounting
+//   ) {
+//     const screenTimeStrokeDashOffset = getStrokeDashOffset(
+//       storageLocation.screenTimeInSeconds,
+//       timeRemaining
+//     );
+//     showScreenTimeTimer(true);
+//     animatedRing.style.strokeDashoffset = `${screenTimeStrokeDashOffset}`;
+//   } else if (storageLocation.isCounting && timeRemaining < 0) {
+//     const restTimeStrokeDashOffset = getStrokeDashOffset(
+//       storageLocation.restTimeInSeconds,
+//       timeRemaining
+//     );
+//     showScreenTimeTimer(false);
+//     animatedRing.style.strokeDashoffset = `${restTimeStrokeDashOffset}`;
+//   }
+// }
 
 function renderLoop() {
-  render(settings);
   eyeSaver.renderClock(document.getElementById("dropzone"), settings);
   window.requestAnimationFrame(renderLoop);
 }
@@ -235,7 +229,6 @@ window.onload = function () {
   });
   chrome.storage.sync.get(defaultSettings, function (result) {
     settings = result;
-    render(settings);
 
     twentyMinRadio.checked = result.screenTimeInSeconds === 1200;
     fortyMinRadio.checked = result.screenTimeInSeconds === 2400;

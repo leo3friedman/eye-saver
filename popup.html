@@ -4,6 +4,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
           rel="stylesheet">
+    <link href="/templates/clock.css" rel="stylesheet">
     <title>Eye Popup</title>
 </head>
 <style>
@@ -21,24 +22,7 @@
     }
 
 
-    .clock__timer {
-        display: inline-block;
-        text-align: center;
-        width: 100%;
-        line-height: 208px;
-        margin: 0;
-        font-weight: 100;
-        font-size: 64px;
-        color: #fdfdfd;
-    }
 
-    .clock__top-svg-ring {
-        position: absolute;
-        transform: rotate(270deg);
-        top: 0px;
-        left: 0px;
-        z-index: 2;
-    }
 
     .toggle-animation {
         animation: wipe 1200s linear;
@@ -47,12 +31,6 @@
 
     .pause-animation {
         animation-play-state: paused;
-    }
-
-    .clock__bottom-svg-ring {
-        position: absolute;
-        top: 0px;
-        left: 0px;
     }
 
     @keyframes wipe {
@@ -64,13 +42,6 @@
         }
     }
 
-    .clock {
-        position: relative;
-        width: 208px;
-        height: 208px;
-        margin: 12px;
-        align-content: center;
-    }
 
     body.show-notification-settings #clock-container {
         opacity: 0;
@@ -78,29 +49,6 @@
 
     body.show-adjust-timer-settings #clock-container {
         opacity: 0;
-    }
-
-    .clock__start-stop-timer {
-        position: absolute;
-        bottom: 5%;
-        left: 50%;
-        transform: translateX(-50%);
-        margin: 0;
-        background-color: transparent;
-        outline: none;
-        border: none;
-        z-index: 50;
-        width: 64px;
-        height: 64px;
-
-    }
-
-    .clock__pause-svg {
-        display: block;
-    }
-
-    .clock__play-svg {
-        display: none;
     }
 
     #notifications-settings {
@@ -236,41 +184,6 @@
 <div id="clock-container">
     <button class="close-button" id="close-rest-timer-button"><img src="IMGs/close.svg"/></button>
     <div id="dropzone"></div>
-    <div class="clock">
-        <svg class="clock__top-svg-ring" width="208px" height="208px">
-            <circle
-                    class="clock__animated-ring"
-                    cx="104"
-                    cy="104"
-                    r="100"
-                    stroke="#f1a33b"
-                    stroke-linecap="round"
-                    stroke-width="4px"
-                    fill="none"
-                    stroke-dasharray="628"
-                    stroke-dashoffset="0"
-            />
-        </svg
-        >
-        <svg class="clock__bottom-svg-ring" width="208px" height="208px">
-            <circle
-                    class="clock__grey-circle"
-                    cx="104"
-                    cy="104"
-                    r="100"
-                    stroke="#28282a"
-                    stroke-width="4px"
-                    fill="none"
-                    stroke-dasharray="628"
-                    stroke-dashoffset="0"
-            />
-        </svg>
-        <span class="clock__timer">?</span>
-        <button class="clock__start-stop-timer">
-            <img class="clock__play-svg" src="IMGs/play.svg"/>
-            <img class="clock__pause-svg" src="IMGs/pause.svg"/>
-        </button>
-    </div>
     <button class="settings-button" id="notifications-button">NOTIFICATIONS</button>
     <button class="settings-button" id="timer-button">ADJUST TIMER</button>
     <div id="look-away-text">REST YOUR EYES</div>
@@ -296,7 +209,7 @@
                 </div>
             </div>
         </form>
-        <div class="settings-options">Audio Notification</div>
+        <div class="settings-options">Audio Notifications</div>
         <form class="settings-form">
             <div class="radio-and-text">
                 <input type="checkbox" name="audio-notification" id="sound-on-look-away" value="sound-on-look-away">

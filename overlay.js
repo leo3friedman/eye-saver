@@ -15,3 +15,11 @@ chrome.storage.onChanged.addListener(function (changes, areaName) {
     render(changes.showOverlay.newValue);
   }
 });
+
+window.onload = () => {
+  const spotToDropClock = document.createElement("div");
+  let clockContainer = document.getElementById("dropzone");
+
+  document.body.appendChild(spotToDropClock);
+  eyeSaver.createClock(spotToDropClock, {});
+};
