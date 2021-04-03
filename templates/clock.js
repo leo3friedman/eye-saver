@@ -1,5 +1,19 @@
 const eyeSaver = {};
 
+function secondsToDigitalTime(timeInSeconds) {
+  let minutes = Math.floor(timeInSeconds / 60);
+  let minTens = Math.floor(minutes / 10);
+  let minOnes = minutes - minTens * 10;
+  let secTens =
+    Math.floor((timeInSeconds - Math.floor(timeInSeconds / 60) * 60) / 10) % 6;
+  let secOnes = Math.floor((timeInSeconds - minutes * 60) % 10);
+  return minTens + "" + minOnes + ":" + secTens + "" + secOnes;
+}
+
+function getStrokeDashOffset(timerLength, timeRemainingWithDecimal) {
+  return 628 * ((timerLength - timeRemainingWithDecimal) / timerLength);
+}
+
 eyeSaver.createClock = (clockContainer, { onStartStopClicked }) => {
   const clockTemplateUrl = chrome.runtime.getURL("templates/clock.html");
   console.log(clockTemplateUrl);
@@ -24,9 +38,10 @@ eyeSaver.renderClock = (clockContainer, options) => {
   );
   const timeRemaining = getTimeRemaining(timeNowInSeconds(), options);
   if (!timer) {
+    console.log("bailing");
     return;
   }
-
+  //console.log("didn't bail");
   playSvg.style.display = options.isCounting ? "none" : "block";
   pauseSvg.style.display = options.isCounting ? "block" : "none";
   startStopButton.style.display =
@@ -35,9 +50,12 @@ eyeSaver.renderClock = (clockContainer, options) => {
       : "none";
 
   //Timer
+  //console.log(timeRemaining);
   if (timeRemaining >= 0) {
+    console.log("updating timer");
     timer.innerText = secondsToDigitalTime(timeRemaining);
   } else if (timeRemaining < 0) {
+    console.log("updating rest timer");
     timer.innerText = `${Math.floor(Math.abs(timeRemaining))}`;
   }
   //Animated Ring
@@ -46,14 +64,14 @@ eyeSaver.renderClock = (clockContainer, options) => {
       options.screenTimeInSeconds,
       timeRemaining
     );
-    showScreenTimeTimer(true);
+    //showScreenTimeTimer(true);
     animatedRing.style.strokeDashoffset = `${screenTimeStrokeDashOffset}`;
   } else if (options.isCounting && timeRemaining < 0) {
     const restTimeStrokeDashOffset = getStrokeDashOffset(
       options.restTimeInSeconds,
       timeRemaining
     );
-    showScreenTimeTimer(false);
+    // showScreenTimeTimer(false);
     animatedRing.style.strokeDashoffset = `${restTimeStrokeDashOffset}`;
   }
 };

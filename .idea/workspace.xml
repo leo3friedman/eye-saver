@@ -23,12 +23,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fdb5de83-9ad0-4024-af57-064983bdc454" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/templates/clock.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/manifest.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/overlay.js" beforeDir="false" afterPath="$PROJECT_DIR$/overlay.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/popup.html" beforeDir="false" afterPath="$PROJECT_DIR$/popup.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/clock.js" beforeDir="false" afterPath="$PROJECT_DIR$/templates/clock.js" afterDir="false" />
     </list>
     <list id="8015561d-b63d-4062-8bee-2670543cacc1" name="Changes by gregfriedman" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -174,7 +173,7 @@
       <workItem from="1612036283428" duration="5190000" />
       <workItem from="1612562691305" duration="3293000" />
       <workItem from="1615587991025" duration="6904000" />
-      <workItem from="1617471362873" duration="1092000" />
+      <workItem from="1617471362873" duration="5586000" />
     </task>
     <servers />
   </component>

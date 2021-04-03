@@ -65,7 +65,7 @@ audioOnRestEndNotificationCheckbox.onclick = () =>
   toggleState("isSoundOnRestEnd");
 twentyMinRadio.onclick = () => setScreenTime(1200);
 // fortyMinRadio.onclick = () => setScreenTime(2400);
-fortyMinRadio.onclick = () => setScreenTime(30);
+fortyMinRadio.onclick = () => setScreenTime(8);
 sixtyMinRadio.onclick = () => setScreenTime(3600);
 twentySecRadio.onclick = () => setRestTime(20);
 fortySecRadio.onclick = () => setRestTime(40);
@@ -141,15 +141,6 @@ function updatePauseStartTimeInSeconds() {
 //     pauseSvg.style.display = "none";
 //   }
 // }
-function secondsToDigitalTime(timeInSeconds) {
-  let minutes = Math.floor(timeInSeconds / 60);
-  let minTens = Math.floor(minutes / 10);
-  let minOnes = minutes - minTens * 10;
-  let secTens =
-    Math.floor((timeInSeconds - Math.floor(timeInSeconds / 60) * 60) / 10) % 6;
-  let secOnes = Math.floor((timeInSeconds - minutes * 60) % 10);
-  return minTens + "" + minOnes + ":" + secTens + "" + secOnes;
-}
 function showNotificationSettings() {
   document.body.classList.add("show-notification-settings");
 }
@@ -161,9 +152,6 @@ function showAdjustTimerSettings() {
 }
 function hideAdjustTimerSettings() {
   document.body.classList.remove("show-adjust-timer-settings");
-}
-function getStrokeDashOffset(timerLength, timeRemainingWithDecimal) {
-  return 628 * ((timerLength - timeRemainingWithDecimal) / timerLength);
 }
 function showScreenTimeTimer(val) {
   if (val) {
