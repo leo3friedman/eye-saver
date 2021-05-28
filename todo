@@ -3,6 +3,7 @@ make the overlay timer animation show
 
 
 TO DO (Product)
+screen timer shows before overlay goes away;
 add optional permissions
 make a page explaining the "learn more"
 add sound for audio notification
@@ -12,6 +13,7 @@ Bug: when you are in settings and the alarm goes off the close button goes away
 
 
 DONE
+
 make desktop notification for when it is time to look back
 bug: when you update extension, it gets all wrong
 correct whiteness on timer

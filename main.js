@@ -33,7 +33,7 @@ const defaultSettings = {
   isCounting: true,
   isSoundOnRest: true,
   isSoundOnRestEnd: true,
-  isOverlayOnRest: false,
+  isOverlayOnRest: true,
   isDesktopNotificationOnRest: true,
   visualNotificationType: "popup",
   restTimeInSeconds: 20,

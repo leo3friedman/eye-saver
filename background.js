@@ -2,7 +2,7 @@ const defaultSettings = {
   isCounting: true,
   isSoundOnRest: true,
   isSoundOnRestEnd: true,
-  isOverlayOnRest: false,
+  isOverlayOnRest: true,
   isDesktopNotificationOnRest: true,
   restTimeInSeconds: 20,
   screenTimeInSeconds: 1200,
