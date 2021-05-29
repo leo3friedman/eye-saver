@@ -1,6 +1,4 @@
-body.res-show-overlay #es-overlay{
-    opacity: 1;
-}
+
 #es-overlay{
     transition: all .5s;
     opacity: 0;
@@ -14,4 +12,9 @@ body.res-show-overlay #es-overlay{
     display: flex;
     justify-content: center;
     align-items: center;
+    pointer-events: none;
+}
+
+body.res-show-overlay #es-overlay{
+    opacity: 1;
 }

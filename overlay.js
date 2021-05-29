@@ -51,7 +51,10 @@ chrome.storage.onChanged.addListener(function (changes, areaName) {
 
 function renderLoop() {
   let elementById = document.getElementById("es-overlay");
-  eyeSaver.renderClock(elementById, settings);
+  eyeSaver.renderClock(elementById, {
+    ...settings,
+    shouldHideScreenTimeTimer: true,
+  });
   window.requestAnimationFrame(renderLoop);
 }
 

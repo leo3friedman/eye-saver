@@ -40,6 +40,10 @@ eyeSaver.renderClock = (clockContainer, options) => {
   if (!timer) {
     return;
   }
+  if (timeRemaining >= 0 && options.shouldHideScreenTimeTimer) {
+    return;
+  }
+
   playSvg.style.display = options.isCounting ? "none" : "block";
   pauseSvg.style.display = options.isCounting ? "block" : "none";
   startStopButton.style.display =

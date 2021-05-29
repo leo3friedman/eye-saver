@@ -1,19 +1,14 @@
 IN PROGRESS
-make the overlay timer animation show
-
+screen timer shows before overlay goes away;
 
 TO DO (Product)
-screen timer shows before overlay goes away;
-add optional permissions
-make a page explaining the "learn more"
-add sound for audio notification
+hide close x button when not in settings
 bug: close x button goes away sometimes when you click 40sec rest time
-make it so user preferences determine what kind of audio notification is received
 Bug: when you are in settings and the alarm goes off the close button goes away
 
 
 DONE
-
+make the overlay timer animation show
 make desktop notification for when it is time to look back
 bug: when you update extension, it gets all wrong
 correct whiteness on timer
@@ -35,6 +30,9 @@ design store tile
 make screenshot
 when you open browser it is not resetting timer
 
-
 SET ASIDE
 get progress bar working on desktop notification *Kinda did it but looks bad
+add optional permissions
+add sound for audio notification
+make a page explaining the "learn more"
+make it so user preferences determine what kind of audio notification is received
