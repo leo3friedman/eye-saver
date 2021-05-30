@@ -1,13 +1,19 @@
 IN PROGRESS
-screen timer shows before overlay goes away;
+
 
 TO DO (Product)
+*alpha release*
+*beta release*
+include cancel button on rest timer
 hide close x button when not in settings
 bug: close x button goes away sometimes when you click 40sec rest time
 Bug: when you are in settings and the alarm goes off the close button goes away
+*public release*
+
 
 
 DONE
+screen timer shows before overlay goes away;
 make the overlay timer animation show
 make desktop notification for when it is time to look back
 bug: when you update extension, it gets all wrong
