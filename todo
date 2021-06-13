@@ -2,7 +2,7 @@ IN PROGRESS
 
 
 TO DO (Product)
-*alpha release*
+
 *beta release*
 include cancel button on rest timer
 hide close x button when not in settings
@@ -13,6 +13,8 @@ Bug: when you are in settings and the alarm goes off the close button goes away
 
 
 DONE
+Hide settings button when rest time
+*alpha release*
 screen timer shows before overlay goes away;
 make the overlay timer animation show
 make desktop notification for when it is time to look back

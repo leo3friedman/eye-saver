@@ -153,8 +153,9 @@ function showAdjustTimerSettings() {
 function hideAdjustTimerSettings() {
   document.body.classList.remove("show-adjust-timer-settings");
 }
-function showScreenTimeTimer(val) {
-  if (val) {
+function showScreenTimeTimer(storageLocation) {
+  const timeRemaining = getTimeRemaining(timeNowInSeconds(), storageLocation);
+  if (timeRemaining >= 0) {
     //startStopButton.style.display = "block";
     notificationsSettingsButton.style.display = "block";
     timerSettingsButton.style.display = "block";
@@ -200,6 +201,7 @@ function showScreenTimeTimer(val) {
 
 function renderLoop() {
   eyeSaver.renderClock(document.getElementById("dropzone"), settings);
+  showScreenTimeTimer(settings);
   window.requestAnimationFrame(renderLoop);
 }
 
