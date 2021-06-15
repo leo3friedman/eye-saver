@@ -1,6 +1,4 @@
 IN PROGRESS
-check if should play sound on notification
-check if should send desktop notification
 
 TO DO (Product)
 *beta release*
@@ -11,6 +9,8 @@ Show overlay even when you open a new tab during rest time
 *public release*
 
 DONE
+check if should play sound on notification
+check if should send desktop notification
 Play sound on notification
 Send silent desktop notifications
 hide close x button when not in settings

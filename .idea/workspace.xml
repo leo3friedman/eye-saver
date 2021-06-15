@@ -24,8 +24,7 @@
   <component name="ChangeListManager">
     <list default="true" id="fdb5de83-9ad0-4024-af57-064983bdc454" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/background.js" beforeDir="false" afterPath="$PROJECT_DIR$/background.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/popup.html" beforeDir="false" afterPath="$PROJECT_DIR$/popup.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/todo" beforeDir="false" afterPath="$PROJECT_DIR$/todo" afterDir="false" />
     </list>
     <list id="8015561d-b63d-4062-8bee-2670543cacc1" name="Changes by gregfriedman" comment="" />
@@ -176,7 +175,7 @@
       <workItem from="1618168994565" duration="17000" />
       <workItem from="1622240671646" duration="8514000" />
       <workItem from="1622743081151" duration="3971000" />
-      <workItem from="1623551667917" duration="7302000" />
+      <workItem from="1623551667917" duration="7624000" />
     </task>
     <servers />
   </component>
