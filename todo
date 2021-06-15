@@ -1,17 +1,16 @@
 IN PROGRESS
-Show overlay even when you open a new tab during rest time
+Send silent desktop notifications
 
 TO DO (Product)
 *beta release*
 include cancel button on rest timer
-hide close x button when not in settings
 bug: close x button goes away sometimes when you click 40sec rest time
 Bug: when you are in settings and the alarm goes off the close button goes away
+Show overlay even when you open a new tab during rest time
 *public release*
 
-
-
 DONE
+hide close x button when not in settings
 On first run of the extension, cant find rest time amount
 Hide settings button when rest time
 *alpha release*

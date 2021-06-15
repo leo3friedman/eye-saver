@@ -17,12 +17,14 @@ const notificationLookAway = {
   title: "Eye Strain Relief",
   message: "Time to look away from the screen",
   iconUrl: "IMGs/64icon.png",
+  silent: true,
 };
 const notificationLookBack = {
   type: "basic",
   title: "Eye Strain Relief",
   message: "Time to look back at the screen",
   iconUrl: "IMGs/64icon.png",
+  silent: true,
 };
 let notifyToLookAway = true;
 
