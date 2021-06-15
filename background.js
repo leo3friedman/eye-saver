@@ -83,17 +83,23 @@ function sendMessageToOverlayJs(lookAway) {
 }
 function createAndClearDesktopNotifications(lookAway) {
   chrome.storage.sync.get(defaultSettings, (result) => {
-    if (result.isDesktopNotificationOnRest) {
-      if (lookAway) {
-        chrome.notifications.clear("lookBack");
+    if (lookAway) {
+      chrome.notifications.clear("lookBack");
+      if (result.isDesktopNotificationOnRest) {
         chrome.notifications.create("lookAway", notificationLookAway);
+      }
+      if (result.isSoundOnRest) {
         let lookAwayAudio = new Audio(
           chrome.runtime.getURL("sounds/look_away_sound.wav")
         );
         lookAwayAudio.play();
-      } else {
-        chrome.notifications.clear("lookAway");
+      }
+    } else {
+      chrome.notifications.clear("lookAway");
+      if (result.isDesktopNotificationOnRest) {
         chrome.notifications.create("lookBack", notificationLookBack);
+      }
+      if (result.isSoundOnRestEnd) {
         let lookBackAudio = new Audio(
           chrome.runtime.getURL("sounds/look_back_sound.wav")
         );
@@ -101,13 +107,6 @@ function createAndClearDesktopNotifications(lookAway) {
       }
     }
   });
-  // if (lookAway) {
-  //   chrome.notifications.clear("lookBack");
-  //   chrome.notifications.create("lookAway", notificationLookAway);
-  // } else {
-  //   chrome.notifications.clear("lookAway");
-  //   chrome.notifications.create("lookBack", notificationLookBack);
-  // }
 }
 
 chrome.runtime.onStartup.addListener(resetTimerToDefaults);

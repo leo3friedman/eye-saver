@@ -1,6 +1,6 @@
 {
   "name": "Eye Saver",
-  "version": "0.2",
+  "version": "0.3",
   "permissions": ["storage","alarms","notifications"],
   "background": {
     "scripts": ["timer.js","background.js"],
