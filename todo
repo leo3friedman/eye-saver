@@ -1,8 +1,7 @@
 IN PROGRESS
-
+Show overlay even when you open a new tab during rest time
 
 TO DO (Product)
-
 *beta release*
 include cancel button on rest timer
 hide close x button when not in settings
@@ -13,6 +12,7 @@ Bug: when you are in settings and the alarm goes off the close button goes away
 
 
 DONE
+On first run of the extension, cant find rest time amount
 Hide settings button when rest time
 *alpha release*
 screen timer shows before overlay goes away;

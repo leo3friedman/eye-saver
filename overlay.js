@@ -1,22 +1,24 @@
 let settings = {};
+const defaultSettings = {
+  isCounting: true,
+  isSoundOnRest: true,
+  isSoundOnRestEnd: true,
+  isOverlayOnRest: true,
+  isDesktopNotificationOnRest: true,
+  visualNotificationType: "popup",
+  restTimeInSeconds: 20,
+  screenTimeInSeconds: 1200,
+  startTimeInSeconds: 0,
+  pauseStartTimeInSeconds: 0,
+  pauseEndTimeInSeconds: 0,
+  hasBeenPausedOrPlayed: false,
+  isTimeToRestTheNextNotification: true,
+};
 
-chrome.storage.sync.get(
-  [
-    "showOverlay",
-    "isCounting",
-    "restTimeInSeconds",
-    "screenTimeInSeconds",
-    "startTimeInSeconds",
-    "pauseStartTimeInSeconds",
-    "pauseEndTimeInSeconds",
-    "hasBeenPausedOrPlayed",
-    "isTimeToRestTheNextNotification",
-  ],
-  (result) => {
-    settings = result;
-    render(result.showOverlay);
-  }
-);
+chrome.storage.sync.get(defaultSettings, (result) => {
+  settings = result;
+  render(result.showOverlay);
+});
 
 function render(showOverlay) {
   if (showOverlay) {

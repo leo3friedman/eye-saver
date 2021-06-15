@@ -208,6 +208,7 @@ function renderLoop() {
 window.requestAnimationFrame(renderLoop);
 
 window.onload = function () {
+  console.log(settings.restTimeInSeconds);
   let clockContainer = document.getElementById("dropzone");
   eyeSaver.createClock(clockContainer, {
     onStartStopClicked: () => {
