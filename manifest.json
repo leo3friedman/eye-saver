@@ -13,6 +13,7 @@
       "js": ["overlay.js","templates/clock.js","timer.js"]
     }
   ],
+
   "browser_action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -22,12 +23,13 @@
       "128": "IMGs/128icon.png"
     }
   },
-  "web_accessible_resources": ["templates/*"],
+  "web_accessible_resources": ["templates/*","sounds/look_away_sound.wav"],
   "icons": {
     "16": "IMGs/16icon.png",
     "32": "IMGs/32icon.png",
     "48": "IMGs/64icon.png",
     "128": "IMGs/128icon.png"
   },
+
   "manifest_version": 2
 }

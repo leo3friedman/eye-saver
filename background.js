@@ -87,9 +87,17 @@ function createAndClearDesktopNotifications(lookAway) {
       if (lookAway) {
         chrome.notifications.clear("lookBack");
         chrome.notifications.create("lookAway", notificationLookAway);
+        let lookAwayAudio = new Audio(
+          chrome.runtime.getURL("sounds/look_away_sound.wav")
+        );
+        lookAwayAudio.play();
       } else {
         chrome.notifications.clear("lookAway");
         chrome.notifications.create("lookBack", notificationLookBack);
+        let lookBackAudio = new Audio(
+          chrome.runtime.getURL("sounds/look_back_sound.wav")
+        );
+        lookBackAudio.play();
       }
     }
   });
