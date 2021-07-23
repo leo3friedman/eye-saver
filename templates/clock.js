@@ -14,7 +14,7 @@ function getStrokeDashOffset(timerLength, timeRemainingWithDecimal) {
   return 628 * ((timerLength - timeRemainingWithDecimal) / timerLength);
 }
 
-eyeSaver.createClock = (clockContainer, { onStartStopClicked }) => {
+eyeSaver.createClock = (clockContainer, { onStartStopClicked, onSkip }) => {
   const clockTemplateUrl = chrome.runtime.getURL("templates/clock.html");
   console.log(clockTemplateUrl);
   const xhr = new XMLHttpRequest();
@@ -23,7 +23,9 @@ eyeSaver.createClock = (clockContainer, { onStartStopClicked }) => {
     const startStopButton = clockContainer.querySelector(
       ".clock__start-stop-timer"
     );
+    const skipRestTimer = document.getElementById("skip-rest-timer-button");
     startStopButton.onclick = onStartStopClicked;
+    skipRestTimer.onclick = onSkip;
   };
   xhr.open("GET", clockTemplateUrl);
   xhr.send();
@@ -36,6 +38,7 @@ eyeSaver.renderClock = (clockContainer, options) => {
   const startStopButton = clockContainer.querySelector(
     ".clock__start-stop-timer"
   );
+  const skipButton = clockContainer.querySelector(".clock__skip");
   const timeRemaining = getTimeRemaining(timeNowInSeconds(), options);
   if (!timer) {
     return;
@@ -50,7 +53,7 @@ eyeSaver.renderClock = (clockContainer, options) => {
     (options.isCounting && timeRemaining >= 0) || !options.isCounting
       ? "block"
       : "none";
-
+  skipButton.style.display = timeRemaining >= 0 ? "none" : "block";
   //Timer
   //console.log(timeRemaining);
   if (timeRemaining >= 0) {

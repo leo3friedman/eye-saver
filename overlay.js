@@ -75,6 +75,10 @@ window.onload = () => {
   overlay.id = "es-overlay";
 
   document.body.appendChild(overlay);
-  eyeSaver.createClock(overlay, {});
+  eyeSaver.createClock(overlay, {
+    onSkip: () => {
+      chrome.runtime.sendMessage({ action: "reset" });
+    },
+  });
   window.requestAnimationFrame(renderLoop);
 };

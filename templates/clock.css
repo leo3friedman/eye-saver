@@ -27,6 +27,7 @@
     height: 208px;
     margin: 12px;
     align-content: center;
+    text-align: center;
 }
 
 .clock__bottom-svg-ring {
@@ -61,5 +62,22 @@
     top: 0px;
     left: 0px;
     z-index: 2;
+}
+
+.clock__skip{
+    margin-top: 12px;
+    padding-bottom: 12px;
+    color: white;
+    background-color: transparent;
+    border: none;
+    font-size:18px;
+    font-family: "Roboto", sans-serif;
+    display:none;
+    margin-left: auto;
+    margin-right: auto;
+}
+.clock__skip:hover{
+    color: #f1a33b;
+    cursor: pointer;
 }
 

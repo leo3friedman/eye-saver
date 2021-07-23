@@ -1,4 +1,3 @@
-const closeRestTimer = document.getElementById("close-rest-timer-button");
 const lookAwayText = document.getElementById("look-away-text");
 const animation = document.querySelector(".toggle-animation");
 const notificationsSettingsButton = document.getElementById(
@@ -43,13 +42,11 @@ const defaultSettings = {
   pauseEndTimeInSeconds: 0,
   hasBeenPausedOrPlayed: false,
   isTimeToRestTheNextNotification: true,
+  isTestMode: false,
 };
 
 let settings = defaultSettings;
 
-closeRestTimer.onclick = () => {
-  chrome.runtime.sendMessage({ action: "reset" });
-};
 // startStopButton.onclick = () => {
 //   settings.isCounting = !settings.isCounting;
 //   toggleState("isCounting");
@@ -63,9 +60,10 @@ audioOnRestStartNotificationCheckbox.onclick = () =>
   toggleState("isSoundOnRest");
 audioOnRestEndNotificationCheckbox.onclick = () =>
   toggleState("isSoundOnRestEnd");
+
 twentyMinRadio.onclick = () => setScreenTime(1200);
 // fortyMinRadio.onclick = () => setScreenTime(2400);
-fortyMinRadio.onclick = () => setScreenTime(8);
+fortyMinRadio.onclick = () => setScreenTime(2400);
 sixtyMinRadio.onclick = () => setScreenTime(3600);
 twentySecRadio.onclick = () => setRestTime(20);
 fortySecRadio.onclick = () => setRestTime(40);
@@ -160,13 +158,11 @@ function showScreenTimeTimer(storageLocation) {
     notificationsSettingsButton.style.display = "block";
     timerSettingsButton.style.display = "block";
     lookAwayText.style.display = "none";
-    closeRestTimer.style.display = "none";
   } else {
     //startStopButton.style.display = "none";
     notificationsSettingsButton.style.display = "none";
     timerSettingsButton.style.display = "none";
     lookAwayText.style.display = "block";
-    closeRestTimer.style.display = "block";
   }
 }
 // function render(storageLocation) {
@@ -217,6 +213,9 @@ window.onload = function () {
       toggleState("isCounting");
       updatePauseStartTimeInSeconds();
     },
+    onSkip: () => {
+      chrome.runtime.sendMessage({ action: "reset" });
+    },
   });
   chrome.storage.sync.get(defaultSettings, function (result) {
     settings = result;
@@ -231,6 +230,9 @@ window.onload = function () {
     desktopNotificationCheckbox.checked = result.isDesktopNotificationOnRest;
     audioOnRestStartNotificationCheckbox.checked = result.isSoundOnRest;
     audioOnRestEndNotificationCheckbox.checked = result.isSoundOnRestEnd;
+    if (result.isTestMode) {
+      twentyMinRadio.onclick = () => setScreenTime(8);
+    }
   });
 };
 chrome.storage.onChanged.addListener(function (changes, areaName) {

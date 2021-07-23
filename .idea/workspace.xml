@@ -24,7 +24,14 @@
   <component name="ChangeListManager">
     <list default="true" id="fdb5de83-9ad0-4024-af57-064983bdc454" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/overlay.css" beforeDir="false" afterPath="$PROJECT_DIR$/overlay.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/overlay.js" beforeDir="false" afterPath="$PROJECT_DIR$/overlay.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/popup.html" beforeDir="false" afterPath="$PROJECT_DIR$/popup.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/clock.css" beforeDir="false" afterPath="$PROJECT_DIR$/templates/clock.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/clock.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/clock.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/clock.js" beforeDir="false" afterPath="$PROJECT_DIR$/templates/clock.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/todo" beforeDir="false" afterPath="$PROJECT_DIR$/todo" afterDir="false" />
     </list>
     <list id="8015561d-b63d-4062-8bee-2670543cacc1" name="Changes by gregfriedman" comment="" />
@@ -36,8 +43,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="JavaScript File" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -62,7 +69,7 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../YouFocus" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -175,7 +182,9 @@
       <workItem from="1618168994565" duration="17000" />
       <workItem from="1622240671646" duration="8514000" />
       <workItem from="1622743081151" duration="3971000" />
-      <workItem from="1623551667917" duration="7624000" />
+      <workItem from="1623551667917" duration="8127000" />
+      <workItem from="1625516126537" duration="3092000" />
+      <workItem from="1625596723802" duration="7408000" />
     </task>
     <servers />
   </component>

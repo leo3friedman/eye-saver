@@ -1,10 +1,11 @@
 IN PROGRESS
+include skip button on rest timer
 
 TO DO (Product)
+fix 40minute button that is used for testing
 *beta release*
-include cancel button on rest timer
-bug: close x button goes away sometimes when you click 40sec rest time
-Bug: when you are in settings and the alarm goes off the close button goes away
+add fully customizable clock times
+add multiple sounds
 Show overlay even when you open a new tab during rest time
 *public release*
 
@@ -43,6 +44,7 @@ when you open browser it is not resetting timer
 SET ASIDE
 get progress bar working on desktop notification *Kinda did it but looks bad
 add optional permissions
-add sound for audio notification
 make a page explaining the "learn more"
 make it so user preferences determine what kind of audio notification is received
+bug: close x button goes away sometimes when you click 40sec rest time
+Bug: when you are in settings and the alarm goes off the close button goes away
