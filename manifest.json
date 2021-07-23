@@ -1,7 +1,7 @@
 {
-  "name": "Eye Saver",
-  "version": "0.3",
-  "description":"Reminds you to look away from the screen at customizable intervals",
+  "name": "Eye Saver - Protect your vision, browse healthier",
+  "version": "0.4",
+  "description":"Eye Saver helps remind you to look away from the screen to prevent eye strain.",
   "permissions": ["storage","alarms","notifications"],
   "background": {
     "scripts": ["timer.js","background.js"],
