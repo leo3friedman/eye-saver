@@ -1,11 +1,13 @@
 {
   "name": "Eye Saver",
   "version": "0.3",
+  "description":"Reminds you to look away from the screen at customizable intervals",
   "permissions": ["storage","alarms","notifications"],
   "background": {
     "scripts": ["timer.js","background.js"],
     "persistent": false
   },
+
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
