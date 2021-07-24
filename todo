@@ -1,8 +1,6 @@
 IN PROGRESS
-include skip button on rest timer
 
 TO DO (Product)
-fix 40minute button that is used for testing
 *beta release*
 add fully customizable clock times
 add multiple sounds
@@ -10,6 +8,8 @@ Show overlay even when you open a new tab during rest time
 *public release*
 
 DONE
+include skip button on rest timer
+fix 40minute button that is used for testing
 check if should play sound on notification
 check if should send desktop notification
 Play sound on notification

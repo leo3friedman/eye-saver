@@ -1,4 +1,4 @@
-const lookAwayText = document.getElementById("look-away-text");
+// const lookAwayText = document.getElementById("look-away-text");
 const animation = document.querySelector(".toggle-animation");
 const notificationsSettingsButton = document.getElementById(
   "notifications-button"
@@ -157,12 +157,12 @@ function showScreenTimeTimer(storageLocation) {
     //startStopButton.style.display = "block";
     notificationsSettingsButton.style.display = "block";
     timerSettingsButton.style.display = "block";
-    lookAwayText.style.display = "none";
+    // lookAwayText.style.display = "none";
   } else {
     //startStopButton.style.display = "none";
     notificationsSettingsButton.style.display = "none";
     timerSettingsButton.style.display = "none";
-    lookAwayText.style.display = "block";
+    // lookAwayText.style.display = "block";
   }
 }
 // function render(storageLocation) {

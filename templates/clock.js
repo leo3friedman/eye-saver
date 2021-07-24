@@ -31,6 +31,9 @@ eyeSaver.createClock = (clockContainer, { onStartStopClicked, onSkip }) => {
   xhr.send();
 };
 eyeSaver.renderClock = (clockContainer, options) => {
+  const topRing = clockContainer.querySelector(".clock__top-svg-ring");
+  const bottomRing = clockContainer.querySelector(".clock__bottom-svg-ring");
+  const lookAwayText = document.getElementById("look-away-text");
   const timer = clockContainer.querySelector(".clock__timer");
   const animatedRing = clockContainer.querySelector(".clock__animated-ring");
   const playSvg = clockContainer.querySelector(".clock__play-svg");
@@ -54,6 +57,9 @@ eyeSaver.renderClock = (clockContainer, options) => {
       ? "block"
       : "none";
   skipButton.style.display = timeRemaining >= 0 ? "none" : "block";
+  lookAwayText.style.display = timeRemaining >= 0 ? "none" : "block";
+  topRing.style.top = timeRemaining >= 0 ? "0" : "34";
+  bottomRing.style.top = timeRemaining >= 0 ? "0" : "34";
   //Timer
   //console.log(timeRemaining);
   if (timeRemaining >= 0) {
