@@ -5,7 +5,6 @@ const defaultSettings = {
   isSoundOnRestEnd: true,
   isOverlayOnRest: true,
   isDesktopNotificationOnRest: true,
-  visualNotificationType: "popup",
   restTimeInSeconds: 20,
   screenTimeInSeconds: 1200,
   startTimeInSeconds: 0,
@@ -61,16 +60,6 @@ function renderLoop() {
 }
 
 window.onload = () => {
-  // background-color: rgba(0,0,0,.75);
-  // position: fixed;
-  // top: 0;
-  // z-index: 999;
-  // bottom: 0;
-  // left: 0;
-  // right: 0;
-  // display: flex;
-  // justify-content: center;
-  // align-items: center;
   const overlay = document.createElement("div");
   overlay.id = "es-overlay";
 

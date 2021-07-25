@@ -1,7 +1,6 @@
 
 #es-overlay{
     transition: all .5s;
-    /*opacity: 0;*/
     display: none;
     background-color: rgba(0,0,0,.85);
     position: fixed;
@@ -10,10 +9,8 @@
     bottom: 0;
     left: 0;
     right: 0;
-    /*display: flex;*/
     justify-content: center;
     align-items: center;
-    /*pointer-events: none;*/
 }
 
 body.res-show-overlay #es-overlay{

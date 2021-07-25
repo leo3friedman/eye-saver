@@ -1,4 +1,3 @@
-// const lookAwayText = document.getElementById("look-away-text");
 const animation = document.querySelector(".toggle-animation");
 const notificationsSettingsButton = document.getElementById(
   "notifications-button"
@@ -34,7 +33,6 @@ const defaultSettings = {
   isSoundOnRestEnd: true,
   isOverlayOnRest: true,
   isDesktopNotificationOnRest: true,
-  visualNotificationType: "popup",
   restTimeInSeconds: 20,
   screenTimeInSeconds: 1200,
   startTimeInSeconds: 0,
@@ -44,15 +42,8 @@ const defaultSettings = {
   isTimeToRestTheNextNotification: true,
   isTestMode: false,
 };
-
 let settings = defaultSettings;
 
-// startStopButton.onclick = () => {
-//   settings.isCounting = !settings.isCounting;
-//   toggleState("isCounting");
-//   renderPlayButton(settings.isCounting);
-//   updatePauseStartTimeInSeconds();
-// };
 overlayNotificationCheckbox.onclick = () => toggleState("isOverlayOnRest");
 desktopNotificationCheckbox.onclick = () =>
   toggleState("isDesktopNotificationOnRest");
@@ -60,9 +51,7 @@ audioOnRestStartNotificationCheckbox.onclick = () =>
   toggleState("isSoundOnRest");
 audioOnRestEndNotificationCheckbox.onclick = () =>
   toggleState("isSoundOnRestEnd");
-
 twentyMinRadio.onclick = () => setScreenTime(1200);
-// fortyMinRadio.onclick = () => setScreenTime(2400);
 fortyMinRadio.onclick = () => setScreenTime(2400);
 sixtyMinRadio.onclick = () => setScreenTime(3600);
 twentySecRadio.onclick = () => setRestTime(20);
@@ -88,11 +77,6 @@ function setRestTime(timeInSeconds) {
 function setScreenTime(timeInSeconds) {
   chrome.storage.sync.set({
     screenTimeInSeconds: timeInSeconds,
-  });
-}
-function setVisualNotificationType(notificationType) {
-  chrome.storage.sync.set({
-    visualNotificationType: notificationType,
   });
 }
 function updatePauseStartTimeInSeconds() {
@@ -130,15 +114,6 @@ function updatePauseStartTimeInSeconds() {
     chrome.storage.sync.set({ hasBeenPausedOrPlayed: true });
   }
 }
-// function renderPlayButton(val) {
-//   if (val) {
-//     playSvg.style.display = "none";
-//     pauseSvg.style.display = "block";
-//   } else if (!val) {
-//     playSvg.style.display = "block";
-//     pauseSvg.style.display = "none";
-//   }
-// }
 function showNotificationSettings() {
   document.body.classList.add("show-notification-settings");
 }
@@ -165,36 +140,6 @@ function showScreenTimeTimer(storageLocation) {
     // lookAwayText.style.display = "block";
   }
 }
-// function render(storageLocation) {
-//   renderPlayButton(storageLocation.isCounting);
-//   const timeRemaining = getTimeRemaining(timeNowInSeconds(), storageLocation);
-//   //Timer
-//   if (timeRemaining >= 0) {
-//     timer.innerText = secondsToDigitalTime(timeRemaining);
-//   } else if (timeRemaining < 0) {
-//     timer.innerText = `${Math.floor(Math.abs(timeRemaining))}`;
-//   }
-//   //Animated Ring
-//   if (
-//     (storageLocation.isCounting && timeRemaining >= 0) ||
-//     !storageLocation.isCounting
-//   ) {
-//     const screenTimeStrokeDashOffset = getStrokeDashOffset(
-//       storageLocation.screenTimeInSeconds,
-//       timeRemaining
-//     );
-//     showScreenTimeTimer(true);
-//     animatedRing.style.strokeDashoffset = `${screenTimeStrokeDashOffset}`;
-//   } else if (storageLocation.isCounting && timeRemaining < 0) {
-//     const restTimeStrokeDashOffset = getStrokeDashOffset(
-//       storageLocation.restTimeInSeconds,
-//       timeRemaining
-//     );
-//     showScreenTimeTimer(false);
-//     animatedRing.style.strokeDashoffset = `${restTimeStrokeDashOffset}`;
-//   }
-// }
-
 function renderLoop() {
   eyeSaver.renderClock(document.getElementById("dropzone"), settings);
   showScreenTimeTimer(settings);
