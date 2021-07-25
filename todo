@@ -1,13 +1,14 @@
 IN PROGRESS
 
 TO DO (Product)
-*beta release*
 add fully customizable clock times
-add multiple sounds
 Show overlay even when you open a new tab during rest time
 *public release*
 
+add multiple sounds
+
 DONE
+Fix x disappearing when rest timer happens
 include skip button on rest timer
 fix 40minute button that is used for testing
 check if should play sound on notification
