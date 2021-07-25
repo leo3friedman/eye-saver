@@ -4,10 +4,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
           rel="stylesheet">
-    <title>Eye Popup</title>
+    <link href="/templates/clock.css" rel="stylesheet">
+    <title>Eye Saver Popup</title>
 </head>
 <style>
-
     body {
         margin: 8px;
         height: 244px;
@@ -21,26 +21,6 @@
         cursor: pointer;
     }
 
-
-    #timer {
-        display: inline-block;
-        text-align: center;
-        width: 100%;
-        line-height: 208px;
-        margin: 0;
-        font-weight: 100;
-        font-size: 64px;
-        color: white;
-    }
-
-    #top-svg-ring {
-        position: absolute;
-        transform: rotate(270deg);
-        top: 0px;
-        left: 0px;
-        z-index: 2;
-    }
-
     .toggle-animation {
         animation: wipe 1200s linear;
         rotate: 90;
@@ -48,12 +28,6 @@
 
     .pause-animation {
         animation-play-state: paused;
-    }
-
-    #bottom-svg-ring {
-        position: absolute;
-        top: 0px;
-        left: 0px;
     }
 
     @keyframes wipe {
@@ -65,13 +39,6 @@
         }
     }
 
-    #clock {
-        position: relative;
-        width: 208px;
-        height: 208px;
-        margin: 12px;
-        align-content: center;
-    }
 
     body.show-notification-settings #clock-container {
         opacity: 0;
@@ -79,29 +46,6 @@
 
     body.show-adjust-timer-settings #clock-container {
         opacity: 0;
-    }
-
-    #start-stop-timer {
-        position: absolute;
-        bottom: 5%;
-        left: 50%;
-        transform: translateX(-50%);
-        margin: 0;
-        background-color: transparent;
-        outline: none;
-        border: none;
-        z-index: 50;
-        width: 64px;
-        height: 64px;
-
-    }
-
-    #pause-svg {
-        display: block;
-    }
-
-    #play-svg {
-        display: none;
     }
 
     #notifications-settings {
@@ -117,7 +61,7 @@
 
     body.show-notification-settings #notifications-settings {
         opacity: 1;
-        height: 558px;
+        height: 464px;
         transform: translateY(-290px);
         transition: all 1s;
         margin: 0;
@@ -152,7 +96,7 @@
 
 
     .settings-form {
-        color: white;
+        color: #fdfdfd;
     }
 
     .radio-and-text {
@@ -178,27 +122,15 @@
         outline: none;
         font-family: "Roboto", sans-serif;
         font-size: 18px;
-        color: white;
+        color: #fdfdfd;
         text-align: center;
         width: 100%;
         padding-bottom: 12px;
     }
-#look-away-text{
-    background-color: transparent;
-    border: none;
-    outline: none;
-    font-family: "Roboto", sans-serif;
-    font-size: 18px;
-    color: white;
-    text-align: center;
-    width: 100%;
-    padding-bottom: 12px;
-    display: none;
-}
-
-    .settings-button:hover {
-        color: #ddd;
+    .settings-button:hover{
+        color: #f1a33b;
     }
+
 
     #clock-container {
         width: 232px;
@@ -233,45 +165,10 @@
 <body>
 
 <div id="clock-container">
-    <div id="clock">
-        <svg id="top-svg-ring" width="208px" height="208px">
-            <circle
-                    id="animated-ring"
-                    class=""
-                    cx="104"
-                    cy="104"
-                    r="100"
-                    stroke="#f1a33b"
-                    stroke-linecap="round"
-                    stroke-width="4px"
-                    fill="none"
-                    stroke-dasharray="628"
-                    stroke-dashoffset="0"
-            />
-        </svg
-        >
-        <svg id="bottom-svg-ring" width="208px" height="208px">
-            <circle
-                    id="grey-circle"
-                    cx="104"
-                    cy="104"
-                    r="100"
-                    stroke="#28282a"
-                    stroke-width="4px"
-                    fill="none"
-                    stroke-dasharray="628"
-                    stroke-dashoffset="0"
-            />
-        </svg>
-        <span id="timer">?</span>
-        <button id="start-stop-timer">
-            <img id="play-svg" src="IMGs/play.svg"/>
-            <img id="pause-svg" src="IMGs/pause.svg"/>
-        </button>
-    </div>
+    <div id="dropzone"></div>
     <button class="settings-button" id="notifications-button">NOTIFICATIONS</button>
     <button class="settings-button" id="timer-button">ADJUST TIMER</button>
-    <div id="look-away-text">REST YOUR EYES</div>
+
 </div>
 <div id="notifications-settings">
     <button class="close-button" id="close-notifications-settings-button"><img src="IMGs/close.svg"/></button>
@@ -279,28 +176,21 @@
         <div class="settings-options">Visual Notifications</div>
         <form class="settings-form">
             <div class="radio-and-text">
-                <input type="radio" name="visual-notification" id="overlay-notification" value="overlay-notification">
+                <input type="checkbox" name="visual-notification" id="overlay-notification" value="overlay-notification">
                 <label for="overlay-notification">Overlay Notification</label>
 
-                <div class="description">Rest timer is displayed over browser window<br>Best Experience: Learn More
+                <div class="description">Overlay the rest timer on browser window when it is time to look away from or back at the screen
                 </div>
             </div>
             <div class="radio-and-text">
-                <input type="radio" name="visual-notification" id="popup-notification" value="popup-notification">
-                <label for="popup-notification">Popup Notification</label>
-                <div class="description">Rest timer is displayed as a popup<br>Privacy Focused: Learn More</div>
-            </div>
-
-            <div class="radio-and-text">
-                <input type="radio" name="visual-notification" id="desktop-notification" value="other">
+                <input type="checkbox" name="visual-notification" id="desktop-notification" value="other">
                 <label for="desktop-notification">Desktop Notification</label>
 
-                <div class="description">When screen timer ends a desktop notification is received<br>Privacy Focused:
-                    Learn More
+                <div class="description">Receive a desktop notification when it is time to look away from or back at the screen
                 </div>
             </div>
         </form>
-        <div class="settings-options">Audio Notification</div>
+        <div class="settings-options">Audio Notifications</div>
         <form class="settings-form">
             <div class="radio-and-text">
                 <input type="checkbox" name="audio-notification" id="sound-on-look-away" value="sound-on-look-away">
@@ -348,6 +238,8 @@
 </div>
 
 </div>
+<script src="timer.js"></script>
 <script src="main.js"></script>
+<script src="templates/clock.js"></script>
 </body>
 </html>
