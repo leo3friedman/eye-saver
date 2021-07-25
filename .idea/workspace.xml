@@ -24,7 +24,6 @@
   <component name="ChangeListManager">
     <list default="true" id="fdb5de83-9ad0-4024-af57-064983bdc454" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/manifest.json" afterDir="false" />
     </list>
     <list id="8015561d-b63d-4062-8bee-2670543cacc1" name="Changes by gregfriedman" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -61,7 +60,7 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../YouFocus" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Distraction Free SparkNotes" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -177,6 +176,7 @@
       <workItem from="1623551667917" duration="8127000" />
       <workItem from="1625516126537" duration="3092000" />
       <workItem from="1625596723802" duration="13026000" />
+      <workItem from="1627230332812" duration="340000" />
     </task>
     <servers />
   </component>
