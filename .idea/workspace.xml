@@ -23,7 +23,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fdb5de83-9ad0-4024-af57-064983bdc454" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/overlay.css" beforeDir="false" afterPath="$PROJECT_DIR$/overlay.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/clock.css" beforeDir="false" afterPath="$PROJECT_DIR$/templates/clock.css" afterDir="false" />
     </list>
     <list id="8015561d-b63d-4062-8bee-2670543cacc1" name="Changes by gregfriedman" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -179,7 +181,7 @@
       <workItem from="1627230332812" duration="1559000" />
       <workItem from="1627238295711" duration="3297000" />
       <workItem from="1627767582583" duration="634000" />
-      <workItem from="1627925170461" duration="11817000" />
+      <workItem from="1627925170461" duration="15323000" />
     </task>
     <servers />
   </component>
