@@ -62,7 +62,6 @@ function renderLoop() {
 window.onload = () => {
   const overlay = document.createElement("div");
   overlay.id = "es-overlay";
-
   document.body.appendChild(overlay);
   eyeSaver.createClock(overlay, {
     onSkip: () => {

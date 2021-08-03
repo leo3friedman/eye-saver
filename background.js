@@ -47,27 +47,44 @@ function resetTimerToDefaults() {
     }
   });
 }
+// function createNewAlarm(lookAway) {
+//   chrome.storage.sync.get(defaultSettings, function (result) {
+//     const timeRemaining = getTimeRemaining(timeNowInSeconds(), result);
+//     chrome.alarms.create("alarm", {
+//       when:
+//         Date.now() +
+//         (lookAway
+//           ? result.restTimeInSeconds - Math.abs(timeRemaining)
+//           : timeRemaining) *
+//           1000,
+//     });
+//     console.log(
+//       "notifyToLookAway: " +
+//         lookAway +
+//         " New alarm made for " +
+//         (lookAway
+//           ? result.restTimeInSeconds - Math.abs(timeRemaining)
+//           : timeRemaining) *
+//           1000 +
+//         " milliseconds from now"
+//     );
+//   });
+// }
+
 function createNewAlarm(lookAway) {
   chrome.storage.sync.get(defaultSettings, function (result) {
-    const timeRemaining = getTimeRemaining(timeNowInSeconds(), result);
     chrome.alarms.create("alarm", {
       when:
         Date.now() +
-        (lookAway
-          ? result.restTimeInSeconds - Math.abs(timeRemaining)
-          : timeRemaining) *
+        (lookAway ? result.restTimeInSeconds : result.screenTimeInSeconds) *
           1000,
     });
-    console.log(
-      "notifyToLookAway: " +
-        lookAway +
-        " New alarm made for " +
-        (lookAway
-          ? result.restTimeInSeconds - Math.abs(timeRemaining)
-          : timeRemaining) *
-          1000 +
-        " milliseconds from now"
-    );
+    //synchronizing timer in popup and overlay to alarm
+    chrome.storage.sync.set({
+      startTimeInSeconds: lookAway
+        ? Date.now() / 1000 - result.screenTimeInSeconds
+        : Date.now() / 1000,
+    });
   });
 }
 function sendMessageToOverlayJs(lookAway) {
@@ -144,3 +161,5 @@ chrome.alarms.onAlarm.addListener(function () {
   createNewAlarm(notifyToLookAway);
   notifyToLookAway = !notifyToLookAway;
 });
+
+//to keep the background page awake
