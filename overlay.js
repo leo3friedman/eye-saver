@@ -12,6 +12,7 @@ const defaultSettings = {
   pauseEndTimeInSeconds: 0,
   hasBeenPausedOrPlayed: false,
   isTimeToRestTheNextNotification: true,
+  showOverlay: false,
 };
 
 chrome.storage.sync.get(defaultSettings, (result) => {
@@ -60,6 +61,13 @@ function renderLoop() {
 }
 
 window.onload = () => {
+  //
+  chrome.storage.sync.get(defaultSettings, (result) => {
+    console.log("result : " + result);
+    console.log("result.showOverlay : " + result.showOverlay);
+    render(result.showOverlay);
+  });
+  //
   const overlay = document.createElement("div");
   overlay.id = "es-overlay";
   document.body.appendChild(overlay);

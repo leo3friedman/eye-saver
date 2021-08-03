@@ -24,7 +24,6 @@
   <component name="ChangeListManager">
     <list default="true" id="fdb5de83-9ad0-4024-af57-064983bdc454" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/background.js" beforeDir="false" afterPath="$PROJECT_DIR$/background.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/overlay.js" beforeDir="false" afterPath="$PROJECT_DIR$/overlay.js" afterDir="false" />
     </list>
     <list id="8015561d-b63d-4062-8bee-2670543cacc1" name="Changes by gregfriedman" comment="" />
@@ -181,7 +180,7 @@
       <workItem from="1627230332812" duration="1559000" />
       <workItem from="1627238295711" duration="3297000" />
       <workItem from="1627767582583" duration="634000" />
-      <workItem from="1627925170461" duration="10715000" />
+      <workItem from="1627925170461" duration="11509000" />
     </task>
     <servers />
   </component>
@@ -204,5 +203,17 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/Eye-Saver" />
     </ignored-roots>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/overlay.js</url>
+          <line>55</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
