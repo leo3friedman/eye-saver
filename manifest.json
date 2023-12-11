@@ -11,7 +11,12 @@
     {
       "matches": ["<all_urls>"],
       "css": ["overlay.css", "templates/clock.css"],
-      "js": ["overlay.js", "templates/clock.js", "timer.js"]
+      "js": [
+        "overlay.js",
+        "templates/clock.js",
+        "timer.js",
+        "content_script.js"
+      ]
     }
   ],
   "action": {
