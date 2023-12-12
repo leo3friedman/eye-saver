@@ -1,16 +1,41 @@
-chrome.storage.onChanged.addListener((changes, area) => {
-  const newState = changes?.state?.newValue;
-  switch (newState) {
-    case 'DISABLED':
-      console.log('time to disable extension');
-      break;
-    case 'BREAK_FROM_SCREEN':
-      console.log('time to take a break from the screen');
-      break;
-    case 'RETURN_TO_SCREEN':
-      console.log('time to return to screen');
-      break;
-  }
-});
+function handleStateChange(oldValue, newValue) {
+  console.log('state changed')
+}
 
-window.onload = () => {};
+function handleTimerDurationChange(oldValue, newValue) {
+  console.log('timer duration changed')
+}
+
+function handleRestDurationChange(oldValue, newValue) {
+  console.log('rest duration changed')
+}
+
+/**
+ * Handles changes to storage. Storage can be modified by service_worker onAlarms or by the popup via user input.
+ *
+ * @param key
+ * @param oldValue
+ * @param newValue
+ *
+ */
+function handleChange(key, oldValue, newValue) {
+  switch (key) {
+    case 'state':
+      handleStateChange(oldValue, newValue)
+      break
+    case 'timerDuration':
+      handleTimerDurationChange(oldValue, newValue)
+      break
+    case 'restDuration':
+      handleRestDurationChange(oldValue, newValue)
+      break
+  }
+}
+
+chrome.storage.onChanged.addListener((changes, area) => {
+  for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
+    handleChange(key, oldValue, newValue)
+  }
+})
+
+window.onload = () => {}
