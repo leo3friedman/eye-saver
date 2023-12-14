@@ -26,7 +26,7 @@ export class Timer {
     xhr.onload = () => {
       container?.insertAdjacentHTML('afterbegin', xhr.response)
       this.initializeProps()
-      this.initializeRings()
+      this.initializeStyles()
     }
     xhr.open('GET', timerTemplateUrl)
     xhr.send()
@@ -38,6 +38,9 @@ export class Timer {
     const progressRing = document.querySelector('.progress-ring')
     const circle = document.querySelector('.progress-ring__circle')
     const background = document.querySelector('.progress-ring__background')
+    const hourDisplay = document.querySelector('.timer-duration__hours')
+    const minuteDisplay = document.querySelector('.timer-duration__minutes')
+    const secondDisplay = document.querySelector('.timer-duration__seconds')
 
     this.props = {
       height: timerDims.height,
@@ -48,10 +51,13 @@ export class Timer {
       progressRing: progressRing,
       circle: circle,
       background: background,
+      hourDisplay: hourDisplay,
+      minuteDisplay: minuteDisplay,
+      secondDisplay: secondDisplay,
     }
   }
 
-  initializeRings() {
+  initializeStyles() {
     const props = this.props
     // TODO: how could timer not be available yet?
     // TODO: throw exception/error?
@@ -59,6 +65,8 @@ export class Timer {
       console.log('invalid props')
       return
     }
+
+    this.setTimerText()
 
     props.progressRing.style.width = props.width
     props.progressRing.style.height = props.height
@@ -91,18 +99,25 @@ export class Timer {
     this.timePassed = 0
     this.timestamp = Date.now()
     this.setProgress(0)
+    this.setTimerText()
+    if (this.state != states.PAUSED) this.state = states.RUNNING
+    this.tick()
   }
 
   tick() {
-    if (this.state == states.PAUSED || this.state == states.DONE) return
+    if (this.state === states.PAUSED || this.state === states.DONE) {
+      return
+    }
+
     this.timePassed += Date.now() - this.timestamp
     this.timestamp = Date.now()
 
     const percentFinished = (this.timePassed / this.duration) * 100
-    this.setProgress(Math.max(percentFinished, 0))
+    this.setProgress(Math.min(percentFinished, 100))
+    this.setTimerText()
 
     if (this.duration - this.timePassed < 0) {
-      this.state == states.DONE
+      this.state = states.DONE
     }
 
     window.requestAnimationFrame(() => this.tick())
@@ -114,5 +129,18 @@ export class Timer {
 
     const offset = circumference - (adjPercent / 100) * circumference
     this.props.circle.style.strokeDashoffset = offset
+  }
+
+  setTimerText() {
+    const timeRemaining = Math.max(this.duration - this.timePassed, 0)
+    const date = new Date(0, 0, 0, 0, 0, 0, timeRemaining)
+
+    const seconds = ('0' + date.getSeconds()).slice(-2)
+    const minutes = ('0' + date.getMinutes()).slice(-2)
+    const hours = date.getHours()
+
+    this.props.secondDisplay.innerText = seconds
+    this.props.minuteDisplay.innerText = minutes
+    this.props.hourDisplay.innerText = hours
   }
 }
