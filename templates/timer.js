@@ -9,9 +9,11 @@ const defaults = {
   breakDuration: 5 * 1000,
 }
 
-window.onload = () => {
+const initializeRings = () => {
   const timer = document.querySelector('.timer')
-  const timerButton = document.querySelector('.timer-button')
+
+  // TODO: how could timer not be available yet?
+  if (!timer) return
 
   const timerDims = timer.getBoundingClientRect()
   properties = {
@@ -44,47 +46,50 @@ window.onload = () => {
   background.setAttribute('cy', properties.radius)
 
   circle.style.strokeDasharray = `${properties.circumference} ${properties.circumference}`
+}
 
-  timerButton.onclick = () => {
-    console.log('clicked')
-    if (!isTimerRunning()) {
-      console.log('STARTING TIMER')
-      startTimer()
-    }
+export const renderTimer = (container) => {
+  const timerTemplateUrl = chrome.runtime.getURL('templates/timer.html')
+  const xhr = new XMLHttpRequest()
+
+  xhr.onload = () => {
+    console.log(xhr.response)
+    console.log(container)
+    container?.insertAdjacentHTML('afterbegin', xhr.response)
+    initializeRings()
   }
+  xhr.open('GET', timerTemplateUrl)
+  xhr.send()
+}
+
+const startTimer = (length, countdown = true) => {
+  timePassed = 0
+  timestamp = Date.now()
+
+  const tick = () => {
+    timePassed += Date.now() - timestamp
+    timestamp = Date.now()
+
+    const percentFinished = (timePassed / defaults.timerDuration) * 100
+    const progress = countdown ? 100 - percentFinished : percentFinished
+    setProgress(Math.max(progress, 0))
+    if (defaults.timerDuration - timePassed < 0) {
+      timePassed = -1
+      timestamp = -1
+      return
+    }
+
+    window.requestAnimationFrame(tick)
+  }
+  tick()
 }
 
 const setProgress = (percent) => {
-  console.log('percent:', percent)
   const offset =
     properties.circumference - (percent / 100) * properties.circumference
-  console.log(offset)
   elements.circle.style.strokeDashoffset = offset
 }
 
 const isTimerRunning = () => {
   return timestamp >= 0 && timePassed >= 0
-}
-
-const startTimer = () => {
-  timePassed = 0
-  timestamp = Date.now()
-  tick()
-}
-
-const tick = () => {
-  timePassed += Date.now() - timestamp
-  timestamp = Date.now()
-
-  if (defaults.length - timePassed < 0) {
-    console.log('ENDING')
-    return
-  }
-
-  const progress = Math.max(
-    100 - (timePassed / defaults.timerDuration) * 100,
-    0
-  )
-  setProgress(progress)
-  window.requestAnimationFrame(tick)
 }
