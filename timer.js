@@ -1,14 +1,20 @@
 let progress = 0
-const length = 10 * 1000
+let properties = {}
+let elements = {}
+let timePassed = -1
+let timestamp = -1
+
+const defaults = {
+  timerDuration: 10 * 1000,
+  breakDuration: 5 * 1000,
+}
 
 window.onload = () => {
-  window.requestAnimationFrame(() => console.log('hello'))
-
   const timer = document.querySelector('.timer')
-  const timerDims = timer.getBoundingClientRect()
-  console.log(timerDims)
+  const timerButton = document.querySelector('.timer-button')
 
-  const properties = {
+  const timerDims = timer.getBoundingClientRect()
+  properties = {
     height: timerDims.height,
     width: timerDims.width,
     radius: timerDims.width / 2,
@@ -18,7 +24,9 @@ window.onload = () => {
 
   const progressRings = document.querySelectorAll('.progress-ring')
   const circle = document.querySelector('.progress-ring__circle')
+  elements.circle = circle
   const background = document.querySelector('.progress-ring__background')
+  elements.background = background
 
   progressRings.forEach((ring) => {
     ring.style.height = properties.height
@@ -37,21 +45,46 @@ window.onload = () => {
 
   circle.style.strokeDasharray = `${properties.circumference} ${properties.circumference}`
 
-  const setProgress = (percent) => {
-    const offset =
-      properties.circumference - (percent / 100) * properties.circumference
-    circle.style.strokeDashoffset = offset
-  }
-
-  const start = Date.now()
-  const tick = () => {
-    const now = Date.now()
-    if (now < start + length) {
-      const progress = 100 - ((now - start) / length) * 100
-      setProgress(progress)
-      window.requestAnimationFrame(tick)
+  timerButton.onclick = () => {
+    console.log('clicked')
+    if (!isTimerRunning()) {
+      console.log('STARTING TIMER')
+      startTimer()
     }
   }
+}
 
+const setProgress = (percent) => {
+  console.log('percent:', percent)
+  const offset =
+    properties.circumference - (percent / 100) * properties.circumference
+  console.log(offset)
+  elements.circle.style.strokeDashoffset = offset
+}
+
+const isTimerRunning = () => {
+  return timestamp >= 0 && timePassed >= 0
+}
+
+const startTimer = () => {
+  timePassed = 0
+  timestamp = Date.now()
   tick()
+}
+
+const tick = () => {
+  timePassed += Date.now() - timestamp
+  timestamp = Date.now()
+
+  if (defaults.length - timePassed < 0) {
+    console.log('ENDING')
+    return
+  }
+
+  const progress = Math.max(
+    100 - (timePassed / defaults.timerDuration) * 100,
+    0
+  )
+  setProgress(progress)
+  window.requestAnimationFrame(tick)
 }
