@@ -1,13 +1,22 @@
-const defaults = {
-  timerDuration: 10 * 1000,
-  breakDuration: 5 * 1000,
+const states = {
+  RUNNING: 0,
+  PAUSED: 1,
+  DONE: 2,
 }
 
 export class Timer {
-  constructor() {
+  /**
+   *
+   * @param {Number} duration timer duration in milliseconds
+   * @param {boolean} countdown true if the timer should count from duration down to 0
+   */
+  constructor(duration, countdown) {
     this.props = {}
     this.timestamp = -1
     this.timePassed = -1
+    this.state = states.DONE
+    this.duration = duration
+    this.countdown = countdown
   }
 
   renderTimer(container) {
@@ -66,31 +75,44 @@ export class Timer {
     props.background.setAttribute('cy', props.radius)
   }
 
-  startTimer(length, countdown) {
-    this.timePassed = 0
+  start() {
+    if (this.state == states.RUNNING) return
+    if (this.state == states.DONE) this.timePassed = 0
     this.timestamp = Date.now()
-    this.tick(countdown)
+    this.state = states.RUNNING
+    this.tick()
   }
 
-  tick(countdown) {
+  pause() {
+    this.state = states.PAUSED
+  }
+
+  reset() {
+    this.timePassed = 0
+    this.timestamp = Date.now()
+    this.setProgress(0)
+  }
+
+  tick() {
+    if (this.state == states.PAUSED || this.state == states.DONE) return
     this.timePassed += Date.now() - this.timestamp
     this.timestamp = Date.now()
 
-    const percentFinished = (this.timePassed / defaults.timerDuration) * 100
-    const progress = countdown ? 100 - percentFinished : percentFinished
-    this.setProgress(Math.max(progress, 0))
-    if (defaults.timerDuration - this.timePassed < 0) {
-      this.timePassed = -1
-      this.timestamp = -1
-      return
+    const percentFinished = (this.timePassed / this.duration) * 100
+    this.setProgress(Math.max(percentFinished, 0))
+
+    if (this.duration - this.timePassed < 0) {
+      this.state == states.DONE
     }
 
-    window.requestAnimationFrame(() => this.tick(countdown))
+    window.requestAnimationFrame(() => this.tick())
   }
 
   setProgress(percent) {
-    const offset =
-      this.props.circumference - (percent / 100) * this.props.circumference
+    const adjPercent = this.countdown ? 100 - percent : percent
+    const circumference = this.props.circumference
+
+    const offset = circumference - (adjPercent / 100) * circumference
     this.props.circle.style.strokeDashoffset = offset
   }
 }
