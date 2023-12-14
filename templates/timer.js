@@ -9,14 +9,16 @@ export class Timer {
    *
    * @param {Number} duration timer duration in milliseconds
    * @param {boolean} countdown true if the timer should count from duration down to 0
+   * @param {() => void} callback runs callback when timer finishes
    */
-  constructor(duration, countdown) {
+  constructor(duration, countdown = true, callback = null) {
     this.props = {}
     this.timestamp = -1
     this.timePassed = -1
     this.state = states.DONE
     this.duration = duration
     this.countdown = countdown
+    this.callback = callback
   }
 
   renderTimer(container) {
@@ -104,6 +106,13 @@ export class Timer {
     this.tick()
   }
 
+  finish() {
+    this.state = states.DONE
+    if (this.callback) {
+      this.callback()
+    }
+  }
+
   tick() {
     if (this.state === states.PAUSED || this.state === states.DONE) {
       return
@@ -117,7 +126,7 @@ export class Timer {
     this.setTimerText()
 
     if (this.duration - this.timePassed < 0) {
-      this.state = states.DONE
+      this.finish()
     }
 
     window.requestAnimationFrame(() => this.tick())

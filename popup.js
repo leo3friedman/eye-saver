@@ -7,7 +7,9 @@ window.onload = () => {
   const load = async () => {
     const timerJsUrl = chrome.runtime.getURL('templates/timer.js')
     const content = await import(timerJsUrl)
-    const timer = new content.Timer(10000, true)
+    const timer = new content.Timer(10000, true, () => {
+      dropzone.remove()
+    })
     timer.renderTimer(dropzone)
     startButton.onclick = () => timer.start()
     pauseButton.onclick = () => timer.pause()
