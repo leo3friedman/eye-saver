@@ -4,15 +4,80 @@
     <title>Eye Saver Popup</title>
   </head>
   <style>
+    @font-face {
+      font-family: roboto-regular;
+      src: url(fonts/Roboto/Roboto-Regular.ttf);
+    }
+    @font-face {
+      font-family: roboto-light;
+      src: url(fonts/Roboto/Roboto-Light.ttf);
+    }
+
     :root {
       width: 320px;
     }
+
+    .timer {
+      display: flex;
+      align-items: center;
+      width: fit-content;
+      aspect-ratio: 1 / 1;
+      padding: 24px;
+      border-radius: 50%;
+    }
+
+    .timer-content {
+      display: flex;
+      width: fit-content;
+      align-items: center;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .timer-duration {
+      display: flex;
+      gap: 4px;
+      font-family: roboto-light;
+      font-size: 32px;
+      font-weight: 300;
+    }
+
+    .progress-ring {
+      position: absolute;
+      overflow: visible;
+    }
+    .progress-ring__circle {
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
   </style>
   <body>
+    <svg class="progress-ring">
+      <circle
+        class="progress-ring__background"
+        stroke="grey"
+        fill="transparent" />
+      <circle class="progress-ring__circle" stroke="black" fill="transparent" />
+    </svg>
+    <section>
+      <div class="timer">
+        <div class="timer-content">
+          <div class="timer-duration">
+            <div class="hours">1</div>
+            <div>:</div>
+            <div class="minutes">29</div>
+            <div>:</div>
+            <div class="seconds">59</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section></section>
     <label for="timer-duration-input">Screen Time (minutes)</label>
     <input id="timer-duration-input" type="number" value="20" />
     <label for="rest-duration-input">Break Time (seconds) </label>
     <input id="rest-duration-input" type="number" value="20" />
   </body>
   <script src="popup.js"></script>
+  <script src="timer.js"></script>
 </html>

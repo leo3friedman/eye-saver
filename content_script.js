@@ -11,7 +11,8 @@ function handleRestDurationChange(oldValue, newValue) {
 }
 
 /**
- * Handles changes to storage. Storage can be modified by service_worker onAlarms or by the popup via user input.
+ * Handles changes to storage.
+ * Storage can be modified by service_worker (if an alarm goes off) or by the popup via user input.
  *
  * @param key
  * @param oldValue
