@@ -49,7 +49,7 @@ export class Timer {
       width: timerDims.width,
       radius: timerDims.width / 2,
       circumference: timerDims.width * Math.PI,
-      strokeWidth: 4,
+      strokeWidth: 3,
       progressRing: progressRing,
       circle: circle,
       background: background,
@@ -151,5 +151,11 @@ export class Timer {
     this.props.secondDisplay.innerText = seconds
     this.props.minuteDisplay.innerText = minutes
     this.props.hourDisplay.innerText = hours
+  }
+
+  setDuration(duration) {
+    this.timePassed = duration * (this.timePassed / this.duration)
+    this.duration = duration
+    this.setTimerText()
   }
 }
