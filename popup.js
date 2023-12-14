@@ -1,11 +1,14 @@
 window.onload = () => {
-  const dropzone = document.querySelector('.timer-dropzone')
+  const dropzone = document.querySelector('.timer__dropzone')
+  const startButton = document.querySelector('.timer__start-button')
 
   const load = async () => {
     const timerJsUrl = chrome.runtime.getURL('templates/timer.js')
     const content = await import(timerJsUrl)
-
-    content.renderTimer(dropzone)
+    const timer = new content.Timer()
+    timer.renderTimer(dropzone)
+    startButton.onclick = () => timer.startTimer(0, true)
+    // content.renderTimer(dropzone)
   }
   load()
 }
