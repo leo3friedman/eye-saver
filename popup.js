@@ -1,18 +1,14 @@
-const defaults = {
-  timerDuration: 10000,
-  restDuration: 5000,
-}
-
 const props = {}
 
 window.onload = async () => {
-  initializeUi()
-  const timerJsUrl = chrome.runtime.getURL('templates/timer.js')
-  const timerScr = await import(timerJsUrl)
-  chrome.storage.sync.get(defaults, (result) => {
-    const timer = new timerScr.Timer(result.timerDuration, true, () => {
-      props.dropzone.remove()
-    })
+  await initializeProps()
+
+  chrome.storage.sync.get(props.defaults, (result) => {
+    const timer = new props.timerSrc.Timer(
+      result.timerDuration,
+      true,
+      initiateRest
+    )
 
     timer.renderTimer(props.dropzone)
     props.startButton.onclick = () => timer.start()
@@ -22,7 +18,7 @@ window.onload = async () => {
   })
 }
 
-const initializeUi = () => {
+const initializeProps = async () => {
   props.timerDurationInput = document.querySelector('#timer-duration-input')
   props.restDurationInput = document.querySelector('#rest-duration-input')
   props.dropzone = document.querySelector('.timer__dropzone')
@@ -30,7 +26,12 @@ const initializeUi = () => {
   props.pauseButton = document.querySelector('.timer__pause-button')
   props.resetButton = document.querySelector('.timer__reset-button')
 
-  chrome.storage.sync.get(defaults, (result) => {
+  props.timerSrc = await import(chrome.runtime.getURL('templates/timer.js'))
+  props.enumsSrc = await import(chrome.runtime.getURL('enums.js'))
+  props.defaults = props.enumsSrc.defaults
+  props.messages = props.enumsSrc.messages
+
+  chrome.storage.sync.get(props.defaults, (result) => {
     props.timerDurationInput.value = result.timerDuration
     props.restDurationInput.value = result.restDuration
   })
@@ -53,3 +54,7 @@ chrome.storage.onChanged.addListener((changes, area) => {
     }
   }
 })
+
+const initiateRest = () => {
+  chrome.runtime.sendMessage(props.messages.INITIATE_REST)
+}
