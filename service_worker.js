@@ -1,48 +1,53 @@
-import { defaults, messages } from './enums.js'
+import { defaults, messages, modes } from './enums.js'
 
-chrome.runtime.onInstalled.addListener(() => {
-  console.log('install')
+const createAlarm = (includeRest = false) => {
   chrome.alarms.clearAll()
-  createAlarm()
-})
-
-chrome.alarms.onAlarm.addListener(async (alarm) => {
-  chrome.alarms.clearAll()
-  requestInitiateRest()
-})
-
-const createAlarm = () => {
   chrome.storage.sync.get(defaults, (result) => {
+    const restDuration = includeRest ? Number(result.restDuration) : 0
+    const timerDuration = Number(result.timerDuration)
     chrome.alarms.create('restAlarm', {
-      when: Date.now() + Number(result.timerDuration),
+      when: Date.now() + restDuration + timerDuration,
     })
   })
 }
 
-chrome.runtime.onMessage.addListener((message) => {
-  if (message === messages.INITIATE_REST) {
-    console.log('request from popup recieved!')
-    requestInitiateRest()
-  }
+const handleRestStart = async () => {
+  createAlarm(true)
+
+  // Trigger overlay in content script
+  await chrome.storage.sync.set({ ['mode']: modes.SCREEN_TIME })
+  await chrome.storage.sync.set({ ['mode']: modes.BREAK_TIME })
+
+  // push desktop notification
+
+  // push sound notification
+}
+
+const handleRestEnd = async () => {
+  createAlarm(false)
+  await chrome.storage.sync.set({ ['mode']: modes.SCREEN_TIME })
+
+  // push desktop notification
+
+  // push sound notification
+}
+
+
+chrome.runtime.onInstalled.addListener(() => {
+  console.log('install')
+  // createAlarm()
 })
 
-const requestInitiateRest = async () => {
-  const [tab] = await chrome.tabs.query({
-    active: true,
-    lastFocusedWindow: true,
-  })
+chrome.alarms.onAlarm.addListener(async (alarm) => {
+  chrome.alarms.clearAll()
+  handleRestStart()
+})
 
-  try {
-    const response = await chrome.tabs.sendMessage(
-      tab.id,
-      messages.INITIATE_REST
-    )
-    if (response != messages.INITIATE_REST_RECIEVED) {
-      console.log('unexpected message recieved, reseting alarm...')
-      createAlarm()
-    }
-  } catch (e) {
-    console.log('error messaging, reseting alarm...')
-    createAlarm()
+chrome.runtime.onMessage.addListener((message) => {
+  if (message === messages.INITIATE_REST) {
+    handleRestStart()
   }
-}
+  if (message === messages.INITIATE_REST_END) {
+    handleRestEnd()
+  }
+})

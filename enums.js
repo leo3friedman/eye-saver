@@ -9,8 +9,9 @@ export const modes = {
 }
 
 export const messages = {
-  INITIATE_REST: 'INITIATE_REST',
-  INITIATE_REST_RECIEVED: 'INITIATE_REST_RECEIVED',
+  INITIATE_REST: 0,
+  INITIATE_REST_RECIEVED: 1,
+  INITIATE_REST_END: 2,
 }
 
 export const defaults = {
