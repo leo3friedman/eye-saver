@@ -12,6 +12,7 @@ export const messages = {
   INITIATE_REST: 0,
   INITIATE_REST_RECIEVED: 1,
   INITIATE_REST_END: 2,
+  RESTART_POPUP_TIMER: 3,
 }
 
 export const defaults = {

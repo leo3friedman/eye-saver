@@ -92,6 +92,7 @@ export class Timer {
   }
 
   start() {
+    this.stopBlinking()
     if (this.state == states.RUNNING) return
     if (this.state == states.DONE) this.timePassed = 0
     this.timestamp = Date.now()
@@ -114,6 +115,7 @@ export class Timer {
 
   finish() {
     this.state = states.DONE
+    this.startBlinking()
     if (this.callback) {
       this.callback()
     }
@@ -167,5 +169,15 @@ export class Timer {
     this.timePassed = duration * (this.timePassed / this.duration)
     this.duration = duration
     this.setTimerText()
+  }
+
+  startBlinking() {
+    const timerText = document.querySelector('.timer-duration')
+    if (timerText) timerText.classList.add('blink')
+  }
+
+  stopBlinking() {
+    const timerText = document.querySelector('.timer-duration')
+    if (timerText) timerText.classList.remove('blink')
   }
 }
