@@ -7,15 +7,16 @@ const states = {
 export class Timer {
   /**
    *
+   * @param {Number} timePassed time passed since timer start in milliseconds
    * @param {Number} duration timer duration in milliseconds
    * @param {boolean} countdown true if the timer should count from duration down to 0
    * @param {() => void} callback runs callback when timer finishes
    */
-  constructor(duration, countdown = true, callback = null) {
+  constructor(timePassed = 0, duration, countdown = true, callback = null) {
     this.props = {}
     this.timestamp = -1
-    this.timePassed = -1
-    this.state = states.DONE
+    this.timePassed = timePassed
+    this.state = states.RUNNING
     this.duration = duration
     this.countdown = countdown
     this.callback = callback
@@ -29,6 +30,10 @@ export class Timer {
       container?.insertAdjacentHTML('afterbegin', xhr.response)
       this.initializeProps()
       this.initializeStyles()
+      if (this.state === states.RUNNING) {
+        this.timestamp = Date.now()
+        this.tick()
+      }
     }
     xhr.open('GET', timerTemplateUrl)
     xhr.send()
@@ -68,8 +73,6 @@ export class Timer {
       return
     }
 
-    this.setTimerText()
-
     props.progressRing.style.width = props.width
     props.progressRing.style.height = props.height
 
@@ -83,6 +86,9 @@ export class Timer {
     props.background.setAttribute('r', props.radius)
     props.background.setAttribute('cx', props.radius)
     props.background.setAttribute('cy', props.radius)
+
+    this.setTimerText()
+    this.setProgress()
   }
 
   start() {
@@ -121,8 +127,7 @@ export class Timer {
     this.timePassed += Date.now() - this.timestamp
     this.timestamp = Date.now()
 
-    const percentFinished = (this.timePassed / this.duration) * 100
-    this.setProgress(Math.min(percentFinished, 100))
+    this.setProgress()
     this.setTimerText()
 
     if (this.duration - this.timePassed < 0) {
@@ -132,7 +137,12 @@ export class Timer {
     window.requestAnimationFrame(() => this.tick())
   }
 
-  setProgress(percent) {
+  setProgress(percent = -1) {
+    percent =
+      percent === -1
+        ? Math.min((this.timePassed / this.duration) * 100, 100)
+        : percent
+
     const adjPercent = this.countdown ? 100 - percent : percent
     const circumference = this.props.circumference
 

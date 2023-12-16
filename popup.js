@@ -3,8 +3,20 @@ const props = {}
 window.onload = async () => {
   await initializeProps()
 
+  const alarm = await chrome.alarms.get(props.alarms.REST_ON_ALARM)
+
   chrome.storage.sync.get(props.defaults, (result) => {
+    const timeRemaining = alarm
+      ? alarm.scheduledTime - Date.now()
+      : result.timerDuration
+
+    const timePassed = Math.min(
+      result.timerDuration - timeRemaining,
+      result.timerDuration
+    )
+
     const timer = new props.timerSrc.Timer(
+      timePassed,
       result.timerDuration,
       true,
       initiateRest
@@ -30,6 +42,7 @@ const initializeProps = async () => {
   props.enumsSrc = await import(chrome.runtime.getURL('enums.js'))
   props.defaults = props.enumsSrc.defaults
   props.messages = props.enumsSrc.messages
+  props.alarms = props.enumsSrc.alarms
 
   chrome.storage.sync.get(props.defaults, (result) => {
     props.timerDurationInput.value = result.timerDuration

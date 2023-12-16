@@ -20,3 +20,7 @@ export const defaults = {
   state: states.RUNNING,
   mode: modes.SCREEN_TIME,
 }
+
+export const alarms = {
+  REST_ON_ALARM: 'restAlarm',
+}

@@ -1,11 +1,11 @@
-import { defaults, messages, modes } from './enums.js'
+import { defaults, messages, modes, alarms } from './enums.js'
 
 const createAlarm = (includeRest = false) => {
   chrome.alarms.clearAll()
   chrome.storage.sync.get(defaults, (result) => {
     const restDuration = includeRest ? Number(result.restDuration) : 0
     const timerDuration = Number(result.timerDuration)
-    chrome.alarms.create('restAlarm', {
+    chrome.alarms.create(alarms.REST_ON_ALARM, {
       when: Date.now() + restDuration + timerDuration,
     })
   })
@@ -31,7 +31,6 @@ const handleRestEnd = async () => {
 
   // push sound notification
 }
-
 
 chrome.runtime.onInstalled.addListener(() => {
   console.log('install')
