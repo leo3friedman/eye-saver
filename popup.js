@@ -5,8 +5,8 @@ const initializeProps = async () => {
   props.restDurationInput = document.querySelector('#rest-duration-input')
   props.dropzone = document.querySelector('.timer__dropzone')
   props.startButton = document.querySelector('.timer__start-button')
-  props.pauseButton = document.querySelector('.timer__pause-button')
-  props.resetButton = document.querySelector('.timer__reset-button')
+  //   props.pauseButton = document.querySelector('.timer__pause-button')
+  props.cancelButton = document.querySelector('.timer__cancel-button')
 
   props.timerSrc = await import(chrome.runtime.getURL('templates/timer.js'))
   props.enumsSrc = await import(chrome.runtime.getURL('enums.js'))
@@ -14,6 +14,7 @@ const initializeProps = async () => {
   props.messages = props.enumsSrc.messages
   props.alarms = props.enumsSrc.alarms
   props.modes = props.enumsSrc.modes
+  props.states = props.enumsSrc.states
 
   chrome.storage.sync.get(props.defaults, (result) => {
     props.timerDurationInput.value = result.timerDuration
@@ -33,6 +34,13 @@ const initiateRest = () => {
   chrome.runtime.sendMessage(props.messages.INITIATE_REST)
 }
 
+const requestStart = () => {
+  chrome.runtime.sendMessage(props.messages.INITIATE_START)
+}
+const requestCancel = () => {
+  chrome.runtime.sendMessage(props.messages.INITIATE_CANCEL)
+}
+
 window.onload = async () => {
   await initializeProps()
 
@@ -40,13 +48,14 @@ window.onload = async () => {
 
   chrome.storage.sync.get(props.defaults, (result) => {
     // TODO: Migrate to timeRemaining (rather than timePassed)
+    const running = result.state === props.states.RUNNING
     const timerDuration = Number(result.timerDuration)
     let timePassed = 0
-    if (!alarm) {
+
+    console.log('running', running)
+    if (alarm && alarm.scheduledTime - Date.now() > timerDuration) {
       timePassed = timerDuration
-    } else if (alarm.scheduledTime - Date.now() > timerDuration) {
-      timePassed = timerDuration
-    } else {
+    } else if (alarm) {
       timePassed = timerDuration - (alarm.scheduledTime - Date.now())
     }
 
@@ -55,14 +64,21 @@ window.onload = async () => {
     const timer = new props.timerSrc.Timer(
       timePassed,
       result.timerDuration,
+      running,
       true,
       initiateRest
     )
 
     timer.renderTimer(props.dropzone)
-    props.startButton.onclick = () => timer.start()
-    props.pauseButton.onclick = () => timer.pause()
-    props.resetButton.onclick = () => timer.reset()
+    props.startButton.onclick = () => {
+      timer.start()
+      requestStart()
+    }
+    // props.pauseButton.onclick = () => timer.pause()
+    props.cancelButton.onclick = () => {
+      timer.cancel()
+      requestCancel()
+    }
     props.timer = timer
   })
 }

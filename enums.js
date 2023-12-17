@@ -1,6 +1,6 @@
 export const states = {
-  PAUSED: 0,
-  RUNNING: 1,
+  RUNNING: 0,
+  STOPPED: 1,
 }
 
 export const modes = {
@@ -13,6 +13,8 @@ export const messages = {
   INITIATE_REST_RECIEVED: 1,
   INITIATE_REST_END: 2,
   RESTART_POPUP_TIMER: 3,
+  INITIATE_START: 4,
+  INITIATE_CANCEL: 5,
 }
 
 export const defaults = {

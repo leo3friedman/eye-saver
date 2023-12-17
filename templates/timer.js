@@ -2,6 +2,7 @@ const states = {
   RUNNING: 0,
   PAUSED: 1,
   DONE: 2,
+  STOPPED: 3,
 }
 
 export class Timer {
@@ -9,14 +10,21 @@ export class Timer {
    *
    * @param {Number} timePassed time passed since timer start in milliseconds
    * @param {Number} duration timer duration in milliseconds
+   * @param {boolean} running true if the timer should be running by default
    * @param {boolean} countdown true if the timer should count from duration down to 0
-   * @param {() => void} callback runs callback when timer finishes
+   * @param {() => void} callback callback to run when timer finishes (on finish())
    */
-  constructor(timePassed = 0, duration, countdown = true, callback = null) {
+  constructor(
+    timePassed = 0,
+    duration,
+    running = true,
+    countdown = true,
+    callback = null
+  ) {
     this.props = {}
     this.timestamp = -1
     this.timePassed = timePassed
-    this.state = states.RUNNING
+    this.state = running ? states.RUNNING : states.STOPPED
     this.duration = duration
     this.countdown = countdown
     this.callback = callback
@@ -100,6 +108,14 @@ export class Timer {
     this.tick()
   }
 
+  cancel() {
+    this.state = states.STOPPED
+    this.timePassed = 0
+    this.stopBlinking()
+    this.setProgress(0)
+    this.setTimerText()
+  }
+
   pause() {
     this.state = states.PAUSED
   }
@@ -122,7 +138,11 @@ export class Timer {
   }
 
   tick() {
-    if (this.state === states.PAUSED || this.state === states.DONE) {
+    if (
+      this.state === states.PAUSED ||
+      this.state === states.DONE ||
+      this.state === states.STOPPED
+    ) {
       return
     }
 
