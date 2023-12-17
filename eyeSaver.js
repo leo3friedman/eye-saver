@@ -8,16 +8,42 @@ export class EyeSaver {
     this.chrome = chrome
 
     chrome.runtime.onMessage.addListener(async (message) => {
-      await this.importEnums()
-
-      // TODO: get enums in here
+      if (!this.enums) await this.importEnums()
       if (message === this.enums.messages.ACTIVATE) {
-        console.log('activated read in the content script!!')
-        if (false && onResting) {
-          onResting()
-        }
+        this.restIfPossible(onResting)
       }
     })
+  }
+
+  async restIfPossible(onResting) {
+    const restDurationRemaining = await this.getRestDurationRemaining()
+    if (restDurationRemaining > 0 && onResting) {
+      onResting(restDurationRemaining)
+    }
+  }
+
+  async getRestDurationRemaining() {
+    if (!this.enums) await this.importEnums()
+    return new Promise((resolve) => {
+      this.chrome.storage.sync.get(this.enums.defaults, (result) => {
+        const sessionStart = Number(result.sessionStart)
+        const timerDuration = Number(result.timerDuration)
+        const restDuration = Number(result.restDuration)
+
+        const currentProgress =
+          (Date.now() - sessionStart) % (timerDuration + restDuration)
+        const isResting = currentProgress > timerDuration
+        const restDurationRemaining = isResting
+          ? restDuration - (currentProgress - timerDuration)
+          : 0
+
+        resolve(restDurationRemaining)
+      })
+    })
+  }
+
+  setSessionStart() {
+    this.chrome.storage.sync.set({ sessionStart: Date.now() })
   }
 
   async importEnums() {

@@ -1,4 +1,5 @@
 import { defaults, messages, modes, alarms, states } from './enums.js'
+import { EyeSaver } from './eyeSaver.js'
 // TODO: better synchronization
 let handlingRestStart = 0
 
@@ -57,6 +58,9 @@ const handleCancel = () => {
 
 chrome.runtime.onInstalled.addListener(() => {
   console.log('install')
+  const eyeSaver = new EyeSaver(chrome, null)
+  eyeSaver.setSessionStart()
+
   chrome.storage.sync.get(defaults, (result) => {
     if (result.state != states.STOPPED) {
       handleStart()

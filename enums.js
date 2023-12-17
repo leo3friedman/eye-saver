@@ -24,6 +24,7 @@ export const defaults = {
   restDuration: 5000,
   state: states.RUNNING,
   mode: modes.SCREEN_TIME,
+  sessionStart: Date.now(),
 }
 
 export const alarms = {
