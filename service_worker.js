@@ -82,4 +82,26 @@ chrome.runtime.onMessage.addListener((message) => {
   if (message === messages.INITIATE_START) {
     handleStart()
   }
+  if (message === 'PING_CONTENT_SCRIPT') {
+    console.log('service_worker recieved message from popup...')
+    pingEyeSaver()
+  }
+})
+
+const messageEyeSaver = async (message) => {
+  const [tab] = await chrome.tabs.query({
+    active: true,
+    lastFocusedWindow: true,
+  })
+  // console.log(tab)
+
+  try {
+    const response = await chrome.tabs.sendMessage(tab.id, message)
+  } catch (e) {
+    console.log('error messaging, reseting alarm...', e)
+  }
+}
+
+chrome.tabs.onActivated.addListener(() => {
+  messageEyeSaver(messages.ACTIVATE)
 })

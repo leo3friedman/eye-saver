@@ -15,6 +15,8 @@ export const messages = {
   RESTART_POPUP_TIMER: 3,
   INITIATE_START: 4,
   INITIATE_CANCEL: 5,
+  RESTING: 6,
+  ACTIVATE: 7,
 }
 
 export const defaults = {

@@ -30,6 +30,16 @@ const initializeProps = async () => {
   }
 }
 
+const initializeTesting = () => {
+  const sendMessageToContentScriptButton = document.querySelector(
+    '.send-message-to-content-script-button'
+  )
+  sendMessageToContentScriptButton.onclick = () => {
+    console.log('sending message initated...')
+    chrome.runtime.sendMessage('PING_CONTENT_SCRIPT')
+  }
+}
+
 const initiateRest = () => {
   chrome.runtime.sendMessage(props.messages.INITIATE_REST)
 }
@@ -43,7 +53,7 @@ const requestCancel = () => {
 
 window.onload = async () => {
   await initializeProps()
-
+  initializeTesting()
   const alarm = await chrome.alarms.get(props.alarms.REST_ON_ALARM)
 
   chrome.storage.sync.get(props.defaults, (result) => {
