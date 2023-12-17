@@ -5,10 +5,7 @@ const main = async () => {
 }
 
 const onResting = (restDurationRemaining) => {
-  console.log(
-    'content script onResting ran!!!!, restDuration remaining:',
-    restDurationRemaining
-  )
+  console.log('REST INITIATED, restDuration remaining:', restDurationRemaining)
 }
 
 window.onload = main
