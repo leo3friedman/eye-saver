@@ -7,31 +7,35 @@ export class EyeSaver {
   constructor(chrome, onResting = null) {
     this.chrome = chrome
     this.timeout = null
+    this.onResting = onResting
 
     chrome.runtime.onMessage.addListener(async (message) => {
       if (!this.enums) await this.importEnums()
       if (message === this.enums.messages.ACTIVATE) {
-        this.restIfPossible(onResting)
+        this.restIfPossible()
       }
     })
   }
 
-  restOnTimeout(onResting, timeUntilNextRest) {
+  restOnTimeout(timeUntilNextRest) {
+    console.log('restOnTimeout time until next rest:', timeUntilNextRest)
     if (this.timeout) clearTimeout(this.timeout)
     this.timeout = window.setTimeout(
-      () => this.restIfPossible(onResting),
+      () => this.restIfPossible(),
       timeUntilNextRest
     )
   }
 
-  async restIfPossible(onResting) {
+  async restIfPossible() {
     const isResting = await this.isResting()
-    if (isResting && onResting != null) {
+    console.log('restIfPossible() --> isResting?', isResting)
+    if (isResting && this.onResting != null) {
       const restDurationRemaining = await this.getRestDurationRemaining()
-      onResting(restDurationRemaining)
+      this.onResting(await restDurationRemaining)
     }
     const timeUntilNextRest = await this.getTimeUntilNextRest()
-    this.restOnTimeout(onResting, timeUntilNextRest)
+    console.log('restOnTimeout time until next rest:', timeUntilNextRest)
+    this.restOnTimeout(timeUntilNextRest)
   }
 
   async isResting() {
@@ -84,9 +88,9 @@ export class EyeSaver {
           (Date.now() - sessionStart) % (timerDuration + restDuration)
 
         if (currentProgress >= timerDuration) {
-          resolve(0)
-        } else {
           resolve(restDuration - (currentProgress - timerDuration))
+        } else {
+          resolve(0)
         }
       })
     })
