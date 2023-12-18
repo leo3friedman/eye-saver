@@ -3,31 +3,37 @@ const states = {
   PAUSED: 1,
   DONE: 2,
   STOPPED: 3,
+  REST: 4,
 }
 
 export class Timer {
   /**
    *
+   * @param {Number} timerDuration timer duration in milliseconds
+   * @param {Number} restDuration rest duration in milliseconds
    * @param {Number} timePassed time passed since timer start in milliseconds
-   * @param {Number} duration timer duration in milliseconds
    * @param {boolean} running true if the timer should be running by default
    * @param {boolean} countdown true if the timer should count from duration down to 0
    * @param {() => void} callback callback to run when timer finishes (on finish())
    */
   constructor(
+    timerDuration,
+    restDuration,
     timePassed = 0,
-    duration,
     running = true,
     countdown = true,
     callback = null
   ) {
-    this.props = {}
-    this.timestamp = -1
-    this.timePassed = timePassed
+    this.timerDuration = timerDuration
+    this.restDuration = restDuration
+    this.timePassed = running ? timePassed : 0
+    console.log(running)
     this.state = running ? states.RUNNING : states.STOPPED
-    this.duration = duration
     this.countdown = countdown
     this.callback = callback
+
+    this.props = {}
+    this.timestamp = -1
   }
 
   renderTimer(container) {
@@ -38,7 +44,8 @@ export class Timer {
       container?.insertAdjacentHTML('afterbegin', xhr.response)
       this.initializeProps()
       this.initializeStyles()
-      if (this.state === states.RUNNING) {
+      if (this.state === states.RUNNING || this.state === states.DONE) {
+        console.log('STATE WAS RUNNING!')
         this.timestamp = Date.now()
         this.tick()
       }
@@ -132,6 +139,7 @@ export class Timer {
   finish() {
     this.state = states.DONE
     this.startBlinking()
+    // setTimeout(() => this.start(), this.restDuration)
     if (this.callback) {
       this.callback()
     }
@@ -152,20 +160,22 @@ export class Timer {
     this.setProgress()
     this.setTimerText()
 
-    if (this.duration - this.timePassed < 0) {
+    if (this.timerDuration - this.timePassed < 0) {
       this.finish()
     }
 
     window.requestAnimationFrame(() => this.tick())
   }
 
-  setProgress(percent = -1) {
+  setProgress(percent = null) {
     percent =
-      percent === -1
-        ? Math.min((this.timePassed / this.duration) * 100, 100)
+      percent == null
+        ? Math.min((this.timePassed / this.timerDuration) * 100, 100)
         : percent
 
+    console.log((this.timePassed / this.timerDuration) * 100)
     const adjPercent = this.countdown ? 100 - percent : percent
+    console.log('adjPercent, ', adjPercent, percent, this.countdown)
     const circumference = this.props.circumference
 
     const offset = circumference - (adjPercent / 100) * circumference
@@ -173,7 +183,7 @@ export class Timer {
   }
 
   setTimerText() {
-    const timeRemaining = Math.max(this.duration - this.timePassed, 0)
+    const timeRemaining = Math.max(this.timerDuration - this.timePassed, 0)
     const date = new Date(0, 0, 0, 0, 0, 0, timeRemaining)
 
     const seconds = ('0' + date.getSeconds()).slice(-2)
@@ -186,8 +196,8 @@ export class Timer {
   }
 
   setDuration(duration) {
-    this.timePassed = duration * (this.timePassed / this.duration)
-    this.duration = duration
+    this.timePassed = duration * (this.timePassed / this.timerDuration)
+    this.timerDuration = duration
     this.setTimerText()
   }
 
