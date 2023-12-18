@@ -2,8 +2,6 @@ const states = {
   RUNNING: 0,
   PAUSED: 1,
   DONE: 2,
-  STOPPED: 3,
-  REST: 4,
 }
 
 export class Timer {
@@ -123,34 +121,16 @@ export class Timer {
     this.setTimerText()
   }
 
-  pause() {
-    this.state = states.PAUSED
-  }
-
-  reset() {
-    this.timePassed = 0
-    this.timestamp = Date.now()
-    this.setProgress(0)
-    this.setTimerText()
-    if (this.state != states.PAUSED) this.state = states.RUNNING
-    this.tick()
-  }
-
   finish() {
     this.state = states.DONE
     this.startBlinking()
-    // setTimeout(() => this.start(), this.restDuration)
     if (this.callback) {
       this.callback()
     }
   }
 
   tick() {
-    if (
-      this.state === states.PAUSED ||
-      this.state === states.DONE ||
-      this.state === states.STOPPED
-    ) {
+    if (this.state === states.DONE || this.state === states.STOPPED) {
       return
     }
 
@@ -173,9 +153,7 @@ export class Timer {
         ? Math.min((this.timePassed / this.timerDuration) * 100, 100)
         : percent
 
-    console.log((this.timePassed / this.timerDuration) * 100)
     const adjPercent = this.countdown ? 100 - percent : percent
-    console.log('adjPercent, ', adjPercent, percent, this.countdown)
     const circumference = this.props.circumference
 
     const offset = circumference - (adjPercent / 100) * circumference

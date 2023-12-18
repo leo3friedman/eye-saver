@@ -7,10 +7,6 @@ const main = async () => {
 
 const onResting = (restDurationRemaining) => {
   if (!isOverlayOn()) {
-    console.log(
-      'REST INITIATED, restDuration remaining:',
-      restDurationRemaining
-    )
     addCanvas()
     setTimeout(removeCanvas, restDurationRemaining)
   }

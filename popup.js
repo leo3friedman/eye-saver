@@ -1,5 +1,44 @@
 const props = {}
 
+const main = async () => {
+  await initializeProps()
+  initializeTesting()
+
+  const eyeSaver = new props.eyeSaverSrc.EyeSaver(this.chrome, null)
+
+  const timerDuration = await eyeSaver.getTimerDuration()
+  const restDuration = await eyeSaver.getRestDuration()
+  const running = await eyeSaver.isExtensionRunning()
+  const timePassed = await eyeSaver.getCurrentProgress()
+
+  const onFinish = async () => {
+    setTimeout(() => timer.start(), await eyeSaver.getRestDurationRemaining())
+  }
+
+  const timer = new props.timerSrc.Timer(
+    timerDuration,
+    restDuration,
+    timePassed,
+    running,
+    true,
+    onFinish
+  )
+
+  timer.renderTimer(props.dropzone)
+
+  props.startButton.onclick = () => {
+    timer.start()
+    eyeSaver.startExtension()
+  }
+
+  props.cancelButton.onclick = () => {
+    timer.cancel()
+    eyeSaver.stopExtension()
+  }
+
+  props.timer = timer
+}
+
 const initializeProps = async () => {
   props.timerDurationInput = document.querySelector('#timer-duration-input')
   props.restDurationInput = document.querySelector('#rest-duration-input')
@@ -45,106 +84,10 @@ const initializeTesting = () => {
   }
 }
 
-const initiateRest = () => {
-  chrome.runtime.sendMessage(props.messages.INITIATE_REST)
-}
+window.onload = main
 
-const requestStart = () => {
-  chrome.runtime.sendMessage(props.messages.INITIATE_START)
-}
-const requestCancel = () => {
-  chrome.runtime.sendMessage(props.messages.INITIATE_CANCEL)
-}
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+  console.log('Message received in popup.js:', message)
 
-window.onload = async () => {
-  await initializeProps()
-  initializeTesting()
-
-  chrome.storage.sync.get(this.defaults, (result) => {
-    console.log('storage on popup load', result)
-  })
-
-  //   const alarm = await chrome.alarms.get(props.alarms.REST_ON_ALARM)
-
-  const eyeSaver = new props.eyeSaverSrc.EyeSaver(this.chrome, null)
-
-  const timerDuration = await eyeSaver.getTimerDuration()
-  const restDuration = await eyeSaver.getRestDuration()
-  const running = await eyeSaver.isExtensionRunning()
-  const timePassed = await eyeSaver.getCurrentProgress()
-
-  const onFinish = async () => {
-    setTimeout(() => timer.start(), await eyeSaver.getRestDurationRemaining())
-  }
-
-  const timer = new props.timerSrc.Timer(
-    timerDuration,
-    restDuration,
-    timePassed,
-    running,
-    true,
-    onFinish
-  )
-
-  timer.renderTimer(props.dropzone)
-
-  props.startButton.onclick = () => {
-    timer.start()
-    // TODO: move to eyeSaver
-    chrome.storage.sync.set({ state: props.states.RUNNING })
-    chrome.storage.sync.set({ sessionStart: Date.now() })
-  }
-
-  props.cancelButton.onclick = () => {
-    timer.cancel()
-    // TODO: move to eyeSaver
-    chrome.storage.sync.set({ state: props.states.STOPPED })
-  }
-
-  props.timer = timer
-
-  //   chrome.storage.sync.get(props.defaults, (result) => {
-  //     // TODO: Migrate to timeRemaining (rather than timePassed)
-  //     const running = result.state === props.states.RUNNING
-
-  //     const timerDuration = Number(result.timerDuration)
-  //     let timePassed = 0
-
-  //     console.log('running', running)
-  //     if (alarm && alarm.scheduledTime - Date.now() > timerDuration) {
-  //       timePassed = timerDuration
-  //     } else if (alarm) {
-  //       timePassed = timerDuration - (alarm.scheduledTime - Date.now())
-  //     }
-
-  //     console.log(timePassed, result.timerDuration, 'here!')
-
-  //     const timer = new props.timerSrc.Timer(
-  //       timePassed,
-  //       result.timerDuration,
-  //       running,
-  //       true,
-  //       initiateRest
-  //     )
-
-  //     timer.renderTimer(props.dropzone)
-  //     props.startButton.onclick = () => {
-  //       timer.start()
-  //       requestStart()
-  //     }
-  //     // props.pauseButton.onclick = () => timer.pause()
-  //     props.cancelButton.onclick = () => {
-  //       timer.cancel()
-  //       requestCancel()
-  //     }
-  //     props.timer = timer
-  //   })
-}
-
-// chrome.storage.onChanged.addListener((changes, area) => {
-//   for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
-//     if (key === 'mode' && newValue === props.modes.SCREEN_TIME) {
-//       if (props.timer) props.timer.start()
-//     }
-//   }
-// })
+  // Handle the message as needed
+})
