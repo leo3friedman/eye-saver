@@ -55,6 +55,7 @@ export class Timer {
       if (this.state === states.RUNNING || this.state === states.DONE) {
         console.log('STATE WAS RUNNING!')
         this.timestamp = Date.now()
+        this.stopBlinking()
         this.tick()
       }
     }
@@ -154,6 +155,8 @@ export class Timer {
     if (this.state === states.DONE || this.state === states.STOPPED) {
       return
     }
+
+    this.stopBlinking() // TODO: this shouldn't be needed (added for blinking bug fix)
 
     this.timePassed += Date.now() - this.timestamp
     this.timestamp = Date.now()
