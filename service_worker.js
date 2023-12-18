@@ -16,6 +16,8 @@ const messageEyeSaver = async (message) => {
 
 chrome.runtime.onInstalled.addListener(async () => {
   const eyeSaver = new EyeSaver(chrome, null)
+
+  // TODO: issue --> these eyeSaver function calls invoke an import() which is not allowed in a  service_worker
   const running = await eyeSaver.isExtensionRunning()
 
   if (running) {

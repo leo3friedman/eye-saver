@@ -12,7 +12,11 @@ const main = async () => {
   const timePassed = await eyeSaver.getCurrentProgress()
 
   const onFinish = async () => {
-    setTimeout(() => timer.start(), await eyeSaver.getRestDurationRemaining())
+    setTimeout(async () => {
+      // TODO: is this the right approach?
+      const running = await eyeSaver.isExtensionRunning()
+      if (running) timer.start()
+    }, await eyeSaver.getRestDurationRemaining())
   }
 
   const timer = new props.timerSrc.Timer(
