@@ -1,15 +1,20 @@
 const main = async () => {
   const eyeSaverSrc = await import(chrome.runtime.getURL('eyeSaver.js'))
-  const eyeSaver = new eyeSaverSrc.EyeSaver(chrome, onResting)
-  console.log('restIfPossible onload!')
-  eyeSaver.restIfPossible()
+  const eyeSaver = new eyeSaverSrc.EyeSaver(chrome, onResting, onBreaking)
+  // console.log('restIfPossible onload!')
+  // eyeSaver.restIfPossible()
+  eyeSaver.handleCurrentState()
 }
 
 const onResting = (restDurationRemaining) => {
   if (!isOverlayOn()) {
     addCanvas()
-    setTimeout(removeCanvas, restDurationRemaining)
+    // setTimeout(removeCanvas, restDurationRemaining)
   }
+}
+
+const onBreaking = () => {
+  removeCanvas()
 }
 
 const removeCanvas = () => {

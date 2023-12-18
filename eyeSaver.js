@@ -3,50 +3,74 @@ export class EyeSaver {
    *
    * @param {any} chrome
    * @param {()=>void} onResting
+   * @param {()=>void} onScreenTime
    */
-  constructor(chrome, onResting = null) {
+  constructor(chrome, onResting = null, onScreenTime = null) {
     this.chrome = chrome
     this.timeout = null
     this.onResting = onResting
+    this.onScreenTime = onScreenTime
 
     chrome.runtime.onMessage.addListener(async (message) => {
       if (!this.enums) await this.importEnums()
       if (message === this.enums.messages.ACTIVATE) {
-        this.restIfPossible()
+        // this.restIfPossible()
+        this.handleCurrentState()
       }
+    })
+
+    chrome.storage.onChanged.addListener((changes) => {
+      if (changes.state) this.handleCurrentState()
     })
   }
 
-  restOnTimeout(timeUntilNextRest) {
-    console.log('restOnTimeout time until next rest:', timeUntilNextRest)
-    if (this.timeout) clearTimeout(this.timeout)
-    this.timeout = window.setTimeout(
-      () => this.restIfPossible(),
-      timeUntilNextRest
-    )
-  }
-
-  async restIfPossible() {
+  async handleCurrentState() {
     const running = await this.isExtensionRunning()
     const resting = await this.isResting()
 
-    if (running && resting && this.onResting != null) {
-      const restDurationRemaining = await this.getRestDurationRemaining()
-      this.onResting(restDurationRemaining)
+    console.log(
+      'handling current state --> running: ',
+      running,
+      'resting: ',
+      resting
+    )
+
+    if (!running) {
+      console.log('handle response --> STOPPED, remove overlay in case')
+      if (this.onScreenTime) this.onScreenTime()
+      return
     }
-    const timeUntilNextRest = await this.getTimeUntilNextRest()
-    this.restOnTimeout(timeUntilNextRest)
+
+    // TOOD: should we be passing in a window to the constructor?
+    this.timeout = window.setTimeout(
+      () => this.handleCurrentState(),
+      await this.getTimeUntilNextStateChange()
+    )
+
+    if (resting) {
+      console.log('handle response --> RESTING, run onResting')
+      if (this.onResting) this.onResting()
+    }
+
+    if (!resting && this.onScreenTime) {
+      console.log('handle response --> RUNNING, run onBreaking')
+      if (this.onScreenTime) this.onScreenTime()
+    }
   }
 
   async startExtension() {
-    await chrome.storage.sync.set({ state: props.states.RUNNING })
+    console.log('starting extension')
     await chrome.storage.sync.set({ sessionStart: Date.now() })
-    this.restIfPossible()
+    await chrome.storage.sync.set({ state: props.states.RUNNING })
+    // this.restIfPossible()
+    // this.handleCurrentState()
   }
 
-  stopExtension() {
+  async stopExtension() {
+    console.log('stopping extension')
     if (this.timeout) clearTimeout(this.timeout)
-    chrome.storage.sync.set({ state: props.states.STOPPED })
+    await chrome.storage.sync.set({ state: props.states.STOPPED })
+    // this.handleCurrentState()
   }
 
   setSessionStart() {
@@ -96,6 +120,14 @@ export class EyeSaver {
     return currentProgress >= timerDuration
   }
 
+  async getTimeUntilNextStateChange() {
+    const resting = await this.isResting()
+
+    if (resting) return await this.getRestDurationRemaining()
+
+    return await this.getTimerDurationRemaining()
+  }
+
   async getCurrentProgress() {
     if (!this.enums) await this.importEnums()
 
@@ -134,7 +166,43 @@ export class EyeSaver {
     return restDuration - (currentProgress - timerDuration)
   }
 
+  async getTimerDurationRemaining() {
+    if (!this.enums) await this.importEnums()
+
+    const resting = await this.isResting()
+
+    if (resting) return 0
+
+    const currentProgress = await this.getCurrentProgress()
+    const timerDuration = await this.getTimerDuration()
+
+    return timerDuration - currentProgress
+  }
+
   async importEnums() {
     this.enums = await import(this.chrome.runtime.getURL('enums.js'))
   }
+
+  // restOnTimeout(timeUntilNextRest) {
+  //   console.log('restOnTimeout time until next rest:', timeUntilNextRest)
+  //   if (this.timeout) clearTimeout(this.timeout)
+  //   this.timeout = window.setTimeout(
+  //     () => this.restIfPossible(),
+  //     timeUntilNextRest
+  //   )
+  // }
+
+  // async restIfPossible() {
+  //   const running = await this.isExtensionRunning()
+  //   const resting = await this.isResting()
+
+  //   if (running && resting && this.onResting != null) {
+  //     const restDurationRemaining = await this.getRestDurationRemaining()
+  //     this.onResting(restDurationRemaining)
+  //   } else {
+  //     this.onBreaking()
+  //   }
+  //   const timeUntilNextRest = await this.getTimeUntilNextRest()
+  //   this.restOnTimeout(timeUntilNextRest)
+  // }
 }
