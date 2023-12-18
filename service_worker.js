@@ -1,4 +1,4 @@
-import { messages } from './enums.js'
+import { messages, defaults, states } from './enums.js'
 import { EyeSaver } from './eyeSaver.js'
 
 const messageEyeSaver = async (message) => {
@@ -14,16 +14,23 @@ const messageEyeSaver = async (message) => {
   }
 }
 
+// TODO: is this even necessary??
 chrome.runtime.onInstalled.addListener(async () => {
-  const eyeSaver = new EyeSaver(chrome, null)
+  // const eyeSaver = new EyeSaver(chrome, null, enums)
 
+  chrome.storage.sync.get({ defaults }, (result) => {
+    const running = result.state === states.RUNNING
+    if (running) {
+      chrome.storage.sync.set({ sessionStart: Date.now() })
+    }
+  })
   // TODO: issue --> these eyeSaver function calls invoke an import() which is not allowed in a  service_worker
-  const running = await eyeSaver.isExtensionRunning()
+  // const running = await eyeSaver.isExtensionRunning()
 
-  if (running) {
-    eyeSaver.setSessionStart()
-    handleStart()
-  }
+  // if (running) {
+  //   eyeSaver.setSessionStart()
+  //   handleStart()
+  // }
 })
 
 chrome.runtime.onMessage.addListener((message) => {

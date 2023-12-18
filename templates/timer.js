@@ -4,6 +4,16 @@ const states = {
   DONE: 2,
 }
 
+const height = 200
+
+const dims = {
+  height: height,
+  width: height,
+  radius: height / 2,
+  circumference: height * Math.PI,
+  strokeWidth: 3,
+}
+
 export class Timer {
   /**
    *
@@ -88,17 +98,28 @@ export class Timer {
 
     props.progressRing.style.width = props.width
     props.progressRing.style.height = props.height
+    // props.progressRing.style.width = dims.width
+    // props.progressRing.style.height = dims.height
 
     props.circle.setAttribute('stroke-width', props.strokeWidth)
     props.circle.setAttribute('r', props.radius)
     props.circle.setAttribute('cx', props.radius)
     props.circle.setAttribute('cy', props.radius)
     props.circle.style.strokeDasharray = `${props.circumference} ${props.circumference}`
+    // props.circle.setAttribute('stroke-width', dims.strokeWidth)
+    // props.circle.setAttribute('r', dims.radius)
+    // props.circle.setAttribute('cx', dims.radius)
+    // props.circle.setAttribute('cy', dims.radius)
+    // props.circle.style.strokeDasharray = `${dims.circumference} ${dims.circumference}`
 
     props.background.setAttribute('stroke-width', props.strokeWidth)
     props.background.setAttribute('r', props.radius)
     props.background.setAttribute('cx', props.radius)
     props.background.setAttribute('cy', props.radius)
+    // props.background.setAttribute('stroke-width', dims.strokeWidth)
+    // props.background.setAttribute('r', dims.radius)
+    // props.background.setAttribute('cx', dims.radius)
+    // props.background.setAttribute('cy', dims.radius)
 
     this.setTimerText()
     this.setProgress()
@@ -155,6 +176,7 @@ export class Timer {
 
     const adjPercent = this.countdown ? 100 - percent : percent
     const circumference = this.props.circumference
+    // const circumference = dims.circumference
 
     const offset = circumference - (adjPercent / 100) * circumference
     this.props.circle.style.strokeDashoffset = offset
@@ -162,7 +184,8 @@ export class Timer {
 
   setTimerText() {
     const timeRemaining = Math.max(this.timerDuration - this.timePassed, 0)
-    const date = new Date(0, 0, 0, 0, 0, 0, timeRemaining)
+    const clockTime = this.countdown ? timeRemaining : this.timePassed
+    const date = new Date(0, 0, 0, 0, 0, 0, clockTime)
 
     const seconds = ('0' + date.getSeconds()).slice(-2)
     const minutes = ('0' + date.getMinutes()).slice(-2)
