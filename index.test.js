@@ -59,18 +59,11 @@ const totalElapsed = (timestamp) => {
 const currentElapsed = (timestamp) => {
   return Math.floor((Date.now() - timestamp) / 1000) % 15
 }
+const clickElement = async (page, selector) => {
+  await page.$eval(selector, (el) => el.click())
+}
 
-test('popup ticks correctly', async () => {
-  const page = await browser.newPage()
-  await page.goto(`chrome-extension://${EXTENSION_ID}/popup.html`)
-  await assertDuration(page, [0, 0, 9])
-  const wait = Math.floor(Math.random() * 10)
-  await page.waitForTimeout(wait * 1000)
-  await assertDuration(page, [0, 0, 9 - wait])
-}, 11000)
-
-// TODO: irregularily failing
-test('popup finishes and restarts correctly', async () => {
+test('popup ticks, finishes and restarts correctly', async () => {
   const page = await browser.newPage()
   await page.goto(`chrome-extension://${EXTENSION_ID}/popup.html`)
   const timestamp = Date.now()
@@ -87,3 +80,20 @@ test('popup finishes and restarts correctly', async () => {
     await page.waitForTimeout(1000)
   }
 }, 25000)
+
+test('popup cancels and starts correctly', async () => {
+  const page = await browser.newPage()
+  await page.goto(`chrome-extension://${EXTENSION_ID}/popup.html`)
+
+  let timestamp = Date.now()
+  await page.waitForTimeout(1000)
+  await assertDuration(page, [0, 0, 9 - Math.min(currentElapsed(timestamp), 9)])
+  await clickElement(page, '.timer__cancel-button')
+  await assertDuration(page, [0, 0, 10])
+  await page.waitForTimeout(2000)
+  await assertDuration(page, [0, 0, 10])
+  await clickElement(page, '.timer__start-button')
+  timestamp = Date.now()
+  await page.waitForTimeout(1000)
+  await assertDuration(page, [0, 0, 9 - Math.min(currentElapsed(timestamp), 9)])
+}, 10000)
