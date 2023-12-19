@@ -19,7 +19,7 @@ export class EyeSaver {
     })
 
     chrome.storage.onChanged.addListener((changes) => {
-      if (changes.state) this.handleCurrentState()
+      if (changes.state || changes.sessionStart) this.handleCurrentState()
     })
   }
 

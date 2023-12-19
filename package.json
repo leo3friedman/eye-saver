@@ -1,0 +1,16 @@
+{
+  "name": "eye-saver",
+  "version": "1.0.0",
+  "description": "User-friendly, break-reminder system to combat eye strain.",
+  "main": "",
+  "type": "module",
+  "scripts": {
+    "start": "jest ."
+  },
+  "author": "Leo Friedman",
+  "license": "MIT",
+  "dependencies": {
+    "jest": "^29.7.0",
+    "puppeteer": "^21.6.1"
+  }
+}

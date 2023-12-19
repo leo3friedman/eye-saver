@@ -15,13 +15,20 @@ const main = async () => {
 
   // TODO: is this the right approach?
   const onFinish = async () => {
+    const restDurationRemaining = await eyeSaver.getRestDurationRemaining()
+    const timerDurationRemaining = await eyeSaver.getTimerDurationRemaining()
+    const restDuration = await eyeSaver.getRestDuration()
+    const timeout =
+      restDurationRemaining > 0
+        ? restDurationRemaining
+        : timerDurationRemaining + restDuration
+    console.log('onFinishTimeout', timeout)
     setTimeout(async () => {
       const running = await eyeSaver.isExtensionRunning()
       if (running) timer.start()
-    }, await eyeSaver.getRestDurationRemaining())
+    }, timeout)
   }
 
-  console.log('timerPROPS:', timerDuration, restDuration, timePassed, running)
   const timer = new timerSrc.Timer(
     timerDuration,
     restDuration,

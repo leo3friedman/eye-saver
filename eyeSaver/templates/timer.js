@@ -42,7 +42,6 @@ export class Timer {
       this.initializeProps()
       this.initializeStyles()
       if (this.state === states.RUNNING || this.state === states.DONE) {
-        console.log('STATE WAS RUNNING!')
         this.timestamp = Date.now()
         this.stopBlinking()
         this.tick()
@@ -123,6 +122,8 @@ export class Timer {
 
   finish() {
     this.state = states.DONE
+    this.setProgress(100)
+    this.setTimerText(0)
     this.startBlinking()
     if (this.callback) {
       this.callback()
@@ -144,27 +145,28 @@ export class Timer {
 
     if (this.timerDuration - this.timePassed < 0) {
       this.finish()
+      return
     }
 
     window.requestAnimationFrame(() => this.tick())
   }
 
   setProgress(percent = null) {
-    percent =
-      percent == null
-        ? Math.min((this.timePassed / this.timerDuration) * 100, 100)
-        : percent
+    if (percent === null) {
+      percent = Math.min((this.timePassed / this.timerDuration) * 100, 100)
+    }
 
     const adjPercent = this.countdown ? 100 - percent : percent
     const circumference = this.props.circumference
-    // const circumference = dims.circumference
 
     const offset = circumference - (adjPercent / 100) * circumference
     this.props.circle.style.strokeDashoffset = offset
   }
 
-  setTimerText() {
-    const timeRemaining = Math.max(this.timerDuration - this.timePassed, 0)
+  setTimerText(timeRemaining = null) {
+    if (timeRemaining === null) {
+      timeRemaining = Math.max(this.timerDuration - this.timePassed, 0)
+    }
     const clockTime = this.countdown ? timeRemaining : this.timePassed
     const date = new Date(0, 0, 0, 0, 0, 0, clockTime)
 
