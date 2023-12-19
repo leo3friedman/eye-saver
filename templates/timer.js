@@ -199,10 +199,15 @@ export class Timer {
     this.props.hourDisplay.innerText = hours
   }
 
-  setDuration(duration) {
+  // TODO: re-evaulate this method
+  setTimerDuration(duration) {
     this.timePassed = duration * (this.timePassed / this.timerDuration)
     this.timerDuration = duration
     this.setTimerText()
+  }
+
+  setRestDuration(duration) {
+    this.restDuration = duration
   }
 
   startBlinking() {

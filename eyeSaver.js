@@ -7,9 +7,9 @@ export class EyeSaver {
    */
   constructor(chrome, onResting = null, onScreenTime = null) {
     this.chrome = chrome
-    this.timeout = null
     this.onResting = onResting
     this.onScreenTime = onScreenTime
+    this.timeout = null
 
     chrome.runtime.onMessage.addListener(async (message) => {
       if (!this.enums) await this.importEnums()
@@ -57,16 +57,24 @@ export class EyeSaver {
   }
 
   async startExtension() {
-    await chrome.storage.sync.set({ sessionStart: Date.now() })
-    await chrome.storage.sync.set({ state: props.states.RUNNING })
+    if (!this.enums) await this.importEnums()
+    this.setSessionStart()
+    await chrome.storage.sync.set({ state: this.enums.states.RUNNING })
   }
 
   async stopExtension() {
-    await chrome.storage.sync.set({ state: props.states.STOPPED })
+    if (!this.enums) await this.importEnums()
+    await chrome.storage.sync.set({ state: this.enums.states.STOPPED })
   }
 
   setSessionStart() {
     this.chrome.storage.sync.set({ sessionStart: Date.now() })
+  }
+  setTimerDuration(duration) {
+    this.chrome.storage.sync.set({ timerDuration: duration })
+  }
+  setRestDuration(duration) {
+    this.chrome.storage.sync.set({ restDuration: duration })
   }
 
   async getSessionStart() {
