@@ -3,7 +3,6 @@ let eyeSaver
 const main = async () => {
   const eyeSaverSrc = await import(chrome.runtime.getURL('eyeSaver.js'))
   eyeSaver = new eyeSaverSrc.EyeSaver(chrome, onResting, onBreaking)
-
   eyeSaver.handleCurrentState()
 }
 

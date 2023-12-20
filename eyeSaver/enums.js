@@ -17,6 +17,8 @@ export const messages = {
   INITIATE_CANCEL: 5,
   RESTING: 6,
   ACTIVATE: 7,
+  PUSH_DESKTOP_NOTIFICATION: 8,
+  PLAY_SOUND: 9,
 }
 
 export const defaults = {
@@ -25,6 +27,16 @@ export const defaults = {
   state: states.RUNNING,
   mode: modes.SCREEN_TIME,
   sessionStart: Date.now(),
+  desktopNotifications: true,
+  soundNotifications: true,
+}
+
+export const notificationOptions = {
+  lookAwayMessage: 'Look away from the screen!',
+  lookBackMessage: 'Rest time over!',
+  iconUrl: 'IMGs/64icon.png',
+  type: 'basic',
+  title: 'Eye Saver',
 }
 
 export const alarms = {

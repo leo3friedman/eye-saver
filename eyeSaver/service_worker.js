@@ -1,24 +1,8 @@
-import { messages, defaults, states } from './enums.js'
-import { EyeSaver } from './eyeSaver.js'
-
-const messageEyeSaver = async (message) => {
-  const [tab] = await chrome.tabs.query({
-    active: true,
-    lastFocusedWindow: true,
-  })
-
-  try {
-    const response = await chrome.tabs.sendMessage(tab.id, message)
-  } catch (e) {
-    console.log('error messaging, reseting alarm...', e)
-  }
-}
+import { defaults, states, messages } from './enums.js'
 
 chrome.runtime.onInstalled.addListener(async () => {
   chrome.storage.sync.get(defaults, (result) => {
-    console.log(result.state === states.RUNNING)
     const running = result.state === states.RUNNING
-    console.log(running)
     if (running) {
       chrome.storage.sync.set({ sessionStart: Date.now() })
     }
@@ -33,15 +17,19 @@ chrome.runtime.onInstalled.addListener(async () => {
   // }
 })
 
+const pushDesktopNotification = (options) => {
+  chrome.notifications.create(options)
+}
+
+const playSound = (sound = null) => {
+  console.log('play sound!')
+}
+
 chrome.runtime.onMessage.addListener((message) => {
-  if (message === 'PING_CONTENT_SCRIPT') {
-    console.log('service_worker recieved message from popup...')
-    chrome.runtime.sendMessage({ greeting: 'Hello from background.js!' })
-    // pingEyeSaver()
+  if (message.key === messages.PUSH_DESKTOP_NOTIFICATION) {
+    pushDesktopNotification(message.payload)
+  }
+  if (message.key === messages.PLAY_SOUND) {
+    playSound()
   }
 })
-
-// TODO: is this step necessary??
-// chrome.tabs.onActivated.addListener(() => {
-//   messageEyeSaver(messages.ACTIVATE)
-// })

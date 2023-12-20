@@ -11,17 +11,16 @@ export class EyeSaver {
     this.onScreenTime = onScreenTime
     this.timeout = null
 
-    // chrome.runtime.onMessage.addListener(async (message) => {
-    //   if (!this.enums) await this.importEnums()
-    //   if (message === this.enums.messages.ACTIVATE) {
-    //     this.handleCurrentState()
-    //   }
-    // })
-
     chrome.storage.onChanged.addListener((changes) => {
       if (changes.state || changes.sessionStart) this.handleCurrentState()
     })
   }
+
+  /**
+   *
+   * ACTIONS
+   *
+   */
 
   async handleCurrentState() {
     if (this.timeout) clearTimeout(this.timeout)
@@ -46,13 +45,16 @@ export class EyeSaver {
       await this.getTimeUntilNextStateChange()
     )
 
-    if (resting && this.onResting) {
+    if (resting) {
       this.onResting()
+      this.pushDesktopNotification()
       return
     }
 
-    if (!resting && this.onScreenTime) {
+    if (!resting) {
       this.onScreenTime()
+      this.pushDesktopNotification()
+      return
     }
   }
 
@@ -67,6 +69,35 @@ export class EyeSaver {
     await chrome.storage.sync.set({ state: this.enums.states.STOPPED })
   }
 
+  async importEnums() {
+    this.enums = await import(this.chrome.runtime.getURL('enums.js'))
+  }
+
+  async pushDesktopNotification() {
+    if (await this.isFreshStart()) return
+    if (!this.enums) await this.importEnums()
+    const options = this.enums.notificationOptions
+    const message = (await this.isResting())
+      ? options.lookAwayMessage
+      : options.lookBackMessage
+    const notificationOptions = {
+      type: options.type,
+      iconUrl: options.iconUrl,
+      title: options.title,
+      message: message,
+    }
+    this.chrome.runtime.sendMessage({
+      key: this.enums.messages.PUSH_DESKTOP_NOTIFICATION,
+      payload: notificationOptions,
+    })
+  }
+
+  /**
+   *
+   * STORAGE SETTERS
+   *
+   */
+
   setSessionStart() {
     this.chrome.storage.sync.set({ sessionStart: Date.now() })
   }
@@ -75,6 +106,35 @@ export class EyeSaver {
   }
   setRestDuration(duration) {
     this.chrome.storage.sync.set({ restDuration: duration })
+  }
+
+  /**
+   *
+   * STORAGE GETTERS
+   *
+   */
+
+  async isFreshStart() {
+    const sessionStart = await this.getSessionStart()
+    const timerDuration = await this.getTimerDuration()
+    const totalTimePassed = Date.now() - sessionStart
+
+    return totalTimePassed < timerDuration
+  }
+
+  async isExtensionRunning() {
+    if (!this.enums) await this.importEnums()
+    return new Promise((resolve) => {
+      this.chrome.storage.sync.get(this.enums.defaults, (result) => {
+        resolve(result.state === this.enums.states.RUNNING)
+      })
+    })
+  }
+
+  async isResting() {
+    const currentProgress = await this.getCurrentProgress()
+    const timerDuration = await this.getTimerDuration()
+    return currentProgress >= timerDuration
   }
 
   async getSessionStart() {
@@ -102,21 +162,6 @@ export class EyeSaver {
         resolve(Number(result.restDuration))
       })
     })
-  }
-
-  async isExtensionRunning() {
-    if (!this.enums) await this.importEnums()
-    return new Promise((resolve) => {
-      this.chrome.storage.sync.get(this.enums.defaults, (result) => {
-        resolve(result.state === this.enums.states.RUNNING)
-      })
-    })
-  }
-
-  async isResting() {
-    const currentProgress = await this.getCurrentProgress()
-    const timerDuration = await this.getTimerDuration()
-    return currentProgress >= timerDuration
   }
 
   async getTimeUntilNextStateChange() {
@@ -154,9 +199,5 @@ export class EyeSaver {
     const timerDuration = await this.getTimerDuration()
 
     return timerDuration - currentProgress
-  }
-
-  async importEnums() {
-    this.enums = await import(this.chrome.runtime.getURL('enums.js'))
   }
 }
