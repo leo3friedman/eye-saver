@@ -42,6 +42,6 @@ chrome.runtime.onMessage.addListener((message) => {
 })
 
 // TODO: is this step necessary??
-chrome.tabs.onActivated.addListener(() => {
-  messageEyeSaver(messages.ACTIVATE)
-})
+// chrome.tabs.onActivated.addListener(() => {
+//   messageEyeSaver(messages.ACTIVATE)
+// })

@@ -11,12 +11,12 @@ export class EyeSaver {
     this.onScreenTime = onScreenTime
     this.timeout = null
 
-    chrome.runtime.onMessage.addListener(async (message) => {
-      if (!this.enums) await this.importEnums()
-      if (message === this.enums.messages.ACTIVATE) {
-        this.handleCurrentState()
-      }
-    })
+    // chrome.runtime.onMessage.addListener(async (message) => {
+    //   if (!this.enums) await this.importEnums()
+    //   if (message === this.enums.messages.ACTIVATE) {
+    //     this.handleCurrentState()
+    //   }
+    // })
 
     chrome.storage.onChanged.addListener((changes) => {
       if (changes.state || changes.sessionStart) this.handleCurrentState()
