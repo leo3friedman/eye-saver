@@ -66,6 +66,10 @@ const renderClock = async (dropzone) => {
   const restDuration = await eyeSaver.getRestDuration()
   const running = await eyeSaver.isExtensionRunning()
   const timePassed = restDuration - (await eyeSaver.getRestDurationRemaining())
+
+  const getGlobalTimePassed = async () => {
+    return await eyeSaver.getCurrentProgress()
+  }
   // const timePassed = await eyeSaver.getCurrentProgress()
 
   const timer = new timerSrc.Timer(
@@ -74,6 +78,7 @@ const renderClock = async (dropzone) => {
     timePassed,
     running,
     false,
+    null,
     null
   )
 

@@ -1,7 +1,7 @@
 const states = {
   RUNNING: 0,
-  PAUSED: 1,
-  DONE: 2,
+  DONE: 1,
+  STOPPED: 2,
 }
 
 export class Timer {
@@ -43,7 +43,6 @@ export class Timer {
       this.initializeStyles()
       if (this.state === states.RUNNING || this.state === states.DONE) {
         this.timestamp = Date.now()
-        this.stopBlinking()
         this.tick()
       }
     }
@@ -132,7 +131,7 @@ export class Timer {
 
   tick() {
     if (this.state === states.DONE || this.state === states.STOPPED) {
-      return
+    return
     }
 
     this.stopBlinking() // TODO: this shouldn't be needed (added for blinking bug fix)
