@@ -12,6 +12,16 @@
     :root {
       width: 320px;
     }
+    .settings-subsection__content {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .settings-subsection__field {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
   </style>
   <body>
     <section>
@@ -19,10 +29,40 @@
       <button class="timer__start-button">Start</button>
       <button class="timer__cancel-button">Cancel</button>
     </section>
-    <label for="timer-duration-input">Screen Time (minutes)</label>
-    <input id="timer-duration-input" type="number" step="1000" min="1000" />
-    <label for="rest-duration-input">Break Time (seconds) </label>
-    <input id="rest-duration-input" type="number" step="1000" min="1000" />
+    <section>
+      <h3>TIMER SETTINGS</h3>
+      <div class="settings-subsection__content">
+        <div class="settings-subsection__field">
+          <input
+            id="timer-duration-input"
+            type="number"
+            step="1000"
+            min="1000" />
+          <label for="timer-duration-input">Screen Time</label>
+        </div>
+        <div class="settings-subsection__field">
+          <input
+            id="rest-duration-input"
+            type="number"
+            step="1000"
+            min="1000" />
+          <label for="rest-duration-input">Break Length </label>
+        </div>
+      </div>
+      <h3>NOTIFICATION SETTINGS</h3>
+      <div class="settings-subsection__content">
+        <div class="settings-subsection__field">
+          <input id="desktop-notification-checkbox" type="checkbox" />
+          <label for="desktop-notification-checkbox"
+            >Push desktop notifications</label
+          >
+        </div>
+        <div class="settings-subsection__field">
+          <input id="sound-notification-checkbox" type="checkbox" />
+          <label for="sound-notification-checkbox">Play sound</label>
+        </div>
+      </div>
+    </section>
   </body>
   <section>
     <h3>TESTING SECTION</h3>

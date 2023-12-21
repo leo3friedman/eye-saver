@@ -66,7 +66,8 @@ export class EyeSaver {
   }
 
   async pushDesktopNotification() {
-    if (await this.isFreshStart()) return
+    const enabled = await this.getPushDesktopNotification()
+    if ((await this.isFreshStart()) || !enabled) return
     if (!this.enums) await this.importEnums()
 
     const options = this.enums.notificationOptions
@@ -86,7 +87,8 @@ export class EyeSaver {
   }
 
   async playSound() {
-    if (await this.isFreshStart()) return
+    const enabled = await this.getPlaySoundNotification()
+    if ((await this.isFreshStart()) || !enabled) return
     if (!this.enums) await this.importEnums()
 
     const source = await this.getSoundSource()
@@ -113,6 +115,12 @@ export class EyeSaver {
   }
   setRestDuration(duration) {
     this.chrome.storage.sync.set({ restDuration: duration })
+  }
+  setPushDesktopNotification(boolean) {
+    this.chrome.storage.sync.set({ pushDesktopNotification: boolean })
+  }
+  setPlaySoundNotification(boolean) {
+    this.chrome.storage.sync.set({ playSoundNotification: boolean })
   }
 
   /**
@@ -185,6 +193,22 @@ export class EyeSaver {
     return new Promise((resolve) => {
       this.chrome.storage.sync.get(this.enums.defaults, (result) => {
         resolve(Number(result.soundVolume))
+      })
+    })
+  }
+  async getPushDesktopNotification() {
+    if (!this.enums) await this.importEnums()
+    return new Promise((resolve) => {
+      this.chrome.storage.sync.get(this.enums.defaults, (result) => {
+        resolve(Boolean(result.pushDesktopNotification))
+      })
+    })
+  }
+  async getPlaySoundNotification() {
+    if (!this.enums) await this.importEnums()
+    return new Promise((resolve) => {
+      this.chrome.storage.sync.get(this.enums.defaults, (result) => {
+        resolve(Boolean(result.playSoundNotification))
       })
     })
   }

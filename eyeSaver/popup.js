@@ -48,28 +48,8 @@ const main = async () => {
    * INITIALIZING DOM ELEMENTS
    */
 
-  const inputs = {
-    timerDurationInput: document.querySelector('#timer-duration-input'),
-    restDurationInput: document.querySelector('#rest-duration-input'),
-  }
-  const inputsArr = Object.values(inputs)
   const startButton = document.querySelector('.timer__start-button')
   const cancelButton = document.querySelector('.timer__cancel-button')
-
-  inputs.timerDurationInput.value = await eyeSaver.getTimerDuration()
-  inputs.restDurationInput.value = await eyeSaver.getRestDuration()
-
-  inputs.timerDurationInput.onchange = (event) => {
-    eyeSaver.setTimerDuration(event.target.value)
-    timer.setTimerDuration(event.target.value)
-  }
-
-  inputs.restDurationInput.onchange = (event) => {
-    eyeSaver.setRestDuration(event.target.value)
-    timer.setRestDuration(event.target.value)
-  }
-  running ? disableDurationInputs(inputsArr) : enableDurationInputs(inputsArr)
-
   startButton.onclick = () => {
     timer.start()
     eyeSaver.startExtension()
@@ -82,6 +62,38 @@ const main = async () => {
     enableDurationInputs(inputsArr)
   }
 
+  const inputs = {
+    timerDurationInput: document.querySelector('#timer-duration-input'),
+    restDurationInput: document.querySelector('#rest-duration-input'),
+  }
+  const inputsArr = Object.values(inputs)
+  inputs.timerDurationInput.value = await eyeSaver.getTimerDuration()
+  inputs.restDurationInput.value = await eyeSaver.getRestDuration()
+  inputs.timerDurationInput.onchange = (event) => {
+    eyeSaver.setTimerDuration(event.target.value)
+    timer.setTimerDuration(event.target.value)
+  }
+  inputs.restDurationInput.onchange = (event) => {
+    eyeSaver.setRestDuration(event.target.value)
+    timer.setRestDuration(event.target.value)
+  }
+  running ? disableDurationInputs(inputsArr) : enableDurationInputs(inputsArr)
+
+  const desktopNotificationCheckbox = document.querySelector(
+    '#desktop-notification-checkbox'
+  )
+  const soundNotificationCheckbox = document.querySelector(
+    '#sound-notification-checkbox'
+  )
+  desktopNotificationCheckbox.checked =
+    await eyeSaver.getPushDesktopNotification()
+  desktopNotificationCheckbox.onclick = async (event) => {
+    eyeSaver.setPushDesktopNotification(event.target.checked)
+  }
+  soundNotificationCheckbox.checked = await eyeSaver.getPlaySoundNotification()
+  soundNotificationCheckbox.onclick = async (event) => {
+    eyeSaver.setPlaySoundNotification(event.target.checked)
+  }
   /**
    *  INITIALIZING ELEMENTS USED FOR TESTING (DEV PURPOSES ONLY)
    */

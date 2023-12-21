@@ -27,8 +27,8 @@ export const defaults = {
   state: states.RUNNING,
   mode: modes.SCREEN_TIME,
   sessionStart: Date.now(),
-  desktopNotifications: true,
-  soundNotifications: true,
+  pushDesktopNotification: true,
+  playSoundNotification: true,
   soundSource: 'sounds/look_back_sound.wav',
   soundVolume: 0.5,
 }
