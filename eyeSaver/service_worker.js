@@ -1,5 +1,6 @@
 import { defaults, states, messages } from './enums.js'
 
+// TODO: is this necessary + how to use eyeSaver for this? (import not allowed)
 chrome.runtime.onInstalled.addListener(async () => {
   chrome.storage.sync.get(defaults, (result) => {
     const running = result.state === states.RUNNING
@@ -7,29 +8,27 @@ chrome.runtime.onInstalled.addListener(async () => {
       chrome.storage.sync.set({ sessionStart: Date.now() })
     }
   })
-  // TODO: issue --> these eyeSaver function calls invoke an import() which is not allowed in a  service_worker
-  // const eyeSaver = new EyeSaver(chrome, null, enums)
-  // const running = await eyeSaver.isExtensionRunning()
-
-  // if (running) {
-  //   eyeSaver.setSessionStart()
-  //   handleStart()
-  // }
 })
 
-const pushDesktopNotification = (options) => {
-  chrome.notifications.create(options)
-}
-
-const playSound = (sound = null) => {
-  console.log('play sound!')
-}
-
-chrome.runtime.onMessage.addListener((message) => {
-  if (message.key === messages.PUSH_DESKTOP_NOTIFICATION) {
-    pushDesktopNotification(message.payload)
+async function createOffscreen() {
+  const offscreenExists = await chrome.offscreen.hasDocument()
+  if (!offscreenExists) {
+    await chrome.offscreen.createDocument({
+      url: 'offscreen.html',
+      reasons: ['AUDIO_PLAYBACK'],
+      justification: 'notification',
+    })
   }
-  if (message.key === messages.PLAY_SOUND) {
-    playSound()
+}
+
+chrome.runtime.onMessage.addListener(async (message) => {
+  if (message.key === messages.PUSH_DESKTOP_NOTIFICATION) {
+    chrome.notifications.create(message.payload)
+  }
+
+  if (message.key === messages.PLAY_SOUND && !message.offscreen) {
+    await createOffscreen()
+    message.offscreen = true
+    await chrome.runtime.sendMessage(message)
   }
 })

@@ -29,14 +29,16 @@ export const defaults = {
   sessionStart: Date.now(),
   desktopNotifications: true,
   soundNotifications: true,
+  soundSource: 'sounds/look_back_sound.wav',
+  soundVolume: 0.5,
 }
 
 export const notificationOptions = {
+  title: 'Eye Saver',
+  type: 'basic',
+  iconUrl: 'IMGs/64icon.png',
   lookAwayMessage: 'Look away from the screen!',
   lookBackMessage: 'Rest time over!',
-  iconUrl: 'IMGs/64icon.png',
-  type: 'basic',
-  title: 'Eye Saver',
 }
 
 export const alarms = {

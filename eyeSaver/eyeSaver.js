@@ -5,7 +5,7 @@ export class EyeSaver {
    * @param {()=>void} onResting
    * @param {()=>void} onScreenTime
    */
-  constructor(chrome, onResting = null, onScreenTime = null) {
+  constructor(chrome, onResting, onScreenTime) {
     this.chrome = chrome
     this.onResting = onResting
     this.onScreenTime = onScreenTime
@@ -45,17 +45,9 @@ export class EyeSaver {
       await this.getTimeUntilNextStateChange()
     )
 
-    if (resting) {
-      this.onResting()
-      this.pushDesktopNotification()
-      return
-    }
-
-    if (!resting) {
-      this.onScreenTime()
-      this.pushDesktopNotification()
-      return
-    }
+    resting ? this.onResting() : this.onScreenTime()
+    this.pushDesktopNotification()
+    this.playSound()
   }
 
   async startExtension() {
@@ -76,19 +68,34 @@ export class EyeSaver {
   async pushDesktopNotification() {
     if (await this.isFreshStart()) return
     if (!this.enums) await this.importEnums()
+
     const options = this.enums.notificationOptions
     const message = (await this.isResting())
       ? options.lookAwayMessage
       : options.lookBackMessage
-    const notificationOptions = {
-      type: options.type,
-      iconUrl: options.iconUrl,
-      title: options.title,
-      message: message,
-    }
+
     this.chrome.runtime.sendMessage({
       key: this.enums.messages.PUSH_DESKTOP_NOTIFICATION,
-      payload: notificationOptions,
+      payload: {
+        type: options.type,
+        iconUrl: options.iconUrl,
+        title: options.title,
+        message: message,
+      },
+    })
+  }
+
+  async playSound() {
+    if (await this.isFreshStart()) return
+    if (!this.enums) await this.importEnums()
+
+    const source = await this.getSoundSource()
+    const volume = await this.getSoundVolume()
+
+    chrome.runtime.sendMessage({
+      key: this.enums.messages.PLAY_SOUND,
+      payload: { source: source, volume: volume },
+      offscreen: false,
     })
   }
 
@@ -160,6 +167,24 @@ export class EyeSaver {
     return new Promise((resolve) => {
       this.chrome.storage.sync.get(this.enums.defaults, (result) => {
         resolve(Number(result.restDuration))
+      })
+    })
+  }
+
+  async getSoundSource() {
+    if (!this.enums) await this.importEnums()
+    return new Promise((resolve) => {
+      this.chrome.storage.sync.get(this.enums.defaults, (result) => {
+        resolve(String(result.soundSource))
+      })
+    })
+  }
+
+  async getSoundVolume() {
+    if (!this.enums) await this.importEnums()
+    return new Promise((resolve) => {
+      this.chrome.storage.sync.get(this.enums.defaults, (result) => {
+        resolve(Number(result.soundVolume))
       })
     })
   }

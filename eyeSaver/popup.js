@@ -6,7 +6,11 @@ const main = async () => {
    * RENDERING THE TIMER
    */
 
-  const eyeSaver = new eyeSaverSrc.EyeSaver(this.chrome, null)
+  const eyeSaver = new eyeSaverSrc.EyeSaver(
+    this.chrome,
+    () => {},
+    () => {}
+  )
   const dropzone = document.querySelector('.timer__dropzone')
   const timerDuration = await eyeSaver.getTimerDuration()
   const restDuration = await eyeSaver.getRestDuration()
@@ -82,12 +86,12 @@ const main = async () => {
    *  INITIALIZING ELEMENTS USED FOR TESTING (DEV PURPOSES ONLY)
    */
 
-  const sendMessageToContentScriptButton = document.querySelector(
-    '.send-message-to-content-script-button'
-  )
-  sendMessageToContentScriptButton.onclick = () => {
-    console.log('sending from popup message initated...')
-    chrome.runtime.sendMessage('PING_CONTENT_SCRIPT')
+  document.querySelector('.send-desktop-notification-button').onclick = () => {
+    eyeSaver.pushDesktopNotification()
+  }
+
+  document.querySelector('.play-sound-button').onclick = () => {
+    eyeSaver.playSound()
   }
 }
 
@@ -100,9 +104,3 @@ const enableDurationInputs = (inputs) => {
 }
 
 window.onload = main
-
-// TODO: implement when skip is clicked on rest
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-  console.log('Message received in popup.js:', message)
-  // Handle the message as needed
-})

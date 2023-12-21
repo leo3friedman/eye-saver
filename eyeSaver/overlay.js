@@ -75,7 +75,11 @@ const addOverlay = () => {
 const renderClock = async (dropzone) => {
   const eyeSaverSrc = await import(chrome.runtime.getURL('eyeSaver.js'))
   const timerSrc = await import(chrome.runtime.getURL('templates/timer.js'))
-  const eyeSaver = new eyeSaverSrc.EyeSaver(chrome, onResting)
+  const eyeSaver = new eyeSaverSrc.EyeSaver(
+    chrome,
+    () => {},
+    () => {}
+  )
 
   const timerDuration = await eyeSaver.getTimerDuration()
   const restDuration = await eyeSaver.getRestDuration()
