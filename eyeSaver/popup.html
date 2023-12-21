@@ -8,9 +8,13 @@
       font-family: roboto-regular;
       src: url(fonts/Roboto/Roboto-Regular.ttf);
     }
+    @font-face {
+      font-family: roboto-light;
+      src: url(fonts/Roboto/Roboto-Light.ttf);
+    }
 
-    :root {
-      width: 320px;
+    body {
+      font-family: 'system-ui';
     }
     .settings-subsection__content {
       display: flex;
@@ -20,7 +24,37 @@
     .settings-subsection__field {
       display: flex;
       align-items: center;
+      gap: 16px;
+    }
+    .duration-input {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      align-items: center;
+    }
+    .duration-input-text {
+      display: flex;
+      flex-direction: row;
       gap: 4px;
+    }
+    .__duration-group {
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      gap: 1px;
+    }
+    .__time {
+      font-family: roboto-light;
+      font-size: 20px;
+    }
+    .__sub {
+      font-family: roboto-regular;
+      font-size: 12px;
+    }
+    .duration-increment {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
   </style>
   <body>
@@ -33,22 +67,26 @@
       <h3>TIMER SETTINGS</h3>
       <div class="settings-subsection__content">
         <div class="settings-subsection__field">
-          <input
-            id="timer-duration-input"
-            type="number"
-            step="1000"
-            min="1000" />
+          <div id="timer-duration-input" class="duration-input">
+            <div class="duration-input-text">
+              <div class="__duration-group">
+                <div class="__time">1</div>
+                <div class="__sub">hr</div>
+              </div>
+              <div class="__duration-group">
+                <div class="__time">20</div>
+                <div class="__sub">min</div>
+              </div>
+            </div>
+            <div class="duration-increment">
+              <img class="increment-up" src="IMGS/increment-up.svg" />
+              <img class="increment-down" src="IMGS/increment-down.svg" />
+            </div>
+          </div>
           <label for="timer-duration-input">Screen Time</label>
         </div>
-        <div class="settings-subsection__field">
-          <input
-            id="rest-duration-input"
-            type="number"
-            step="1000"
-            min="1000" />
-          <label for="rest-duration-input">Break Length </label>
-        </div>
       </div>
+
       <h3>NOTIFICATION SETTINGS</h3>
       <div class="settings-subsection__content">
         <div class="settings-subsection__field">
@@ -66,10 +104,20 @@
   </body>
   <section>
     <h3>TESTING SECTION</h3>
-    <button class="send-desktop-notification-button">
-      Push Desktop Notifications
-    </button>
-    <button class="play-sound-button">Play Sound</button>
+    <div class="settings-subsection__content">
+      <div class="settings-subsection__field">
+        <input id="timer-duration-input" type="number" step="1000" min="1000" />
+        <label for="timer-duration-input">Screen Time</label>
+      </div>
+      <div class="settings-subsection__field">
+        <input id="rest-duration-input" type="number" step="1000" min="1000" />
+        <label for="rest-duration-input">Break Length </label>
+      </div>
+      <button class="send-desktop-notification-button">
+        Push Desktop Notifications
+      </button>
+      <button class="play-sound-button">Play Sound</button>
+    </div>
   </section>
   <script src="popup.js"></script>
 </html>

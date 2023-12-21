@@ -62,23 +62,6 @@ const main = async () => {
     enableDurationInputs(inputsArr)
   }
 
-  const inputs = {
-    timerDurationInput: document.querySelector('#timer-duration-input'),
-    restDurationInput: document.querySelector('#rest-duration-input'),
-  }
-  const inputsArr = Object.values(inputs)
-  inputs.timerDurationInput.value = await eyeSaver.getTimerDuration()
-  inputs.restDurationInput.value = await eyeSaver.getRestDuration()
-  inputs.timerDurationInput.onchange = (event) => {
-    eyeSaver.setTimerDuration(event.target.value)
-    timer.setTimerDuration(event.target.value)
-  }
-  inputs.restDurationInput.onchange = (event) => {
-    eyeSaver.setRestDuration(event.target.value)
-    timer.setRestDuration(event.target.value)
-  }
-  running ? disableDurationInputs(inputsArr) : enableDurationInputs(inputsArr)
-
   const desktopNotificationCheckbox = document.querySelector(
     '#desktop-notification-checkbox'
   )
@@ -97,6 +80,26 @@ const main = async () => {
   /**
    *  INITIALIZING ELEMENTS USED FOR TESTING (DEV PURPOSES ONLY)
    */
+
+  const inputs = {
+    timerDurationInput: document.querySelector('#timer-duration-input'),
+    restDurationInput: document.querySelector('#rest-duration-input'),
+  }
+
+  const inputsArr = Object.values(inputs)
+  inputs.timerDurationInput.value = await eyeSaver.getTimerDuration()
+  inputs.restDurationInput.value = await eyeSaver.getRestDuration()
+  inputs.timerDurationInput.onchange = (event) => {
+    eyeSaver.setTimerDuration(event.target.value)
+    timer.setTimerDuration(event.target.value)
+  }
+  
+  inputs.restDurationInput.onchange = (event) => {
+    eyeSaver.setRestDuration(event.target.value)
+    timer.setRestDuration(event.target.value)
+  }
+
+  running ? disableDurationInputs(inputsArr) : enableDurationInputs(inputsArr)
 
   document.querySelector('.send-desktop-notification-button').onclick = () => {
     eyeSaver.pushDesktopNotification()
