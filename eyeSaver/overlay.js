@@ -45,22 +45,32 @@ const addOverlay = () => {
     position: 'fixed',
     top: '0',
     left: '0',
-    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
     zIndex: Number.MAX_SAFE_INTEGER,
+    pointerEvents: 'all',
   })
 
   const overlayContents = document.createElement('div')
   applyStyles(overlayContents, {
     display: 'flex',
     flexDirection: 'column',
-    gap: '16px',
+    gap: '32px',
   })
 
   const dropzone = document.createElement('dropzone')
   dropzone.className = 'timer__dropzone'
 
-  const skipButton = document.createElement('button')
-  skipButton.innerText = 'SKIP'
+  const skipButton = document.createElement('div')
+  applyStyles(skipButton, {
+    color: '#eae9eb',
+    textAlign: 'center',
+    fontSize: '18px',
+    fontFamily: 'system-ui',
+  })
+  skipButton.innerText = 'Skip'
+  skipButton.onmouseover = (event) => {
+    event.target.style.cursor = 'pointer'
+  }
   skipButton.onclick = async () => {
     await eyeSaver.setSessionStart()
   }
