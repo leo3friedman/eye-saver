@@ -29,6 +29,8 @@ export const defaults = {
   sessionStart: Date.now(),
   pushDesktopNotification: true,
   playSoundNotification: true,
+  hasNotifiedLookAway: false,
+  hasNotifiedLookBack: false,
   soundSource: 'sounds/look_back_sound.wav',
   soundVolume: 0.5,
 }

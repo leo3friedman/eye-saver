@@ -17,6 +17,23 @@ const main = async () => {
   const running = await eyeSaver.isExtensionRunning()
   const timePassed = await eyeSaver.getCurrentProgress()
 
+  const startStopButton = document.createElement('button')
+  startStopButton.innerText = running ? 'Cancel' : 'Start'
+  startStopButton.onclick = async (event) => {
+    if (await eyeSaver.isExtensionRunning()) {
+      timer.cancel()
+      await eyeSaver.stopExtension()
+      enableDurationInputs()
+    } else {
+      timer.start()
+      await eyeSaver.startExtension()
+      disableDurationInputs()
+    }
+    event.target.innerText = (await eyeSaver.isExtensionRunning())
+      ? 'Cancel'
+      : 'Start'
+  }
+
   // TODO: is this the right approach?
   const onFinish = async () => {
     const restDurationRemaining = await eyeSaver.getRestDurationRemaining()
@@ -39,7 +56,8 @@ const main = async () => {
     timePassed,
     running,
     true,
-    onFinish
+    onFinish,
+    startStopButton
   )
 
   timer.renderTimer(dropzone)
@@ -47,20 +65,6 @@ const main = async () => {
   /**
    * INITIALIZING UI ELEMENTS
    */
-
-  const startButton = document.querySelector('.timer__start-button')
-  const cancelButton = document.querySelector('.timer__cancel-button')
-  startButton.onclick = () => {
-    timer.start()
-    eyeSaver.startExtension()
-    disableDurationInputs()
-  }
-
-  cancelButton.onclick = () => {
-    timer.cancel()
-    eyeSaver.stopExtension()
-    enableDurationInputs()
-  }
 
   setTimerDurationInputText(timerDuration)
   setRestDurationInputText(restDuration)
@@ -163,8 +167,7 @@ const main = async () => {
     restDurationInput: document.querySelector('#test-rest-duration-input'),
   }
 
-  const inputsArr = Object.values(inputs)
-  inputs.timerDurationInput.value = timerDuration
+  inputs.timerDurationInput.value = await eyeSaver.getTimerDuration()
 
   inputs.restDurationInput.value = await eyeSaver.getRestDuration()
 
@@ -210,6 +213,7 @@ const setTimerDurationInputText = (time) => {
   document.querySelector('.__time-input.timer-duration__minutes').innerText =
     minutes
 }
+
 const setRestDurationInputText = (time) => {
   const minutes = timeToText(time).minutes
   const seconds = ('0' + timeToText(time).seconds).slice(-2)

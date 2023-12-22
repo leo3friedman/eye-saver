@@ -46,8 +46,18 @@ export class EyeSaver {
     )
 
     resting ? this.onResting() : this.onScreenTime()
-    this.pushDesktopNotification()
-    this.playSound()
+
+    if (resting && !(await this.getHasNotifiedLookAway())) {
+      await this.setHasNotifiedLookAway(true)
+      await this.setHasNotifiedLookBack(false)
+      this.playSound()
+      this.pushDesktopNotification()
+    } else if (!resting && !(await this.getHasNotifiedLookBack())) {
+      await this.setHasNotifiedLookBack(true)
+      await this.setHasNotifiedLookAway(false)
+      this.playSound()
+      this.pushDesktopNotification()
+    }
   }
 
   async startExtension() {
@@ -107,20 +117,26 @@ export class EyeSaver {
    *
    */
 
-  setSessionStart() {
+  async setSessionStart() {
     this.chrome.storage.sync.set({ sessionStart: Date.now() })
   }
-  setTimerDuration(duration) {
+  async setTimerDuration(duration) {
     this.chrome.storage.sync.set({ timerDuration: duration })
   }
-  setRestDuration(duration) {
+  async setRestDuration(duration) {
     this.chrome.storage.sync.set({ restDuration: duration })
   }
-  setPushDesktopNotification(boolean) {
+  async setPushDesktopNotification(boolean) {
     this.chrome.storage.sync.set({ pushDesktopNotification: boolean })
   }
-  setPlaySoundNotification(boolean) {
+  async setPlaySoundNotification(boolean) {
     this.chrome.storage.sync.set({ playSoundNotification: boolean })
+  }
+  async setHasNotifiedLookAway(boolean) {
+    this.chrome.storage.sync.set({ hasNotifiedLookAway: boolean })
+  }
+  async setHasNotifiedLookBack(boolean) {
+    this.chrome.storage.sync.set({ hasNotifiedLookBack: boolean })
   }
 
   /**
@@ -204,11 +220,30 @@ export class EyeSaver {
       })
     })
   }
+
   async getPlaySoundNotification() {
     if (!this.enums) await this.importEnums()
     return new Promise((resolve) => {
       this.chrome.storage.sync.get(this.enums.defaults, (result) => {
         resolve(Boolean(result.playSoundNotification))
+      })
+    })
+  }
+
+  async getHasNotifiedLookAway() {
+    if (!this.enums) await this.importEnums()
+    return new Promise((resolve) => {
+      this.chrome.storage.sync.get(this.enums.defaults, (result) => {
+        resolve(Boolean(result.hasNotifiedLookAway))
+      })
+    })
+  }
+
+  async getHasNotifiedLookBack() {
+    if (!this.enums) await this.importEnums()
+    return new Promise((resolve) => {
+      this.chrome.storage.sync.get(this.enums.defaults, (result) => {
+        resolve(Boolean(result.hasNotifiedLookBack))
       })
     })
   }

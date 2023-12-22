@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap"
+    rel="stylesheet" />
   <style>
     @font-face {
       font-family: roboto-thin;
@@ -8,6 +10,7 @@
     }
 
     .timer {
+      position: relative;
       display: flex;
       align-items: center;
       width: fit-content;
@@ -20,7 +23,6 @@
       width: fit-content;
       align-items: center;
       flex-direction: column;
-      gap: 16px;
     }
 
     .timer-duration {
@@ -29,6 +31,11 @@
       font-family: roboto-thin, 'Roboto', 'open-sans' !important;
       font-weight: 100 !important;
       font-size: 48px;
+    }
+
+    .timer-ui {
+      position: absolute;
+      top: 70%;
     }
 
     .progress-ring {
@@ -42,15 +49,20 @@
     }
 
     .blink {
-        animation: blinker 1s infinite;
-    }
-      
-    @keyframes blinker {
-        from { opacity: 1.0; }
-        50% { opacity: 0.5; }
-        to { opacity: 1.0; }
+      animation: blinker 1s infinite;
     }
 
+    @keyframes blinker {
+      from {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+      to {
+        opacity: 1;
+      }
+    }
   </style>
   <body>
     <svg class="progress-ring">
@@ -60,18 +72,18 @@
         fill="transparent" />
       <circle class="progress-ring__circle" stroke="black" fill="transparent" />
     </svg>
-    <section>
-      <div class="timer">
-        <div class="timer-content">
-          <div class="timer-duration">
-            <div class="timer-duration__hours">0</div>
-            <div>:</div>
-            <div class="timer-duration__minutes">00</div>
-            <div>:</div>
-            <div class="timer-duration__seconds">00</div>
-          </div>
+    <div class="timer">
+      <div class="timer-content">
+        <div class="timer-duration">
+          <div class="timer-duration__hours">0</div>
+          <div>:</div>
+          <div class="timer-duration__minutes">00</div>
+          <div>:</div>
+          <div class="timer-duration__seconds">00</div>
         </div>
+        <div class="timer-ui"></div>
       </div>
+    </div>
   </body>
   <script src="timer.js"></script>
 </html>

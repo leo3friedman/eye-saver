@@ -13,6 +13,7 @@ export class Timer {
    * @param {boolean} running true if the timer should be running by default
    * @param {boolean} countdown true if the timer should count from duration down to 0
    * @param {() => void} callback callback to run when timer finishes (on finish())
+   * @param {Node} UI Dom element containing UI for the timer
    */
   constructor(
     timerDuration,
@@ -20,7 +21,8 @@ export class Timer {
     timePassed = 0,
     running = true,
     countdown = true,
-    callback = null
+    callback = null,
+    UI = null
   ) {
     this.timerDuration = timerDuration
     this.restDuration = restDuration
@@ -28,6 +30,7 @@ export class Timer {
     this.state = running ? states.RUNNING : states.STOPPED
     this.countdown = countdown
     this.callback = callback
+    this.UI = UI
 
     this.props = {}
     this.timestamp = -1
@@ -100,6 +103,10 @@ export class Timer {
 
     this.setTimerText()
     this.setProgress()
+
+    if (this.UI) {
+      document.querySelector('.timer-ui').appendChild(this.UI)
+    }
   }
 
   start() {
@@ -131,7 +138,7 @@ export class Timer {
 
   tick() {
     if (this.state === states.DONE || this.state === states.STOPPED) {
-    return
+      return
     }
 
     this.stopBlinking() // TODO: this shouldn't be needed (added for blinking bug fix)
