@@ -18,7 +18,8 @@
     }
 
     :root {
-      --section-padding: 24px;
+      --section-padding: 0px 24px;
+      --padding-top: 24px;
       --background: #141216;
       --secondary: #29252d;
       --text: #eae9eb;
@@ -26,6 +27,7 @@
     }
 
     body {
+      width: 300px;
       margin: 0px;
       background-color: var(--background);
       color: var(--text);
@@ -38,24 +40,34 @@
     }
 
     .timer-section {
+      display: flex;
+      justify-content: center;
       padding: var(--section-padding);
+      padding: var(--padding-top);
     }
 
     .settings-section {
-      background: #29252d;
       padding: var(--section-padding);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
     .settings-header {
       font-family: roboto-regular;
       font-size: 12px;
-      color: var(--accent);
+      color: #666666;
+      margin: 0;
+      padding-bottom: 8px;
     }
 
     .settings-subsection__content {
       display: flex;
       flex-direction: column;
       gap: 8px;
+      padding: 16px;
+      background-color: var(--secondary);
+      border-radius: 16px;
     }
 
     .settings-subsection__field {
@@ -101,14 +113,14 @@
     }
 
     .footer {
-      padding: var(--section-padding);
+      padding: 24px;
       display: flex;
       justify-content: space-between;
       font-size: 12px;
       font-family: roboto-regular;
     }
     a {
-      color: #eae9eb !important;
+      color: #666666 !important;
     }
   </style>
   <body>
@@ -117,72 +129,76 @@
         <div class="timer__dropzone"></div>
       </section>
       <section class="settings-section">
-        <h4 class="settings-header">TIMER SETTINGS</h4>
-        <div class="settings-subsection__content timer-settings">
-          <div class="settings-subsection__field">
-            <div id="timer-duration-input" class="duration-input">
-              <div class="duration-input-text">
-                <div class="__duration-group">
-                  <div class="__time-input timer-duration__hours">0</div>
-                  <div class="__sub">h</div>
+        <div>
+          <h4 class="settings-header">Timer Settings</h4>
+          <div class="settings-subsection__content timer-settings">
+            <div class="settings-subsection__field">
+              <div id="timer-duration-input" class="duration-input">
+                <div class="duration-input-text">
+                  <div class="__duration-group">
+                    <div class="__time-input timer-duration__hours">0</div>
+                    <div class="__sub">h</div>
+                  </div>
+                  <div class="__duration-group">
+                    <div class="__time-input timer-duration__minutes">00</div>
+                    <div class="__sub">m</div>
+                  </div>
                 </div>
-                <div class="__duration-group">
-                  <div class="__time-input timer-duration__minutes">00</div>
-                  <div class="__sub">m</div>
+                <div class="duration-increment">
+                  <img
+                    class="svg-icon timer-duration-increment-up"
+                    src="IMGS/increment-up.svg" />
+                  <img
+                    class="svg-icon timer-duration-increment-down"
+                    src="IMGS/increment-down.svg" />
                 </div>
               </div>
-              <div class="duration-increment">
-                <img
-                  class="svg-icon timer-duration-increment-up"
-                  src="IMGS/increment-up.svg" />
-                <img
-                  class="svg-icon timer-duration-increment-down"
-                  src="IMGS/increment-down.svg" />
-              </div>
+              <label for="timer-duration-input">Screen Time</label>
             </div>
-            <label for="timer-duration-input">Screen Time</label>
-          </div>
-          <div class="settings-subsection__field">
-            <div id="rest-duration-input" class="duration-input">
-              <div class="duration-input-text">
-                <div class="__duration-group">
-                  <div class="__time-input rest-duration__minutes">0</div>
-                  <div class="__sub">m</div>
+            <div class="settings-subsection__field">
+              <div id="rest-duration-input" class="duration-input">
+                <div class="duration-input-text">
+                  <div class="__duration-group">
+                    <div class="__time-input rest-duration__minutes">0</div>
+                    <div class="__sub">m</div>
+                  </div>
+                  <div class="__duration-group">
+                    <div class="__time-input rest-duration__seconds">00</div>
+                    <div class="__sub">s</div>
+                  </div>
                 </div>
-                <div class="__duration-group">
-                  <div class="__time-input rest-duration__seconds">00</div>
-                  <div class="__sub">s</div>
+                <div class="duration-increment">
+                  <img
+                    class="svg-icon rest-duration-increment-up"
+                    src="IMGS/increment-up.svg" />
+                  <img
+                    class="svg-icon rest-duration-increment-down"
+                    src="IMGS/increment-down.svg" />
                 </div>
               </div>
-              <div class="duration-increment">
-                <img
-                  class="svg-icon rest-duration-increment-up"
-                  src="IMGS/increment-up.svg" />
-                <img
-                  class="svg-icon rest-duration-increment-down"
-                  src="IMGS/increment-down.svg" />
-              </div>
+              <label for="timer-duration-input">Break Length</label>
             </div>
-            <label for="timer-duration-input">Break Length</label>
           </div>
         </div>
-        <h4 class="settings-header">NOTIFICATION SETTINGS</h4>
-        <div class="settings-subsection__content">
-          <div class="settings-subsection__field">
-            <input
-              class="checkbox"
-              id="desktop-notification-checkbox"
-              type="checkbox" />
-            <label for="desktop-notification-checkbox"
-              >Push notifications</label
-            >
-          </div>
-          <div class="settings-subsection__field">
-            <input
-              class="checkbox"
-              id="sound-notification-checkbox"
-              type="checkbox" />
-            <label for="sound-notification-checkbox">Play sound</label>
+        <div>
+          <h4 class="settings-header">Notification Settings</h4>
+          <div class="settings-subsection__content">
+            <div class="settings-subsection__field">
+              <input
+                class="checkbox"
+                id="desktop-notification-checkbox"
+                type="checkbox" />
+              <label for="desktop-notification-checkbox"
+                >Push notifications</label
+              >
+            </div>
+            <div class="settings-subsection__field">
+              <input
+                class="checkbox"
+                id="sound-notification-checkbox"
+                type="checkbox" />
+              <label for="sound-notification-checkbox">Play sound</label>
+            </div>
           </div>
         </div>
       </section>
