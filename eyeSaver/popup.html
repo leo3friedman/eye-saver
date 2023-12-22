@@ -43,7 +43,7 @@
       align-items: baseline;
       gap: 1px;
     }
-    .__time {
+    .__time-input {
       font-family: roboto-light;
       font-size: 20px;
     }
@@ -55,6 +55,9 @@
       display: flex;
       flex-direction: column;
       gap: 2px;
+    }
+    .svg-icon:hover {
+      cursor: pointer;
     }
   </style>
   <body>
@@ -70,17 +73,21 @@
           <div id="timer-duration-input" class="duration-input">
             <div class="duration-input-text">
               <div class="__duration-group">
-                <div class="__time">1</div>
+                <div class="__time-input timer-duration__hours">1</div>
                 <div class="__sub">hr</div>
               </div>
               <div class="__duration-group">
-                <div class="__time">20</div>
+                <div class="__time-input timer-duration__minutes">20</div>
                 <div class="__sub">min</div>
               </div>
             </div>
             <div class="duration-increment">
-              <img class="increment-up" src="IMGS/increment-up.svg" />
-              <img class="increment-down" src="IMGS/increment-down.svg" />
+              <img
+                class="svg-icon timer-duration-increment-up"
+                src="IMGS/increment-up.svg" />
+              <img
+                class="svg-icon timer-duration-increment-down"
+                src="IMGS/increment-down.svg" />
             </div>
           </div>
           <label for="timer-duration-input">Screen Time</label>
@@ -106,12 +113,20 @@
     <h3>TESTING SECTION</h3>
     <div class="settings-subsection__content">
       <div class="settings-subsection__field">
-        <input id="timer-duration-input" type="number" step="1000" min="1000" />
-        <label for="timer-duration-input">Screen Time</label>
+        <input
+          id="test-timer-duration-input"
+          type="number"
+          step="1000"
+          min="1000" />
+        <label for="test-timer-duration-input">Screen Time</label>
       </div>
       <div class="settings-subsection__field">
-        <input id="rest-duration-input" type="number" step="1000" min="1000" />
-        <label for="rest-duration-input">Break Length </label>
+        <input
+          id="test-rest-duration-input"
+          type="number"
+          step="1000"
+          min="1000" />
+        <label for="test-rest-duration-input">Break Length </label>
       </div>
       <button class="send-desktop-notification-button">
         Push Desktop Notifications

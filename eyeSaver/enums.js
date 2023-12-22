@@ -22,8 +22,8 @@ export const messages = {
 }
 
 export const defaults = {
-  timerDuration: 10000,
-  restDuration: 5000,
+  timerDuration: 20 * 60 * 1000,
+  restDuration: 20 * 1000,
   state: states.RUNNING,
   mode: modes.SCREEN_TIME,
   sessionStart: Date.now(),
@@ -39,6 +39,13 @@ export const notificationOptions = {
   iconUrl: 'IMGs/64icon.png',
   lookAwayMessage: 'Look away from the screen!',
   lookBackMessage: 'Rest time over!',
+}
+
+export const timerInputDefaults = {
+  timerDurationIncrement: 10 * 60 * 1000,
+  restDurationIncrement: 10 * 1000,
+  maxDuration: 2 * 60 * 60 * 1000,
+  minDuration: 10 * 60 * 1000,
 }
 
 export const alarms = {

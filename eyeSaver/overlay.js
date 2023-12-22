@@ -58,7 +58,7 @@ const addOverlay = () => {
 
   const dropzone = document.createElement('dropzone')
   dropzone.className = 'timer__dropzone'
-
+  
   const skipButton = document.createElement('button')
   skipButton.innerText = 'SKIP'
   skipButton.onclick = async () => {
