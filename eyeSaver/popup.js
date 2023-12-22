@@ -53,17 +53,19 @@ const main = async () => {
   startButton.onclick = () => {
     timer.start()
     eyeSaver.startExtension()
-    disableDurationInputs(inputsArr)
+    disableDurationInputs()
   }
 
   cancelButton.onclick = () => {
     timer.cancel()
     eyeSaver.stopExtension()
-    enableDurationInputs(inputsArr)
+    enableDurationInputs()
   }
 
   setTimerDurationInputText(timerDuration)
   setRestDurationInputText(restDuration)
+
+  running ? disableDurationInputs() : enableDurationInputs()
 
   document.querySelector('.timer-duration-increment-up').onclick = async () => {
     const defaults = enums.timerInputDefaults
@@ -176,8 +178,6 @@ const main = async () => {
     timer.setRestDuration(event.target.value)
   }
 
-  running ? disableDurationInputs(inputsArr) : enableDurationInputs(inputsArr)
-
   document.querySelector('.send-desktop-notification-button').onclick = () => {
     eyeSaver.pushDesktopNotification()
   }
@@ -187,12 +187,19 @@ const main = async () => {
   }
 }
 
-const disableDurationInputs = (inputs) => {
-  inputs.forEach((input) => input.setAttribute('disabled', ''))
+const disableDurationInputs = () => {
+  const container = document.querySelector(
+    '.settings-subsection__content.timer-settings'
+  )
+  container.style.pointerEvents = 'none'
+  container.style.opacity = '.4'
 }
-
-const enableDurationInputs = (inputs) => {
-  inputs.forEach((input) => input.removeAttribute('disabled'))
+const enableDurationInputs = () => {
+  const container = document.querySelector(
+    '.settings-subsection__content.timer-settings'
+  )
+  container.style.pointerEvents = 'auto'
+  container.style.opacity = '1'
 }
 
 const setTimerDurationInputText = (time) => {
