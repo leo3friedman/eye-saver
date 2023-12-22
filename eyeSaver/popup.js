@@ -17,7 +17,11 @@ const main = async () => {
   const running = await eyeSaver.isExtensionRunning()
   const timePassed = await eyeSaver.getCurrentProgress()
 
-  const startStopButton = document.createElement('button')
+  const startStopButton = document.createElement('div')
+  startStopButton.onmouseover = (event) => {
+    event.target.style.cursor = 'pointer'
+  }
+
   startStopButton.innerText = running ? 'Cancel' : 'Start'
   startStopButton.onclick = async (event) => {
     if (await eyeSaver.isExtensionRunning()) {
@@ -188,6 +192,9 @@ const main = async () => {
   document.querySelector('.play-sound-button').onclick = () => {
     eyeSaver.playSound()
   }
+
+  // toggle testing on and off here (TODO: make better system for managing this)
+  if (true) document.querySelector('.testing-section').style.display = 'none'
 }
 
 const disableDurationInputs = () => {

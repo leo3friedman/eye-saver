@@ -104,8 +104,12 @@ export class Timer {
     this.setTimerText()
     this.setProgress()
 
+    // TODO: make more robust
     if (this.UI) {
-      document.querySelector('.timer-ui').appendChild(this.UI)
+      // const { button, icon } = this.UI
+      document
+        .querySelector('.timer-ui')
+        .insertAdjacentElement('afterbegin', this.UI)
     }
   }
 
