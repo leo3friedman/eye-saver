@@ -44,8 +44,10 @@ export const notificationOptions = {
 export const timerInputDefaults = {
   timerDurationIncrement: 10 * 60 * 1000,
   restDurationIncrement: 10 * 1000,
-  maxDuration: 2 * 60 * 60 * 1000,
-  minDuration: 10 * 60 * 1000,
+  maxTimerDuration: 2 * 60 * 60 * 1000,
+  minTimerDuration: 10 * 60 * 1000,
+  maxRestDuration: 2 * 60 * 1000,
+  minRestDuration: 10 * 1000,
 }
 
 export const alarms = {

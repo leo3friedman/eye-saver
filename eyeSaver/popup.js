@@ -45,7 +45,7 @@ const main = async () => {
   timer.renderTimer(dropzone)
 
   /**
-   * INITIALIZING DOM ELEMENTS
+   * INITIALIZING UI ELEMENTS
    */
 
   const startButton = document.querySelector('.timer__start-button')
@@ -63,20 +63,14 @@ const main = async () => {
   }
 
   setTimerDurationInputText(timerDuration)
+  setRestDurationInputText(restDuration)
 
-  const timerDurationIncrementUp = document.querySelector(
-    '.timer-duration-increment-up'
-  )
-  const timerDurationIncrementDown = document.querySelector(
-    '.timer-duration-increment-down'
-  )
-
-  timerDurationIncrementUp.onclick = async () => {
+  document.querySelector('.timer-duration-increment-up').onclick = async () => {
     const defaults = enums.timerInputDefaults
     const duration = await eyeSaver.getTimerDuration()
 
     const newDuration = Math.min(
-      defaults.maxDuration,
+      defaults.maxTimerDuration,
       duration + defaults.timerDurationIncrement
     )
 
@@ -89,23 +83,59 @@ const main = async () => {
     timer.setTimerDuration(rounded)
   }
 
-  timerDurationIncrementDown.onclick = async () => {
-    const defaults = enums.timerInputDefaults
-    const duration = await eyeSaver.getTimerDuration()
+  document.querySelector('.timer-duration-increment-down').onclick =
+    async () => {
+      const defaults = enums.timerInputDefaults
+      const duration = await eyeSaver.getTimerDuration()
 
-    const newDuration = Math.max(
-      defaults.minDuration,
-      duration - defaults.timerDurationIncrement
+      const newDuration = Math.max(
+        defaults.minTimerDuration,
+        duration - defaults.timerDurationIncrement
+      )
+
+      const rounded =
+        Math.ceil(newDuration / defaults.timerDurationIncrement) *
+        defaults.timerDurationIncrement
+
+      await eyeSaver.setTimerDuration(rounded)
+      setTimerDurationInputText(rounded)
+      timer.setTimerDuration(rounded)
+    }
+
+  document.querySelector('.rest-duration-increment-up').onclick = async () => {
+    const defaults = enums.timerInputDefaults
+    const duration = await eyeSaver.getRestDuration()
+
+    const newDuration = Math.min(
+      defaults.maxRestDuration,
+      duration + defaults.restDurationIncrement
     )
 
     const rounded =
-      Math.ceil(newDuration / defaults.timerDurationIncrement) *
-      defaults.timerDurationIncrement
+      Math.ceil(newDuration / defaults.restDurationIncrement) *
+      defaults.restDurationIncrement
 
-    await eyeSaver.setTimerDuration(rounded)
-    setTimerDurationInputText(rounded)
-    timer.setTimerDuration(rounded)
+    await eyeSaver.setRestDuration(rounded)
+    setRestDurationInputText(rounded)
   }
+
+  document.querySelector('.rest-duration-increment-down').onclick =
+    async () => {
+      const defaults = enums.timerInputDefaults
+      const duration = await eyeSaver.getRestDuration()
+
+      const newDuration = Math.max(
+        defaults.minRestDuration,
+        duration - defaults.restDurationIncrement
+      )
+
+      const rounded =
+        Math.ceil(newDuration / defaults.restDurationIncrement) *
+        defaults.restDurationIncrement
+
+      await eyeSaver.setRestDuration(rounded)
+      setRestDurationInputText(rounded)
+    }
 
   const desktopNotificationCheckbox = document.querySelector(
     '#desktop-notification-checkbox'
@@ -172,6 +202,14 @@ const setTimerDurationInputText = (time) => {
     hours
   document.querySelector('.__time-input.timer-duration__minutes').innerText =
     minutes
+}
+const setRestDurationInputText = (time) => {
+  const minutes = timeToText(time).minutes
+  const seconds = ('0' + timeToText(time).seconds).slice(-2)
+  document.querySelector('.__time-input.rest-duration__minutes').innerText =
+    minutes
+  document.querySelector('.__time-input.rest-duration__seconds').innerText =
+    seconds
 }
 
 /**
