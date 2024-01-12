@@ -33,6 +33,8 @@ export const defaults = {
   hasNotifiedLookBack: false,
   soundSource: 'sounds/look_back_sound.wav',
   soundVolume: 0.5,
+  lastLookAway: 0,
+  lastLookBack: 0,
 }
 
 export const notificationOptions = {
