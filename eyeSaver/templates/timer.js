@@ -83,7 +83,6 @@ export class Timer {
     // TODO: how could timer not be available yet?
     // TODO: throw exception/error?
     if (Object.values(props).includes(null) || Object.keys(props).length == 0) {
-      console.log('invalid props')
       return
     }
 

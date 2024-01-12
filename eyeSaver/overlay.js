@@ -17,7 +17,6 @@ const onBreaking = () => {
 }
 
 const removeCanvas = () => {
-  console.log('remove canvas!')
   document
     .querySelectorAll('.eye-saver__overlay')
     .forEach((canvas) => document.body.removeChild(canvas))
@@ -72,6 +71,7 @@ const addOverlay = () => {
     event.target.style.cursor = 'pointer'
   }
   skipButton.onclick = async () => {
+    removeCanvas()
     await eyeSaver.setSessionStart()
   }
 

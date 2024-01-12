@@ -16,6 +16,6 @@ const playAudio = async (source, volume) => {
   try {
     await audio.play()
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 }

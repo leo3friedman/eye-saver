@@ -27,13 +27,6 @@ export class EyeSaver {
     const running = await this.isExtensionRunning()
     const resting = await this.isResting()
 
-    console.log(
-      'handling current state --> running: ',
-      running,
-      'resting: ',
-      resting
-    )
-
     if (!running) {
       if (this.onScreenTime) this.onScreenTime()
       return

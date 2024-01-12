@@ -47,7 +47,7 @@ const main = async () => {
       restDurationRemaining > 0
         ? restDurationRemaining
         : timerDurationRemaining + restDuration
-    console.log('onFinishTimeout', timeout)
+
     setTimeout(async () => {
       const running = await eyeSaver.isExtensionRunning()
       if (running) timer.start()
@@ -194,7 +194,7 @@ const main = async () => {
   }
 
   // toggle testing on and off here (TODO: make better system for managing this)
-  if (true) document.querySelector('.testing-section').style.display = 'none'
+  if (false) document.querySelector('.testing-section').style.display = 'none'
 }
 
 const disableDurationInputs = () => {
