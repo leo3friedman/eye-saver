@@ -40,7 +40,7 @@ export const defaults = {
 export const notificationOptions = {
   title: 'Eye Saver',
   type: 'basic',
-  iconUrl: 'IMGs/64icon.png',
+  iconUrl: 'assets/64icon.png',
   lookAwayMessage: 'Look away from the screen!',
   lookBackMessage: 'Rest time over!',
 }
