@@ -1,5 +1,5 @@
 {
-  "name": "Eye Saver - 20-20-20 Break Reminder",
+  "name": "Eye Saver - Break Reminder",
   "version": "0.6",
   "description": "Eye Saver helps remind you to look away from the screen to prevent eye strain.",
   "permissions": ["storage", "notifications", "offscreen"],
