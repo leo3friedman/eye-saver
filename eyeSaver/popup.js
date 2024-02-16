@@ -38,7 +38,6 @@ const main = async () => {
       : 'Start'
   }
 
-  // TODO: is this the right approach?
   const onFinish = async () => {
     const restDurationRemaining = await eyeSaver.getRestDurationRemaining()
     const timerDurationRemaining = await eyeSaver.getTimerDurationRemaining()
@@ -203,6 +202,8 @@ const disableDurationInputs = () => {
   )
   container.style.pointerEvents = 'none'
   container.style.opacity = '.4'
+  const warningText = document.querySelector('.duration-input-warning')
+  warningText.style.display = 'inline'
 }
 const enableDurationInputs = () => {
   const container = document.querySelector(
@@ -210,6 +211,8 @@ const enableDurationInputs = () => {
   )
   container.style.pointerEvents = 'auto'
   container.style.opacity = '1'
+  const warningText = document.querySelector('.duration-input-warning')
+  warningText.style.display = 'none'
 }
 
 const setTimerDurationInputText = (time) => {

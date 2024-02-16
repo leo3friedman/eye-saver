@@ -86,6 +86,12 @@
       flex-direction: row;
       gap: 4px;
     }
+
+    .duration-input-warning {
+      position: absolute;
+      color: var(--accent);
+    }
+
     .__duration-group {
       display: flex;
       flex-direction: row;
@@ -130,7 +136,12 @@
       </section>
       <section class="settings-section">
         <div>
-          <h4 class="settings-header">Timer Settings</h4>
+          <h4 class="settings-header">
+            Timer Settings&nbsp;&nbsp;
+            <span class="duration-input-warning">
+              (disabled while timer is running)
+            </span>
+          </h4>
           <div class="settings-subsection__content timer-settings">
             <div class="settings-subsection__field">
               <div id="timer-duration-input" class="duration-input">
