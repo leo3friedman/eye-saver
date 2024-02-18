@@ -35,6 +35,7 @@ export const defaults = {
   soundVolume: 0.5,
   lastLookAway: 0,
   lastLookBack: 0,
+  restStart: 0,
 }
 
 export const notificationOptions = {

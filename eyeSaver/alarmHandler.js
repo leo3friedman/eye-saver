@@ -2,6 +2,14 @@ import { defaults, states, messages, constants } from './enums.js'
 
 /**
  *
+ * @param {Number} time time to set restStart in ms from the epoch
+ */
+function setRestStart(time) {
+  chrome.storage.sync.set({ restStart: time })
+}
+
+/**
+ *
  * @param {number} length - amount of time in ms before alarm should fire
  */
 function createNewAlarm(length) {
@@ -21,6 +29,7 @@ function playSound() {
 
 function onAlarm(alarm) {
   console.log('alarm fired...', alarm)
+  setRestStart(Date.now())
   chrome.storage.sync.get(defaults, (result) => {
     const {
       state,
@@ -32,8 +41,8 @@ function onAlarm(alarm) {
 
     if (state === states.STOPPED) return
 
-    const alarmLength = timerDuration + restDuration
-    createNewAlarm(2000)
+    // const alarmLength = timerDuration + restDuration
+    // createNewAlarm(2000)
 
     if (pushDesktopNotification) pushNotification()
     if (playSoundNotification) playSound()
@@ -49,7 +58,7 @@ function onInstall() {
     const alarmLength = timerDuration + restDuration
 
     chrome.alarms.clearAll(() => {
-      createNewAlarm(2000)
+      createNewAlarm(5000)
     })
   })
 }
