@@ -193,7 +193,7 @@ const main = async () => {
   }
 
   // toggle testing on and off here (TODO: make better system for managing this)
-  if (true) document.querySelector('.testing-section').style.display = 'none'
+  if (false) document.querySelector('.testing-section').style.display = 'none'
 }
 
 const disableDurationInputs = () => {

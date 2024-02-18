@@ -109,4 +109,5 @@ const renderClock = async (dropzone) => {
   timer.renderTimer(dropzone)
 }
 
+
 window.onload = main

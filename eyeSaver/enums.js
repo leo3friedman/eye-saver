@@ -57,3 +57,7 @@ export const timerInputDefaults = {
 export const alarms = {
   REST_ON_ALARM: 'restAlarm',
 }
+
+export const constants = {
+  ALARM_NAME: 'eye-saver-alarm',
+}
