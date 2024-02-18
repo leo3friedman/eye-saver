@@ -44,11 +44,12 @@ export class EyeSaver {
       await this.setLastLookAway()
       this.pushDesktopNotification(true)
       this.playSound()
-    } else if (!resting && (await this.shouldNotifyToLookBack())) {
-      await this.setLastLookBack()
-      this.pushDesktopNotification(false)
-      this.playSound()
     }
+    // else if (!resting && (await this.shouldNotifyToLookBack())) {
+    //   await this.setLastLookBack()
+    //   this.pushDesktopNotification(false)
+    //   this.playSound()
+    // }
   }
 
   async startExtension() {
