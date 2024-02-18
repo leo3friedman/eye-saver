@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Eye Saver Popup</title>
+  </head>
+  <style>
+    @font-face {
+      font-family: roboto-bold;
+      src: url(fonts/Roboto/Roboto-Bold.ttf);
+    }
+    @font-face {
+      font-family: roboto-regular;
+      src: url(fonts/Roboto/Roboto-Regular.ttf);
+    }
+    @font-face {
+      font-family: roboto-light;
+      src: url(fonts/Roboto/Roboto-Light.ttf);
+    }
+
+    :root {
+      --section-padding: 0px 24px;
+      --padding-top: 24px;
+      --background: #141216;
+      --secondary: #29252d;
+      --text: #eae9eb;
+      --accent: #f1a33b;
+    }
+
+    body {
+      width: 300px;
+      margin: 0px;
+      background-color: var(--background);
+      color: var(--text);
+      font-size: 16px;
+      font-family: roboto-thin;
+    }
+
+    .eye-saver-logo {
+      height: 32px;
+    }
+
+    .timer-section {
+      display: flex;
+      justify-content: center;
+      padding: var(--section-padding);
+      padding: var(--padding-top);
+    }
+
+    .settings-section {
+      padding: var(--section-padding);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .settings-header {
+      font-family: roboto-regular;
+      font-size: 12px;
+      color: #666666;
+      margin: 0;
+      padding-bottom: 8px;
+    }
+
+    .settings-subsection__content {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 16px;
+      background-color: var(--secondary);
+      border-radius: 16px;
+    }
+
+    .settings-subsection__field {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .duration-input {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      align-items: center;
+    }
+    .duration-input-text {
+      display: flex;
+      flex-direction: row;
+      gap: 4px;
+    }
+
+    .duration-input-warning {
+      position: absolute;
+      color: var(--accent);
+    }
+
+    .__duration-group {
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      gap: 1px;
+    }
+    .__time-input {
+      font-family: roboto-regular;
+      font-size: 20px;
+    }
+    .__sub {
+      font-family: roboto-thin;
+      font-size: 16px;
+    }
+    .duration-increment {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .svg-icon:hover {
+      cursor: pointer;
+    }
+    .checkbox {
+      accent-color: #f1a33b;
+    }
+
+    .footer {
+      padding: 24px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-family: roboto-regular;
+    }
+    a {
+      color: #666666 !important;
+    }
+  </style>
+  <body>
+    <div class="popup-content">
+      <section class="timer-section">
+        <div class="timer__dropzone"></div>
+      </section>
+      <section class="settings-section">
+        <div>
+          <h4 class="settings-header">
+            Timer Settings&nbsp;&nbsp;
+            <span class="duration-input-warning">
+              (disabled while timer is running)
+            </span>
+          </h4>
+          <div class="settings-subsection__content timer-settings">
+            <div class="settings-subsection__field">
+              <div id="timer-duration-input" class="duration-input">
+                <div class="duration-input-text">
+                  <div class="__duration-group">
+                    <div class="__time-input timer-duration__hours">0</div>
+                    <div class="__sub">h</div>
+                  </div>
+                  <div class="__duration-group">
+                    <div class="__time-input timer-duration__minutes">00</div>
+                    <div class="__sub">m</div>
+                  </div>
+                </div>
+                <div class="duration-increment">
+                  <img
+                    class="svg-icon timer-duration-increment-up"
+                    src="assets/increment-up.svg" />
+                  <img
+                    class="svg-icon timer-duration-increment-down"
+                    src="assets/increment-down.svg" />
+                </div>
+              </div>
+              <label for="timer-duration-input">Screen Time</label>
+            </div>
+            <div class="settings-subsection__field">
+              <div id="rest-duration-input" class="duration-input">
+                <div class="duration-input-text">
+                  <div class="__duration-group">
+                    <div class="__time-input rest-duration__minutes">0</div>
+                    <div class="__sub">m</div>
+                  </div>
+                  <div class="__duration-group">
+                    <div class="__time-input rest-duration__seconds">00</div>
+                    <div class="__sub">s</div>
+                  </div>
+                </div>
+                <div class="duration-increment">
+                  <img
+                    class="svg-icon rest-duration-increment-up"
+                    src="assets/increment-up.svg" />
+                  <img
+                    class="svg-icon rest-duration-increment-down"
+                    src="assets/increment-down.svg" />
+                </div>
+              </div>
+              <label for="timer-duration-input">Break Length</label>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h4 class="settings-header">Notification Settings</h4>
+          <div class="settings-subsection__content">
+            <div class="settings-subsection__field">
+              <input
+                class="checkbox"
+                id="desktop-notification-checkbox"
+                type="checkbox" />
+              <label for="desktop-notification-checkbox"
+                >Push notifications</label
+              >
+            </div>
+            <div class="settings-subsection__field">
+              <input
+                class="checkbox"
+                id="sound-notification-checkbox"
+                type="checkbox" />
+              <label for="sound-notification-checkbox">Play sound</label>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="testing-section">
+        <h3>TESTING SECTION</h3>
+        <div class="settings-subsection__content">
+          <div class="settings-subsection__field">
+            <input
+              id="test-timer-duration-input"
+              type="number"
+              step="1000"
+              min="1000" />
+            <label for="test-timer-duration-input">Screen Time</label>
+          </div>
+          <div class="settings-subsection__field">
+            <input
+              id="test-rest-duration-input"
+              type="number"
+              step="1000"
+              min="1000" />
+            <label for="test-rest-duration-input">Break Length </label>
+          </div>
+          <button class="send-desktop-notification-button">
+            Push Desktop Notifications
+          </button>
+          <button class="play-sound-button">Play Sound</button>
+        </div>
+      </section>
+    </div>
+    <footer class="footer">
+      <a
+        href="mailto:scone_proofs_0a@icloud.com?subject=Eye Saver Feature Request"
+        >Request Feature</a
+      >
+      <a
+        href="https://chromewebstore.google.com/detail/eye-saver-20-20-20-break/mhfodjdadffkgglbjdlnfakpohhemdga"
+        target="_blank"
+        >Rate</a
+      >
+    </footer>
+  </body>
+
+  <script src="popup.js"></script>
+</html>
