@@ -1,5 +1,19 @@
 import { defaults, states, messages, constants } from './enums.js'
 
+async function getFromStorage(defaults, keys = null) {
+  const requestedDefaults = keys
+    ? Object.fromEntries(
+        Object.entries(defaults).filter(([key]) => keys.includes(key))
+      )
+    : defaults
+
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(requestedDefaults, (result) => {
+      resolve(result)
+    })
+  })
+}
+
 /**
  *
  * @param {Number} time time to set restStart in ms from the epoch
@@ -9,37 +23,42 @@ function setRestStart(time) {
 }
 
 /**
+ * Clears existing alarms and creates a new one
  *
  * @param {number} length - amount of time in ms before alarm should fire
  */
 function createNewAlarm(length) {
-  console.log(`creating new alarm of length: ${length / 1000}`)
-  chrome.alarms.create(constants.ALARM_NAME, {
-    when: Date.now() + length,
+  // console.log(`creating new alarm of length: ${length / 1000}`)
+  chrome.alarms.clearAll(async () => {
+    await chrome.alarms.create(constants.ALARM_NAME, {
+      when: Date.now() + length,
+    })
+    const newAlarm = await chrome.alarms.get(constants.ALARM_NAME)
+    chrome.storage.sync.set({ alarm: newAlarm })
   })
 }
 
 function pushNotification() {
-  console.log('push desktop notification!')
+  // console.log('push desktop notification!')
 }
 
 function playSound() {
-  console.log('play sound!')
+  // console.log('play sound!')
 }
 
-function onAlarm(alarm) {
-  console.log('alarm fired...', alarm)
+async function onAlarm(alarm) {
+  // console.log('alarm fired...', alarm)
 
   chrome.storage.sync.get(defaults, (result) => {
     const {
-      state,
+      isRunning,
       timerDuration,
       restDuration,
       pushDesktopNotification,
       playSoundNotification,
     } = result
 
-    if (state === states.STOPPED) return
+    if (!isRunning) return
 
     setRestStart(Date.now())
 
@@ -51,18 +70,13 @@ function onAlarm(alarm) {
   })
 }
 
-function onInstall() {
-  chrome.storage.sync.get(defaults, (result) => {
-    const { state, timerDuration, restDuration } = result
+async function onInstall() {
+  const { isRunning, timerDuration } = await getFromStorage(defaults)
 
-    if (state === states.STOPPED) return
+  if (!isRunning) return
 
-    const alarmLength = Number(timerDuration) + Number(restDuration)
-
-    chrome.alarms.clearAll(() => {
-      createNewAlarm(alarmLength)
-    })
-  })
+  const alarmLength = Number(timerDuration)
+  createNewAlarm(alarmLength)
 }
 
 async function createOffscreen() {
@@ -93,7 +107,7 @@ chrome.runtime.onMessage.addListener(async (message) => {
   }
 
   if (message.key === messages.START) {
-    chrome.storage.sync.set({ state: states.RUNNING })
+    chrome.storage.sync.set({ isRunning: true })
     chrome.storage.sync.get(defaults, (result) => {
       const alarmLength = Number(result.timerDuration)
       createNewAlarm(alarmLength)
@@ -101,16 +115,8 @@ chrome.runtime.onMessage.addListener(async (message) => {
   }
 
   if (message.key === messages.STOP) {
-    chrome.storage.sync.set({ state: states.STOPPED })
+    chrome.storage.sync.set({ isRunning: false })
+    chrome.storage.sync.set({ alarm: null })
     chrome.alarms.clearAll()
   }
 })
-
-// chrome.runtime.onInstalled.addListener(async () => {
-//   chrome.storage.sync.get(defaults, (result) => {
-//     const running = result.state === states.RUNNING
-//     if (running) {
-//       chrome.storage.sync.set({ sessionStart: Date.now() })
-//     }
-//   })
-// })

@@ -1,91 +1,60 @@
-async function onStart() {
-  const enums = await import(chrome.runtime.getURL('enums.js'))
-
-  this.chrome.runtime.sendMessage({
-    key: enums.messages.START,
-  })
-}
-
-async function onCancel() {
-  const enums = await import(chrome.runtime.getURL('enums.js'))
-
-  this.chrome.runtime.sendMessage({
-    key: enums.messages.STOP,
-  })
-}
-
 const main = async () => {
   const timerSrc = await import(chrome.runtime.getURL('templates/timer.js'))
-  const eyeSaverSrc = await import(chrome.runtime.getURL('eyeSaver.js'))
-  const enums = await import(chrome.runtime.getURL('enums.js'))
+
+  const { StorageManager } = await import(
+    chrome.runtime.getURL('storageManager.js')
+  )
 
   /**
    * RENDERING THE TIMER
    */
 
-  const eyeSaver = new eyeSaverSrc.EyeSaver(
-    this.chrome,
-    () => {},
-    () => {}
-  )
+  const storage = new StorageManager(chrome)
+  const timerDuration = await storage.getTimerDuration()
+  const restDuration = await storage.getRestDuration()
+  const timeRemaining = await storage.getTimeUntilAlarm()
+  const isRunning = await storage.getIsRunning()
+  const { messages } = await storage.getEnums()
+
   const dropzone = document.querySelector('.timer__dropzone')
-
-  const alarm = await chrome.alarms.get(enums?.constants?.ALARM_NAME)
-  const timerDuration = await eyeSaver.getTimerDuration()
-
-  const timePassed = alarm
-    ? timerDuration - Math.max(alarm?.scheduledTime - Date.now(), 0)
-    : timerDuration
-
-  const restDuration = await eyeSaver.getRestDuration()
-  const running = await eyeSaver.isExtensionRunning()
-  // const timePassed = await eyeSaver.getCurrentProgress()
 
   const startStopButton = document.createElement('div')
   startStopButton.onmouseover = (event) => {
     event.target.style.cursor = 'pointer'
   }
 
-  startStopButton.innerText = running ? 'Cancel' : 'Start'
+  startStopButton.innerText = isRunning ? 'Cancel' : 'Start'
   startStopButton.onclick = async (event) => {
-    if (await eyeSaver.isExtensionRunning()) {
-      onCancel()
+    if (await storage.getIsRunning()) {
+      this.chrome.runtime.sendMessage({
+        key: messages.STOP,
+      })
+      enableDurationInputs()
       timer.cancel()
       event.target.innerText = 'Start'
-      // await eyeSaver.stopExtension()
-      enableDurationInputs()
     } else {
-      onStart()
-      timer.start()
-      // await eyeSaver.startExtension()
+      this.chrome.runtime.sendMessage({
+        key: messages.START,
+      })
       disableDurationInputs()
+      timer.start()
       event.target.innerText = 'Cancel'
     }
-    // event.target.innerText = (await eyeSaver.isExtensionRunning())
-    //   ? 'Cancel'
-    //   : 'Start'
   }
 
   const onFinish = async () => {
-    // const restDurationRemaining = await eyeSaver.getRestDurationRemaining()
-    // const timerDurationRemaining = await eyeSaver.getTimerDurationRemaining()
-    const restDuration = await eyeSaver.getRestDuration()
+    const restDurationRemaining = await storage.getRestDurationRemaining()
 
-    // const timeout =
-    //   restDurationRemaining > 0
-    //     ? restDurationRemaining
-    //     : timerDurationRemaining + restDuration
-
-    setTimeout(async () => {
-      const running = await eyeSaver.isExtensionRunning()
-      if (running) timer.start()
-    }, restDuration)
+    setTimeout(
+      async () => (await storage.getIsRunning()) && timer.start(),
+      restDurationRemaining
+    )
   }
 
   const timer = new timerSrc.Timer(
     timerDuration,
-    timePassed,
-    running,
+    timeRemaining,
+    isRunning,
     true,
     onFinish,
     startStopButton
@@ -100,78 +69,31 @@ const main = async () => {
   setTimerDurationInputText(timerDuration)
   setRestDurationInputText(restDuration)
 
-  running ? disableDurationInputs() : enableDurationInputs()
+  isRunning ? disableDurationInputs() : enableDurationInputs()
 
   document.querySelector('.timer-duration-increment-up').onclick = async () => {
-    const defaults = enums.timerInputDefaults
-    const duration = await eyeSaver.getTimerDuration()
-
-    const newDuration = Math.min(
-      defaults.maxTimerDuration,
-      duration + defaults.timerDurationIncrement
-    )
-
-    const rounded =
-      Math.ceil(newDuration / defaults.timerDurationIncrement) *
-      defaults.timerDurationIncrement
-
-    await eyeSaver.setTimerDuration(rounded)
-    setTimerDurationInputText(rounded)
-    timer.setTimerDuration(rounded)
+    const newTimerDuration = await storage.incrementTimerDuration(true)
+    console.log(newTimerDuration)
+    setTimerDurationInputText(newTimerDuration)
+    timer.setTimerDuration(newTimerDuration)
   }
 
   document.querySelector('.timer-duration-increment-down').onclick =
     async () => {
-      const defaults = enums.timerInputDefaults
-      const duration = await eyeSaver.getTimerDuration()
-
-      const newDuration = Math.max(
-        defaults.minTimerDuration,
-        duration - defaults.timerDurationIncrement
-      )
-
-      const rounded =
-        Math.ceil(newDuration / defaults.timerDurationIncrement) *
-        defaults.timerDurationIncrement
-
-      await eyeSaver.setTimerDuration(rounded)
-      setTimerDurationInputText(rounded)
-      timer.setTimerDuration(rounded)
+      const newTimerDuration = await storage.incrementTimerDuration(false)
+      setTimerDurationInputText(newTimerDuration)
+      timer.setTimerDuration(newTimerDuration)
     }
 
   document.querySelector('.rest-duration-increment-up').onclick = async () => {
-    const defaults = enums.timerInputDefaults
-    const duration = await eyeSaver.getRestDuration()
-
-    const newDuration = Math.min(
-      defaults.maxRestDuration,
-      duration + defaults.restDurationIncrement
-    )
-
-    const rounded =
-      Math.ceil(newDuration / defaults.restDurationIncrement) *
-      defaults.restDurationIncrement
-
-    await eyeSaver.setRestDuration(rounded)
-    setRestDurationInputText(rounded)
+    const newRestDuration = await storage.incrementRestDuration(true)
+    setRestDurationInputText(newRestDuration)
   }
 
   document.querySelector('.rest-duration-increment-down').onclick =
     async () => {
-      const defaults = enums.timerInputDefaults
-      const duration = await eyeSaver.getRestDuration()
-
-      const newDuration = Math.max(
-        defaults.minRestDuration,
-        duration - defaults.restDurationIncrement
-      )
-
-      const rounded =
-        Math.ceil(newDuration / defaults.restDurationIncrement) *
-        defaults.restDurationIncrement
-
-      await eyeSaver.setRestDuration(rounded)
-      setRestDurationInputText(rounded)
+      const newRestDuration = await storage.incrementRestDuration(false)
+      setRestDurationInputText(newRestDuration)
     }
 
   const desktopNotificationCheckbox = document.querySelector(
@@ -181,42 +103,32 @@ const main = async () => {
     '#sound-notification-checkbox'
   )
   desktopNotificationCheckbox.checked =
-    await eyeSaver.getPushDesktopNotification()
+    await storage.getPushDesktopNotification()
   desktopNotificationCheckbox.onclick = async (event) => {
-    eyeSaver.setPushDesktopNotification(event.target.checked)
+    storage.setPushDesktopNotification(event.target.checked)
   }
-  soundNotificationCheckbox.checked = await eyeSaver.getPlaySoundNotification()
+  soundNotificationCheckbox.checked = await storage.getPlaySoundNotification()
   soundNotificationCheckbox.onclick = async (event) => {
-    eyeSaver.setPlaySoundNotification(event.target.checked)
+    storage.setPlaySoundNotification(event.target.checked)
   }
   /**
    *  INITIALIZING ELEMENTS USED FOR TESTING (DEV PURPOSES ONLY)
    */
 
-  const inputs = {
-    timerDurationInput: document.querySelector('#test-timer-duration-input'),
-    restDurationInput: document.querySelector('#test-rest-duration-input'),
-  }
-
-  inputs.timerDurationInput.value = await eyeSaver.getTimerDuration()
-
-  inputs.restDurationInput.value = await eyeSaver.getRestDuration()
-
-  inputs.timerDurationInput.onchange = (event) => {
-    eyeSaver.setTimerDuration(event.target.value)
+  const timerDurationInput = document.querySelector(
+    '#test-timer-duration-input'
+  )
+  timerDurationInput.value = await storage.getTimerDuration()
+  timerDurationInput.onchange = (event) => {
+    storage.setTimerDuration(event.target.value)
     timer.setTimerDuration(event.target.value)
   }
+  const restDurationInput = document.querySelector('#test-rest-duration-input')
+  restDurationInput.value = await storage.getRestDuration()
+  console.log(await storage.getRestDuration())
 
-  inputs.restDurationInput.onchange = (event) => {
-    eyeSaver.setRestDuration(event.target.value)
-  }
-
-  document.querySelector('.send-desktop-notification-button').onclick = () => {
-    eyeSaver.pushDesktopNotification()
-  }
-
-  document.querySelector('.play-sound-button').onclick = () => {
-    eyeSaver.playSound()
+  restDurationInput.onchange = (event) => {
+    storage.setRestDuration(event.target.value)
   }
 
   // toggle testing on and off here (TODO: make better system for managing this)

@@ -7,8 +7,8 @@ const states = {
 export class Timer {
   /**
    *
-   * @param {Number} timerDuration timer duration in milliseconds
-   * @param {Number} timePassed time passed since timer start in milliseconds
+   * @param {Number} timerDuration timer total duration in milliseconds
+   * @param {Number} timeRemaining time remaining on the timer in milliseconds
    * @param {boolean} running true if the timer should be running by default
    * @param {boolean} countdown true if the timer should count from duration down to 0
    * @param {() => void} callback callback to run when timer finishes (on finish())
@@ -16,14 +16,14 @@ export class Timer {
    */
   constructor(
     timerDuration,
-    timePassed = 0,
+    timeRemaining = 0,
     running = true,
     countdown = true,
     callback = null,
     UI = null
   ) {
     this.timerDuration = timerDuration
-    this.timePassed = running ? timePassed : 0
+    this.timeRemaining = running ? timeRemaining : timerDuration
     this.state = running ? states.RUNNING : states.STOPPED
     this.countdown = countdown
     this.callback = callback
@@ -112,21 +112,22 @@ export class Timer {
   start() {
     this.stopBlinking()
     if (this.state == states.RUNNING) return
-    if (this.state == states.DONE) this.timePassed = 0
     this.timestamp = Date.now()
     this.state = states.RUNNING
+    this.timeRemaining = this.timerDuration
     this.tick()
   }
 
   cancel() {
     this.state = states.STOPPED
-    this.timePassed = 0
+    this.timeRemaining = this.timerDuration
     this.stopBlinking()
     this.setProgress(0)
     this.setTimerText()
   }
 
   finish() {
+    console.log('finish!')
     this.state = states.DONE
     this.setProgress(100)
     this.setTimerText(0)
@@ -143,13 +144,13 @@ export class Timer {
 
     this.stopBlinking() // TODO: this shouldn't be needed (added for blinking bug fix)
 
-    this.timePassed += Date.now() - this.timestamp
+    this.timeRemaining -= Date.now() - this.timestamp
     this.timestamp = Date.now()
 
     this.setProgress()
     this.setTimerText()
 
-    if (this.timerDuration - this.timePassed < 0) {
+    if (this.timeRemaining < 0 || this.timeRemaining > this.timerDuration) {
       this.finish()
       return
     }
@@ -158,8 +159,9 @@ export class Timer {
   }
 
   setProgress(percent = null) {
+    const timePassed = this.timerDuration - this.timeRemaining
     if (percent === null) {
-      percent = Math.min((this.timePassed / this.timerDuration) * 100, 100)
+      percent = Math.min((timePassed / this.timerDuration) * 100, 100)
     }
 
     const adjPercent = this.countdown ? 100 - percent : percent
@@ -171,9 +173,10 @@ export class Timer {
 
   setTimerText(timeRemaining = null) {
     if (timeRemaining === null) {
-      timeRemaining = Math.max(this.timerDuration - this.timePassed, 0)
+      timeRemaining = Math.max(this.timeRemaining, 0)
     }
-    const clockTime = this.countdown ? timeRemaining : this.timePassed
+    const timePassed = this.timerDuration - this.timeRemaining
+    const clockTime = this.countdown ? timeRemaining : timePassed
     const date = new Date(0, 0, 0, 0, 0, 0, clockTime)
 
     const seconds = ('0' + date.getSeconds()).slice(-2)
@@ -185,11 +188,9 @@ export class Timer {
     this.props.hourDisplay.innerText = hours
   }
 
-  // TODO: re-evaulate this method
   setTimerDuration(duration) {
-    this.timePassed = duration * (this.timePassed / this.timerDuration)
     this.timerDuration = duration
-    this.setTimerText()
+    this.setTimerText(duration)
   }
 
   startBlinking() {

@@ -24,7 +24,7 @@
         "sounds/look_away_sound.wav",
         "fonts/Roboto/*.ttf",
         "enums.js",
-        "eyeSaver.js",
+        "storageManager.js",
         "overlay.html"
       ],
       "matches": ["<all_urls>"]

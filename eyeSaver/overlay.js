@@ -4,7 +4,7 @@ function destroyOverlay() {
     .forEach((canvas) => document.body.removeChild(canvas))
 }
 
-async function renderOverlay(totalDuration, timePassed) {
+async function renderOverlay(totalDuration, timeRemaining) {
   const timerTemplateUrl = chrome.runtime.getURL('overlay.html')
   const xhr = new XMLHttpRequest()
 
@@ -20,7 +20,7 @@ async function renderOverlay(totalDuration, timePassed) {
 
     const timer = new timerSrc.Timer(
       totalDuration,
-      timePassed,
+      timeRemaining,
       true,
       false,
       destroyOverlay,
@@ -34,33 +34,33 @@ async function renderOverlay(totalDuration, timePassed) {
 }
 
 async function onPageLoad() {
-  const enums = await import(chrome.runtime.getURL('enums.js'))
+  const { StorageManager } = await import(
+    chrome.runtime.getURL('storageManager.js')
+  )
 
-  chrome.storage.sync.get(enums.defaults, (result) => {
-    const restDuration = Number(result.restDuration)
-    const restStart = Number(result.restStart)
-    const timePassed = Date.now() - restStart
+  const storage = new StorageManager(chrome)
+  const restDuration = await storage.getRestDuration()
+  const restDurationRemaining = await storage.getRestDurationRemaining()
 
-    timePassed < restDuration
-      ? renderOverlay(restDuration, timePassed)
-      : destroyOverlay()
-  })
+  restDurationRemaining > 0
+    ? renderOverlay(restDuration, restDurationRemaining)
+    : destroyOverlay()
 }
 
 async function onStorageChanged(changes) {
-  const enums = await import(chrome.runtime.getURL('enums.js'))
-  const newRestStart = changes?.restStart?.newValue
+  if (!changes?.restStart) return
 
-  if (!newRestStart || newRestStart < 0) {
-    destroyOverlay()
-    return
-  }
+  const { StorageManager } = await import(
+    chrome.runtime.getURL('storageManager.js')
+  )
+  
+  const storage = new StorageManager(chrome)
+  const restDuration = await storage.getRestDuration()
+  const restDurationRemaining = await storage.getRestDurationRemaining()
 
-  chrome.storage.sync.get(enums.defaults, (result) => {
-    const restDuration = Number(result.restDuration)
-    const timePassed = Date.now() - Number(newRestStart)
-    renderOverlay(restDuration, timePassed)
-  })
+  restDurationRemaining > 0
+    ? renderOverlay(restDuration, restDurationRemaining)
+    : destroyOverlay()
 }
 
 window.onload = onPageLoad
