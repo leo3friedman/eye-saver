@@ -19,6 +19,8 @@ export const messages = {
   ACTIVATE: 7,
   PUSH_DESKTOP_NOTIFICATION: 8,
   PLAY_SOUND: 9,
+  START: 10,
+  STOP: 11,
 }
 
 export const defaults = {

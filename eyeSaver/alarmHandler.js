@@ -29,7 +29,7 @@ function playSound() {
 
 function onAlarm(alarm) {
   console.log('alarm fired...', alarm)
-  setRestStart(Date.now())
+
   chrome.storage.sync.get(defaults, (result) => {
     const {
       state,
@@ -41,8 +41,10 @@ function onAlarm(alarm) {
 
     if (state === states.STOPPED) return
 
-    // const alarmLength = timerDuration + restDuration
-    // createNewAlarm(2000)
+    setRestStart(Date.now())
+
+    const alarmLength = Number(timerDuration) + Number(restDuration)
+    createNewAlarm(alarmLength)
 
     if (pushDesktopNotification) pushNotification()
     if (playSoundNotification) playSound()
@@ -55,10 +57,10 @@ function onInstall() {
 
     if (state === states.STOPPED) return
 
-    const alarmLength = timerDuration + restDuration
+    const alarmLength = Number(timerDuration) + Number(restDuration)
 
     chrome.alarms.clearAll(() => {
-      createNewAlarm(5000)
+      createNewAlarm(alarmLength)
     })
   })
 }
@@ -89,13 +91,26 @@ chrome.runtime.onMessage.addListener(async (message) => {
     message.offscreen = true
     await chrome.runtime.sendMessage(message)
   }
+
+  if (message.key === messages.START) {
+    chrome.storage.sync.set({ state: states.RUNNING })
+    chrome.storage.sync.get(defaults, (result) => {
+      const alarmLength = Number(result.timerDuration)
+      createNewAlarm(alarmLength)
+    })
+  }
+
+  if (message.key === messages.STOP) {
+    chrome.storage.sync.set({ state: states.STOPPED })
+    chrome.alarms.clearAll()
+  }
 })
 
-chrome.runtime.onInstalled.addListener(async () => {
-  chrome.storage.sync.get(defaults, (result) => {
-    const running = result.state === states.RUNNING
-    if (running) {
-      chrome.storage.sync.set({ sessionStart: Date.now() })
-    }
-  })
-})
+// chrome.runtime.onInstalled.addListener(async () => {
+//   chrome.storage.sync.get(defaults, (result) => {
+//     const running = result.state === states.RUNNING
+//     if (running) {
+//       chrome.storage.sync.set({ sessionStart: Date.now() })
+//     }
+//   })
+// })

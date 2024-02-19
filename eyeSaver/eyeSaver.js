@@ -11,9 +11,9 @@ export class EyeSaver {
     this.onScreenTime = onScreenTime
     this.timeout = null
 
-    chrome.storage.onChanged.addListener((changes) => {
-      if (changes.state || changes.sessionStart) this.handleCurrentState()
-    })
+    // chrome.storage.onChanged.addListener((changes) => {
+    //   if (changes.state || changes.sessionStart) this.handleCurrentState()
+    // })
   }
 
   /**

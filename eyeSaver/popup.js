@@ -1,7 +1,24 @@
+async function onStart() {
+  const enums = await import(chrome.runtime.getURL('enums.js'))
+
+  this.chrome.runtime.sendMessage({
+    key: enums.messages.START,
+  })
+}
+
+async function onCancel() {
+  const enums = await import(chrome.runtime.getURL('enums.js'))
+
+  this.chrome.runtime.sendMessage({
+    key: enums.messages.STOP,
+  })
+}
+
 const main = async () => {
   const timerSrc = await import(chrome.runtime.getURL('templates/timer.js'))
   const eyeSaverSrc = await import(chrome.runtime.getURL('eyeSaver.js'))
   const enums = await import(chrome.runtime.getURL('enums.js'))
+
   /**
    * RENDERING THE TIMER
    */
@@ -12,10 +29,17 @@ const main = async () => {
     () => {}
   )
   const dropzone = document.querySelector('.timer__dropzone')
+
+  const alarm = await chrome.alarms.get(enums?.constants?.ALARM_NAME)
   const timerDuration = await eyeSaver.getTimerDuration()
+
+  const timePassed = alarm
+    ? timerDuration - Math.max(alarm?.scheduledTime - Date.now(), 0)
+    : timerDuration
+
   const restDuration = await eyeSaver.getRestDuration()
   const running = await eyeSaver.isExtensionRunning()
-  const timePassed = await eyeSaver.getCurrentProgress()
+  // const timePassed = await eyeSaver.getCurrentProgress()
 
   const startStopButton = document.createElement('div')
   startStopButton.onmouseover = (event) => {
@@ -25,32 +49,37 @@ const main = async () => {
   startStopButton.innerText = running ? 'Cancel' : 'Start'
   startStopButton.onclick = async (event) => {
     if (await eyeSaver.isExtensionRunning()) {
+      onCancel()
       timer.cancel()
-      await eyeSaver.stopExtension()
+      event.target.innerText = 'Start'
+      // await eyeSaver.stopExtension()
       enableDurationInputs()
     } else {
+      onStart()
       timer.start()
-      await eyeSaver.startExtension()
+      // await eyeSaver.startExtension()
       disableDurationInputs()
+      event.target.innerText = 'Cancel'
     }
-    event.target.innerText = (await eyeSaver.isExtensionRunning())
-      ? 'Cancel'
-      : 'Start'
+    // event.target.innerText = (await eyeSaver.isExtensionRunning())
+    //   ? 'Cancel'
+    //   : 'Start'
   }
 
   const onFinish = async () => {
-    const restDurationRemaining = await eyeSaver.getRestDurationRemaining()
-    const timerDurationRemaining = await eyeSaver.getTimerDurationRemaining()
+    // const restDurationRemaining = await eyeSaver.getRestDurationRemaining()
+    // const timerDurationRemaining = await eyeSaver.getTimerDurationRemaining()
     const restDuration = await eyeSaver.getRestDuration()
-    const timeout =
-      restDurationRemaining > 0
-        ? restDurationRemaining
-        : timerDurationRemaining + restDuration
+
+    // const timeout =
+    //   restDurationRemaining > 0
+    //     ? restDurationRemaining
+    //     : timerDurationRemaining + restDuration
 
     setTimeout(async () => {
       const running = await eyeSaver.isExtensionRunning()
       if (running) timer.start()
-    }, timeout)
+    }, restDuration)
   }
 
   const timer = new timerSrc.Timer(
@@ -180,7 +209,6 @@ const main = async () => {
 
   inputs.restDurationInput.onchange = (event) => {
     eyeSaver.setRestDuration(event.target.value)
-    timer.setRestDuration(event.target.value)
   }
 
   document.querySelector('.send-desktop-notification-button').onclick = () => {
