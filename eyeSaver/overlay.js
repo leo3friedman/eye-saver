@@ -5,40 +5,33 @@ function destroyOverlay() {
 }
 
 async function renderOverlay(totalDuration, timePassed) {
-  const overlay = document.createElement('div')
-  const overlayContents = document.createElement('div')
-  const dropzone = document.createElement('dropzone')
-  const skipButton = document.createElement('div')
+  const timerTemplateUrl = chrome.runtime.getURL('overlay.html')
+  const xhr = new XMLHttpRequest()
 
-  overlay.className = 'eye-saver__overlay'
-  overlayContents.className = 'eye-saver__overlay-contents'
-  dropzone.className = 'timer__dropzone'
-  skipButton.className = 'eye-saver__skip-button'
+  xhr.onload = async () => {
+    document.body.insertAdjacentHTML('afterbegin', xhr.response)
+    const timerSrc = await import(chrome.runtime.getURL('templates/timer.js'))
+    const dropzone = document.querySelector('.timer__dropzone')
+    const skipButton = document.querySelector('.eye-saver__skip-button')
 
-  skipButton.innerText = 'Skip'
-  skipButton.onclick = async () => {
-    destroyOverlay()
-    // TODO: message to alarmHandler.js to force new alarm
+    skipButton.onclick = () => {
+      destroyOverlay()
+    }
+
+    const timer = new timerSrc.Timer(
+      totalDuration,
+      0,
+      timePassed,
+      true,
+      false,
+      destroyOverlay,
+      null
+    )
+
+    timer.renderTimer(dropzone)
   }
-
-  overlay.appendChild(overlayContents)
-  overlayContents.appendChild(dropzone)
-  overlayContents.appendChild(skipButton)
-  document.body.appendChild(overlay)
-
-  const timerSrc = await import(chrome.runtime.getURL('templates/timer.js'))
-
-  const timer = new timerSrc.Timer(
-    totalDuration,
-    0,
-    timePassed,
-    true,
-    false,
-    destroyOverlay,
-    null
-  )
-
-  timer.renderTimer(dropzone)
+  xhr.open('GET', timerTemplateUrl)
+  xhr.send()
 }
 
 window.onload = async () => {

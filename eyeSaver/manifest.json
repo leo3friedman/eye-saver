@@ -10,8 +10,8 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "css": ["overlay.css"],
-      "js": ["overlay.js"]
+      "css": [],
+      "js": ["overlay.js", "fonts.js"]
     }
   ],
   "action": {
@@ -24,7 +24,8 @@
         "sounds/look_away_sound.wav",
         "fonts/Roboto/*.ttf",
         "enums.js",
-        "eyeSaver.js"
+        "eyeSaver.js",
+        "overlay.html"
       ],
       "matches": ["<all_urls>"]
     }
