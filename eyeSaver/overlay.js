@@ -20,7 +20,6 @@ async function renderOverlay(totalDuration, timePassed) {
 
     const timer = new timerSrc.Timer(
       totalDuration,
-      0,
       timePassed,
       true,
       false,
@@ -34,7 +33,7 @@ async function renderOverlay(totalDuration, timePassed) {
   xhr.send()
 }
 
-window.onload = async () => {
+async function onPageLoad() {
   const enums = await import(chrome.runtime.getURL('enums.js'))
 
   chrome.storage.sync.get(enums.defaults, (result) => {
@@ -48,7 +47,8 @@ window.onload = async () => {
   })
 }
 
-chrome.storage.onChanged.addListener(async (changes) => {
+async function onStorageChanged(changes) {
+  const enums = await import(chrome.runtime.getURL('enums.js'))
   const newRestStart = changes?.restStart?.newValue
 
   if (!newRestStart || newRestStart < 0) {
@@ -56,10 +56,12 @@ chrome.storage.onChanged.addListener(async (changes) => {
     return
   }
 
-  const enums = await import(chrome.runtime.getURL('enums.js'))
   chrome.storage.sync.get(enums.defaults, (result) => {
     const restDuration = Number(result.restDuration)
     const timePassed = Date.now() - Number(newRestStart)
     renderOverlay(restDuration, timePassed)
   })
-})
+}
+
+window.onload = onPageLoad
+chrome.storage.onChanged.addListener(onStorageChanged)

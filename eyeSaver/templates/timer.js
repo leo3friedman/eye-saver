@@ -8,7 +8,6 @@ export class Timer {
   /**
    *
    * @param {Number} timerDuration timer duration in milliseconds
-   * @param {Number} restDuration rest duration in milliseconds
    * @param {Number} timePassed time passed since timer start in milliseconds
    * @param {boolean} running true if the timer should be running by default
    * @param {boolean} countdown true if the timer should count from duration down to 0
@@ -17,7 +16,6 @@ export class Timer {
    */
   constructor(
     timerDuration,
-    restDuration,
     timePassed = 0,
     running = true,
     countdown = true,
@@ -25,7 +23,6 @@ export class Timer {
     UI = null
   ) {
     this.timerDuration = timerDuration
-    this.restDuration = restDuration
     this.timePassed = running ? timePassed : 0
     this.state = running ? states.RUNNING : states.STOPPED
     this.countdown = countdown
@@ -193,10 +190,6 @@ export class Timer {
     this.timePassed = duration * (this.timePassed / this.timerDuration)
     this.timerDuration = duration
     this.setTimerText()
-  }
-
-  setRestDuration(duration) {
-    this.restDuration = duration
   }
 
   startBlinking() {

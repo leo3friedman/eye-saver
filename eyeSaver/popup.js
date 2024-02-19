@@ -55,7 +55,6 @@ const main = async () => {
 
   const timer = new timerSrc.Timer(
     timerDuration,
-    restDuration,
     timePassed,
     running,
     true,
