@@ -4,6 +4,18 @@ function destroyOverlay() {
     .forEach((canvas) => document.body.removeChild(canvas))
 }
 
+async function skipRest() {
+  const { StorageManager } = await import(
+    chrome.runtime.getURL('storageManager.js')
+  )
+
+  const storage = new StorageManager(chrome)
+
+  const { messages } = await storage.getEnums()
+  destroyOverlay()
+  chrome.runtime.sendMessage({ key: messages.SKIP_REST })
+}
+
 async function renderOverlay(totalDuration, timeRemaining) {
   const timerTemplateUrl = chrome.runtime.getURL('overlay.html')
   const xhr = new XMLHttpRequest()
@@ -11,12 +23,8 @@ async function renderOverlay(totalDuration, timeRemaining) {
   xhr.onload = async () => {
     document.body.insertAdjacentHTML('afterbegin', xhr.response)
     const timerSrc = await import(chrome.runtime.getURL('templates/timer.js'))
-    const dropzone = document.querySelector('.timer__dropzone')
-    const skipButton = document.querySelector('.eye-saver__skip-button')
 
-    skipButton.onclick = () => {
-      destroyOverlay()
-    }
+    document.querySelector('.eye-saver__skip-button').onclick = skipRest
 
     const timer = new timerSrc.Timer(
       totalDuration,
@@ -27,7 +35,7 @@ async function renderOverlay(totalDuration, timeRemaining) {
       null
     )
 
-    timer.renderTimer(dropzone)
+    timer.renderTimer(document.querySelector('.timer__dropzone'))
   }
   xhr.open('GET', timerTemplateUrl)
   xhr.send()
@@ -38,27 +46,29 @@ async function onPageLoad() {
     chrome.runtime.getURL('storageManager.js')
   )
 
-  const storage = new StorageManager(chrome)
+  const storage = new StorageManager(this.chrome)
   const restDuration = await storage.getRestDuration()
   const restDurationRemaining = await storage.getRestDurationRemaining()
+  const running = await storage.getIsRunning()
 
-  restDurationRemaining > 0
+  restDurationRemaining > 0 && running
     ? renderOverlay(restDuration, restDurationRemaining)
     : destroyOverlay()
 }
 
 async function onStorageChanged(changes) {
-  if (!changes?.restStart) return
+  if (!changes?.alarm) return
 
   const { StorageManager } = await import(
     chrome.runtime.getURL('storageManager.js')
   )
-  
+
   const storage = new StorageManager(chrome)
   const restDuration = await storage.getRestDuration()
   const restDurationRemaining = await storage.getRestDurationRemaining()
+  const running = await storage.getIsRunning()
 
-  restDurationRemaining > 0
+  restDurationRemaining > 0 && running
     ? renderOverlay(restDuration, restDurationRemaining)
     : destroyOverlay()
 }

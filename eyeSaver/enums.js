@@ -21,6 +21,7 @@ export const messages = {
   PLAY_SOUND: 9,
   START: 10,
   STOP: 11,
+  SKIP_REST: 12,
 }
 
 export const defaults = {

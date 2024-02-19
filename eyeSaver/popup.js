@@ -16,8 +16,6 @@ const main = async () => {
   const isRunning = await storage.getIsRunning()
   const { messages } = await storage.getEnums()
 
-  const dropzone = document.querySelector('.timer__dropzone')
-
   const startStopButton = document.createElement('div')
   startStopButton.onmouseover = (event) => {
     event.target.style.cursor = 'pointer'
@@ -60,7 +58,7 @@ const main = async () => {
     startStopButton
   )
 
-  timer.renderTimer(dropzone)
+  timer.renderTimer(document.querySelector('.timer__dropzone'))
 
   /**
    * INITIALIZING UI ELEMENTS
@@ -73,7 +71,6 @@ const main = async () => {
 
   document.querySelector('.timer-duration-increment-up').onclick = async () => {
     const newTimerDuration = await storage.incrementTimerDuration(true)
-    console.log(newTimerDuration)
     setTimerDurationInputText(newTimerDuration)
     timer.setTimerDuration(newTimerDuration)
   }
@@ -125,7 +122,6 @@ const main = async () => {
   }
   const restDurationInput = document.querySelector('#test-rest-duration-input')
   restDurationInput.value = await storage.getRestDuration()
-  console.log(await storage.getRestDuration())
 
   restDurationInput.onchange = (event) => {
     storage.setRestDuration(event.target.value)

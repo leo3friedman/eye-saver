@@ -127,7 +127,6 @@ export class Timer {
   }
 
   finish() {
-    console.log('finish!')
     this.state = states.DONE
     this.setProgress(100)
     this.setTimerText(0)

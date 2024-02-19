@@ -9,8 +9,7 @@ export class StorageManager {
   }
 
   async getEnums() {
-    await this.loadEnums
-    return this.enums
+    return await import(this.chrome.runtime.getURL('enums.js'))
   }
 
   /**
@@ -68,7 +67,6 @@ export class StorageManager {
     await this.loadEnums()
     return new Promise((resolve) => {
       this.chrome.storage.sync.get(this.enums.defaults, (result) => {
-        console.log(result.alarm)
         resolve(result.alarm)
       })
     })

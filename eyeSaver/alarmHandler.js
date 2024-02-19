@@ -22,6 +22,11 @@ function setRestStart(time) {
   chrome.storage.sync.set({ restStart: time })
 }
 
+async function storeCurrentAlarm() {
+  const alarm = await chrome.alarms.get(constants.ALARM_NAME)
+  chrome.storage.sync.set({ alarm: alarm })
+}
+
 /**
  * Clears existing alarms and creates a new one
  *
@@ -33,8 +38,7 @@ function createNewAlarm(length) {
     await chrome.alarms.create(constants.ALARM_NAME, {
       when: Date.now() + length,
     })
-    const newAlarm = await chrome.alarms.get(constants.ALARM_NAME)
-    chrome.storage.sync.set({ alarm: newAlarm })
+    await storeCurrentAlarm()
   })
 }
 
@@ -59,8 +63,6 @@ async function onAlarm(alarm) {
     } = result
 
     if (!isRunning) return
-
-    setRestStart(Date.now())
 
     const alarmLength = Number(timerDuration) + Number(restDuration)
     createNewAlarm(alarmLength)
@@ -118,5 +120,13 @@ chrome.runtime.onMessage.addListener(async (message) => {
     chrome.storage.sync.set({ isRunning: false })
     chrome.storage.sync.set({ alarm: null })
     chrome.alarms.clearAll()
+  }
+
+  if (message.key === messages.SKIP_REST) {
+    chrome.storage.sync.set({ isRunning: true })
+    chrome.storage.sync.get(defaults, (result) => {
+      const alarmLength = Number(result.timerDuration)
+      createNewAlarm(alarmLength)
+    })
   }
 })
