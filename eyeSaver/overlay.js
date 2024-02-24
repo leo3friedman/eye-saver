@@ -1,18 +1,28 @@
+let timerGlobal
+
 function destroyOverlay() {
   document
     .querySelectorAll('.eye-saver__overlay')
     .forEach((canvas) => document.body.removeChild(canvas))
 }
 
-async function skipRest() {
+function endTimer(timer) {
+  console.log('trying to cancel...')
+  if (timer) {
+    timer.cancel()
+  }
+}
+
+async function skipRest(timer) {
+  destroyOverlay()
+  endTimer(timer)
+
   const { StorageManager } = await import(
     chrome.runtime.getURL('storageManager.js')
   )
-
   const storage = new StorageManager(chrome)
-
   const { messages } = await storage.getEnums()
-  destroyOverlay()
+
   chrome.runtime.sendMessage({ key: messages.SKIP_REST })
 }
 
@@ -21,11 +31,10 @@ async function renderOverlay(totalDuration, timeRemaining) {
   const xhr = new XMLHttpRequest()
 
   xhr.onload = async () => {
+    // console.log('xhr loaded!')
+    console.log(xhr.response)
     document.body.insertAdjacentHTML('afterbegin', xhr.response)
     const timerSrc = await import(chrome.runtime.getURL('templates/timer.js'))
-
-    document.querySelector('.eye-saver__skip-button').onclick = skipRest
-
     const timer = new timerSrc.Timer(
       totalDuration,
       timeRemaining,
@@ -34,6 +43,13 @@ async function renderOverlay(totalDuration, timeRemaining) {
       destroyOverlay,
       null
     )
+
+    document.querySelector('.eye-saver__skip-button').onclick = () => {
+      skipRest(timer)
+    }
+
+    // global set so other functions can cancel
+    timerGlobal = timer
 
     timer.renderTimer(document.querySelector('.timer__dropzone'))
   }
@@ -51,9 +67,12 @@ async function onPageLoad() {
   const restDurationRemaining = await storage.getRestDurationRemaining()
   const running = await storage.getIsRunning()
 
-  restDurationRemaining > 0 && running
-    ? renderOverlay(restDuration, restDurationRemaining)
-    : destroyOverlay()
+  if (restDurationRemaining > 0 && running) {
+    renderOverlay(restDuration, restDurationRemaining)
+  } else {
+    destroyOverlay()
+    endTimer(timerGlobal)
+  }
 }
 
 async function onStorageChanged(changes) {
@@ -64,13 +83,16 @@ async function onStorageChanged(changes) {
   )
 
   const storage = new StorageManager(chrome)
-  const restDuration = await storage.getRestDuration()
   const restDurationRemaining = await storage.getRestDurationRemaining()
   const running = await storage.getIsRunning()
+  const restDuration = await storage.getRestDuration()
 
-  restDurationRemaining > 0 && running
-    ? renderOverlay(restDuration, restDurationRemaining)
-    : destroyOverlay()
+  if (restDurationRemaining > 0 && running) {
+    renderOverlay(restDuration, restDurationRemaining)
+  } else {
+    destroyOverlay()
+    endTimer(timerGlobal)
+  }
 }
 
 window.onload = onPageLoad

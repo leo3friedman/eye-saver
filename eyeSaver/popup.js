@@ -1,9 +1,13 @@
 const main = async () => {
+  console.log('main ran')
   const timerSrc = await import(chrome.runtime.getURL('templates/timer.js'))
 
   const { StorageManager } = await import(
     chrome.runtime.getURL('storageManager.js')
   )
+
+  const { injectFonts } = await import(chrome.runtime.getURL('fonts.js'))
+  injectFonts()
 
   /**
    * RENDERING THE TIMER
@@ -40,6 +44,7 @@ const main = async () => {
     }
   }
 
+  // TODO: reproduce bug -- popup timer restarts on finish
   const onFinish = async () => {
     const restDurationRemaining = await storage.getRestDurationRemaining()
 
@@ -125,6 +130,14 @@ const main = async () => {
 
   restDurationInput.onchange = (event) => {
     storage.setRestDuration(event.target.value)
+  }
+
+  document.querySelector('.send-desktop-notification-button').onclick = () => {
+    chrome.runtime.sendMessage({ key: messages.PUSH_DESKTOP_NOTIFICATION })
+  }
+
+  document.querySelector('.play-sound-button').onclick = () => {
+    chrome.runtime.sendMessage({ key: messages.PLAY_SOUND })
   }
 
   // toggle testing on and off here (TODO: make better system for managing this)

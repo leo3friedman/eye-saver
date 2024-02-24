@@ -2,7 +2,13 @@
   "name": "Eye Saver - Break Reminder",
   "version": "0.8",
   "description": "Eye Saver helps remind you to look away from the screen to prevent eye strain.",
-  "permissions": ["storage", "notifications", "offscreen", "alarms"],
+  "permissions": [
+    "storage",
+    "notifications",
+    "offscreen",
+    "alarms",
+    "activeTab"
+  ],
   "background": {
     "service_worker": "alarmHandler.js",
     "type": "module"
@@ -10,8 +16,8 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "css": [],
-      "js": ["overlay.js", "fonts.js"]
+      "css": ["templates/overlay.css"],
+      "js": ["overlay.js"]
     }
   ],
   "action": {
@@ -25,7 +31,8 @@
         "fonts/Roboto/*.ttf",
         "enums.js",
         "storageManager.js",
-        "overlay.html"
+        "overlay.html",
+        "fonts.js"
       ],
       "matches": ["<all_urls>"]
     }

@@ -74,18 +74,25 @@ export class StorageManager {
 
   async getTimeUntilAlarm() {
     const alarm = await this.getAlarm()
-    if (!alarm) return 0
+    if (!alarm) return -1
     return Number(alarm?.scheduledTime) - Date.now()
   }
 
   async getRestDurationRemaining() {
     const timeUntilAlarm = await this.getTimeUntilAlarm()
-    const timerDuration = await this.getTimerDuration()
-    const restDuration = await this.getRestDuration()
 
-    return timeUntilAlarm > 0
-      ? Math.max(timeUntilAlarm - timerDuration, 0)
-      : restDuration
+    // case where there is no alarm
+    if (timeUntilAlarm < 0) return -1
+
+    const timerDuration = await this.getTimerDuration()
+
+    // const restDuration = await this.getRestDuration()
+
+    return timeUntilAlarm - timerDuration
+
+    // return timeUntilAlarm > 0
+    //   ? Math.max(timeUntilAlarm - timerDuration, 0)
+    //   : restDuration
   }
 
   /**

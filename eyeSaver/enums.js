@@ -66,6 +66,13 @@ export const alarms = {
 
 export const constants = {
   ALARM_NAME: 'eye-saver-alarm',
+  PUSH_NOTIFICATION: {
+    title: 'Eye Saver',
+    type: 'basic',
+    iconUrl: 'assets/64icon.png',
+    message: 'Look away from the screen!',
+  },
+  soundSource: 'sounds/look_back_sound.wav',
   timerDurationIncrement: 10 * 60 * 1000,
   restDurationIncrement: 10 * 1000,
   maxTimerDuration: 2 * 60 * 60 * 1000,

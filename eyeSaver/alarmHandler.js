@@ -1,4 +1,4 @@
-import { defaults, states, messages, constants } from './enums.js'
+import { defaults, messages, constants } from './enums.js'
 
 async function getFromStorage(defaults, keys = null) {
   const requestedDefaults = keys
@@ -14,26 +14,17 @@ async function getFromStorage(defaults, keys = null) {
   })
 }
 
-/**
- *
- * @param {Number} time time to set restStart in ms from the epoch
- */
-function setRestStart(time) {
-  chrome.storage.sync.set({ restStart: time })
-}
-
 async function storeCurrentAlarm() {
   const alarm = await chrome.alarms.get(constants.ALARM_NAME)
   chrome.storage.sync.set({ alarm: alarm })
 }
 
 /**
- * Clears existing alarms and creates a new one
+ * Clears existing alarms and create and stores a new one
  *
  * @param {number} length - amount of time in ms before alarm should fire
  */
 function createNewAlarm(length) {
-  // console.log(`creating new alarm of length: ${length / 1000}`)
   chrome.alarms.clearAll(async () => {
     await chrome.alarms.create(constants.ALARM_NAME, {
       when: Date.now() + length,
@@ -43,16 +34,64 @@ function createNewAlarm(length) {
 }
 
 function pushNotification() {
-  // console.log('push desktop notification!')
+  chrome.notifications.create(constants.PUSH_NOTIFICATION)
 }
 
-function playSound() {
-  // console.log('play sound!')
+async function playSound() {
+  console.log('playing sound...')
+  const offscreenExists = await chrome.offscreen.hasDocument()
+  console.log('offscreenExists', offscreenExists)
+  if (!offscreenExists) {
+    await chrome.offscreen.createDocument({
+      url: 'offscreen.html',
+      reasons: ['AUDIO_PLAYBACK'],
+      justification: 'notification',
+    })
+  }
+
+  chrome.runtime.sendMessage({
+    key: messages.PLAY_SOUND,
+    offscreen: true,
+    payload: {
+      source: constants.soundSource,
+      volume: defaults.soundVolume,
+    },
+  })
 }
 
+async function startTimer() {
+  chrome.storage.sync.set({ isRunning: true })
+  chrome.storage.sync.get(defaults, (result) => {
+    const alarmLength = Number(result.timerDuration)
+    createNewAlarm(alarmLength)
+  })
+}
+
+async function stopTimer() {
+  chrome.storage.sync.set({ isRunning: false })
+  chrome.storage.sync.set({ alarm: null })
+  chrome.alarms.clearAll()
+}
+
+async function onInstall() {
+  const { isRunning, timerDuration } = await getFromStorage(defaults)
+
+  if (!isRunning) return
+
+  const alarmLength = Number(timerDuration)
+  createNewAlarm(alarmLength)
+}
+
+async function getCurrentTab() {
+  let queryOptions = { active: true, lastFocusedWindow: true }
+  // `tab` will either be a `tabs.Tab` instance or `undefined`.
+  let [tab] = await chrome.tabs.query(queryOptions)
+  return tab
+}
 async function onAlarm(alarm) {
-  // console.log('alarm fired...', alarm)
+  console.log('alarm fired...', alarm)
 
+  console.log('current tab', await getCurrentTab())
   chrome.storage.sync.get(defaults, (result) => {
     const {
       isRunning,
@@ -72,61 +111,31 @@ async function onAlarm(alarm) {
   })
 }
 
-async function onInstall() {
-  const { isRunning, timerDuration } = await getFromStorage(defaults)
+async function handleMessage(message) {
+  // messages for offscreen.js only
+  if (message.offscreen) return
 
-  if (!isRunning) return
+  switch (message.key) {
+    case messages.START:
+      await startTimer()
+      break
+    case messages.SKIP_REST:
+      await startTimer()
+      break
+    case messages.STOP:
+      await stopTimer()
+      break
 
-  const alarmLength = Number(timerDuration)
-  createNewAlarm(alarmLength)
-}
-
-async function createOffscreen() {
-  const offscreenExists = await chrome.offscreen.hasDocument()
-  if (!offscreenExists) {
-    await chrome.offscreen.createDocument({
-      url: 'offscreen.html',
-      reasons: ['AUDIO_PLAYBACK'],
-      justification: 'notification',
-    })
+    // CASES USED FOR TESTING ONLY
+    case messages.PLAY_SOUND:
+      playSound()
+      break
+    case messages.PUSH_DESKTOP_NOTIFICATION:
+      pushNotification()
+      break
   }
 }
-
+chrome.tabs.onActivated.addListener(() => console.log('new tab'))
 chrome.runtime.onInstalled.addListener(onInstall)
 chrome.alarms.onAlarm.addListener(onAlarm)
-
-// PRE-MIGRATION CODE
-
-chrome.runtime.onMessage.addListener(async (message) => {
-  if (message.key === messages.PUSH_DESKTOP_NOTIFICATION) {
-    chrome.notifications.create(message.payload)
-  }
-
-  if (message.key === messages.PLAY_SOUND && !message.offscreen) {
-    await createOffscreen()
-    message.offscreen = true
-    await chrome.runtime.sendMessage(message)
-  }
-
-  if (message.key === messages.START) {
-    chrome.storage.sync.set({ isRunning: true })
-    chrome.storage.sync.get(defaults, (result) => {
-      const alarmLength = Number(result.timerDuration)
-      createNewAlarm(alarmLength)
-    })
-  }
-
-  if (message.key === messages.STOP) {
-    chrome.storage.sync.set({ isRunning: false })
-    chrome.storage.sync.set({ alarm: null })
-    chrome.alarms.clearAll()
-  }
-
-  if (message.key === messages.SKIP_REST) {
-    chrome.storage.sync.set({ isRunning: true })
-    chrome.storage.sync.get(defaults, (result) => {
-      const alarmLength = Number(result.timerDuration)
-      createNewAlarm(alarmLength)
-    })
-  }
-})
+chrome.runtime.onMessage.addListener(handleMessage)
