@@ -63,6 +63,9 @@ async function onPageLoad() {
     chrome.runtime.getURL('storageManager.js')
   )
 
+  const { injectFonts } = await import(chrome.runtime.getURL('fonts.js'))
+  injectFonts()
+
   const storage = new StorageManager(this.chrome)
   const restDuration = await storage.getRestDuration()
   const restDurationRemaining = await storage.getRestDurationRemaining()
@@ -73,7 +76,7 @@ async function onPageLoad() {
   } else {
     destroyOverlay()
     endTimer(timerGlobal)
-  }  
+  }
 }
 
 async function onMessage(message) {

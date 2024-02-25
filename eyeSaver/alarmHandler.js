@@ -33,9 +33,15 @@ async function showOverlay(tabId, totalRestDuration, restDurationRemaining) {
         restDurationRemaining,
       },
     })
-  } catch (err) {
-    console.log('No connection, could not send message')
-  }
+  } catch (err) {}
+}
+
+function showAllOverlay(totalRestDuration, restDurationRemaining) {
+  chrome.tabs.query({}, (tabs) => {
+    tabs.forEach((tab) =>
+      showOverlay(tab.id, totalRestDuration, restDurationRemaining)
+    )
+  })
 }
 
 async function removeOverlay(tabId) {
@@ -44,9 +50,11 @@ async function removeOverlay(tabId) {
       key: messages.REMOVE_OVERLAY,
       receiver: receivers.OVERLAY,
     })
-  } catch (err) {
-    console.log('No connection, could not send message')
-  }
+  } catch (err) {}
+}
+
+function removeAllOverlay() {
+  chrome.tabs.query({}, (tabs) => tabs.forEach((tab) => removeOverlay(tab.id)))
 }
 
 function pushNotification() {
@@ -62,37 +70,37 @@ async function playSound() {
       justification: 'notification',
     })
   }
+  try {
+    chrome.runtime.sendMessage({
+      key: messages.PLAY_SOUND,
+      offscreen: true,
+      payload: {
+        source: constants.soundSource,
+        volume: defaults.soundVolume,
+      },
+    })
+  } catch (err) {
+    console.error('Could not play sound', err)
+  }
+}
 
-  chrome.runtime.sendMessage({
-    key: messages.PLAY_SOUND,
-    offscreen: true,
-    payload: {
-      source: constants.soundSource,
-      volume: defaults.soundVolume,
-    },
-  })
+async function skipRest() {
+  const timerDuration = await storage.getTimerDuration()
+  createNewAlarm(timerDuration)
+  removeAllOverlay()
 }
 
 async function startTimer() {
-  chrome.storage.sync.set({ isRunning: true })
-  chrome.storage.sync.get(defaults, (result) => {
-    const alarmLength = Number(result.timerDuration)
-    createNewAlarm(alarmLength)
-  })
+  storage.setIsRunning(true)
+  const timerDuration = await storage.getTimerDuration()
+  createNewAlarm(timerDuration)
 }
 
 async function stopTimer() {
-  chrome.storage.sync.set({ isRunning: false })
-  chrome.storage.sync.set({ alarm: null })
+  storage.setIsRunning(false)
+  storage.setAlarm(null)
   chrome.alarms.clearAll()
-  const currentTab = await getCurrentTab()
-  if (currentTab?.id) removeOverlay(currentTab.id)
-}
-
-async function getCurrentTab() {
-  let queryOptions = { active: true, lastFocusedWindow: true }
-  let [tab] = await chrome.tabs.query(queryOptions)
-  return tab
+  removeAllOverlay()
 }
 
 async function onInstall() {
@@ -112,14 +120,10 @@ async function onAlarm(alarm) {
   const restDuration = await storage.getRestDuration()
   const pushDesktopNotification = await storage.getPushDesktopNotification()
   const playSoundNotification = await storage.getPlaySoundNotification()
-  const currentTab = await getCurrentTab()
-  const currentTabId = currentTab?.id
 
   createNewAlarm(timerDuration + restDuration)
 
-  if (currentTab === null || currentTabId === null) return
-
-  showOverlay(currentTabId, restDuration, restDuration)
+  showAllOverlay(restDuration, restDuration)
   if (pushDesktopNotification) pushNotification()
   if (playSoundNotification) playSound()
 }
@@ -133,7 +137,7 @@ async function onMessage(message) {
       await startTimer()
       break
     case messages.SKIP_REST:
-      await startTimer()
+      await skipRest()
       break
     case messages.STOP:
       await stopTimer()

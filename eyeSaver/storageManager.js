@@ -105,7 +105,6 @@ export class StorageManager {
     const timerDuration = await this.getTimerDuration()
 
     return timeUntilAlarm - timerDuration
-
   }
 
   /**
@@ -113,6 +112,10 @@ export class StorageManager {
    * STORAGE SETTERS
    *
    */
+
+  async setIsRunning(isRunning) {
+    await this.chrome.storage.sync.set({ isRunning: isRunning })
+  }
 
   async setAlarm(alarm) {
     await this.chrome.storage.sync.set({ alarm: alarm })
