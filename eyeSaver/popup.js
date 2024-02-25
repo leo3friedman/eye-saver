@@ -1,5 +1,4 @@
 const main = async () => {
-  console.log('main ran')
   const timerSrc = await import(chrome.runtime.getURL('templates/timer.js'))
 
   const { StorageManager } = await import(

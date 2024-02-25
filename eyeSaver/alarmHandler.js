@@ -38,6 +38,17 @@ async function showOverlay(tabId, totalRestDuration, restDurationRemaining) {
   }
 }
 
+async function removeOverlay(tabId) {
+  try {
+    await chrome.tabs.sendMessage(tabId, {
+      key: messages.REMOVE_OVERLAY,
+      receiver: receivers.OVERLAY,
+    })
+  } catch (err) {
+    console.log('No connection, could not send message')
+  }
+}
+
 function pushNotification() {
   chrome.notifications.create(constants.PUSH_NOTIFICATION)
 }
@@ -74,6 +85,8 @@ async function stopTimer() {
   chrome.storage.sync.set({ isRunning: false })
   chrome.storage.sync.set({ alarm: null })
   chrome.alarms.clearAll()
+  const currentTab = await getCurrentTab()
+  if (currentTab?.id) removeOverlay(currentTab.id)
 }
 
 async function getCurrentTab() {
@@ -139,9 +152,13 @@ async function onMessage(message) {
 async function onTabActivated(currentTab) {
   const restDurationRemaining = await storage.getRestDurationRemaining()
   const totalRestDuration = await storage.getRestDuration()
+  const isRunning = await storage.getIsRunning()
 
-  if (restDurationRemaining > 0)
+  if (isRunning && restDurationRemaining > 0) {
     showOverlay(currentTab?.tabId, totalRestDuration, restDurationRemaining)
+  } else {
+    removeOverlay(currentTab?.tabId)
+  }
 }
 
 chrome.tabs.onActivated.addListener(onTabActivated)

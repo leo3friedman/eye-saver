@@ -34,12 +34,10 @@ export class Timer {
   }
 
   renderTimer(container) {
-    console.log('render timer', container)
     const timerTemplateUrl = chrome.runtime.getURL('templates/timer.html')
     const xhr = new XMLHttpRequest()
 
     xhr.onload = () => {
-      console.log('loaded timer!!!')
       container?.insertAdjacentHTML('afterbegin', xhr.response)
       this.initializeProps()
       this.initializeStyles()

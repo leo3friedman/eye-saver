@@ -23,6 +23,7 @@ export const messages = {
   STOP: 11,
   SKIP_REST: 12,
   SHOW_OVERLAY: 13,
+  REMOVE_OVERLAY: 14,
 }
 
 export const receivers = {
