@@ -1,5 +1,9 @@
 let timerGlobal
 
+function overlayExists() {
+  return document.querySelectorAll('.eye-saver__overlay').length > 0
+}
+
 function destroyOverlay() {
   document
     .querySelectorAll('.eye-saver__overlay')
@@ -7,7 +11,6 @@ function destroyOverlay() {
 }
 
 function endTimer(timer) {
-  console.log('trying to cancel...')
   if (timer) {
     timer.cancel()
   }
@@ -31,8 +34,6 @@ async function renderOverlay(totalDuration, timeRemaining) {
   const xhr = new XMLHttpRequest()
 
   xhr.onload = async () => {
-    // console.log('xhr loaded!')
-    console.log(xhr.response)
     document.body.insertAdjacentHTML('afterbegin', xhr.response)
     const timerSrc = await import(chrome.runtime.getURL('templates/timer.js'))
     const timer = new timerSrc.Timer(
@@ -95,5 +96,32 @@ async function onStorageChanged(changes) {
   }
 }
 
-window.onload = onPageLoad
-chrome.storage.onChanged.addListener(onStorageChanged)
+// window.onload = onPageLoad
+// chrome.storage.onChanged.addListener(onStorageChanged)
+
+chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+  const { StorageManager } = await import(
+    chrome.runtime.getURL('storageManager.js')
+  )
+
+  const storage = new StorageManager(this.chrome)
+
+  const { messages, receivers } = await storage.getEnums()
+
+  if (message?.receiver !== receivers.OVERLAY) {
+    return
+  }
+
+  switch (message?.key) {
+    case messages.SHOW_OVERLAY:
+      const { totalRestDuration, restDurationRemaining } = message.payload
+      console.log('should render', totalRestDuration, restDurationRemaining)
+      if (!overlayExists())
+        renderOverlay(totalRestDuration, restDurationRemaining)
+      break
+    case messages.REMOVE_OVERLAY:
+      console.log('remove overlay')
+      break
+  }
+  // return true <- this and the callback in background.js are what caused a crash in extensions page of my Google chrome
+})

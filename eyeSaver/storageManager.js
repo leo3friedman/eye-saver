@@ -1,14 +1,32 @@
 export class StorageManager {
-  constructor(chrome) {
+  /**
+   *
+   * Instiantiate a new StorageManager
+   *
+   * @param {object} chrome local chrome instance
+   * @param {boolean} allowImports set to false if running in a service_worker
+   * @param {object} enums enums used if running in a service_worker
+   */
+  constructor(chrome, allowImports = true, enums = null) {
+    if (!enums && !allowImports)
+      throw new Error(
+        'enums required for StorageManager running in a service_worker'
+      )
+
     this.chrome = chrome
+    this.allowImports = allowImports
+    this.enums = enums
   }
 
   async loadEnums() {
-    this.enums =
-      this.enums || (await import(this.chrome.runtime.getURL('enums.js')))
+    if (this.enums !== null) return
+
+    this.enums = await import(this.chrome.runtime.getURL('enums.js'))
   }
 
   async getEnums() {
+    if (this.enums !== null) return this.enums
+
     return await import(this.chrome.runtime.getURL('enums.js'))
   }
 
@@ -86,13 +104,8 @@ export class StorageManager {
 
     const timerDuration = await this.getTimerDuration()
 
-    // const restDuration = await this.getRestDuration()
-
     return timeUntilAlarm - timerDuration
 
-    // return timeUntilAlarm > 0
-    //   ? Math.max(timeUntilAlarm - timerDuration, 0)
-    //   : restDuration
   }
 
   /**
@@ -100,6 +113,10 @@ export class StorageManager {
    * STORAGE SETTERS
    *
    */
+
+  async setAlarm(alarm) {
+    await this.chrome.storage.sync.set({ alarm: alarm })
+  }
 
   async setTimerDuration(duration) {
     await this.chrome.storage.sync.set({ timerDuration: duration })

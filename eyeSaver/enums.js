@@ -22,6 +22,11 @@ export const messages = {
   START: 10,
   STOP: 11,
   SKIP_REST: 12,
+  SHOW_OVERLAY: 13,
+}
+
+export const receivers = {
+  OVERLAY: 0,
 }
 
 export const defaults = {
@@ -79,4 +84,16 @@ export const constants = {
   minTimerDuration: 10 * 60 * 1000,
   maxRestDuration: 2 * 60 * 1000,
   minRestDuration: 10 * 1000,
+}
+
+export default {
+  states,
+  modes,
+  messages,
+  receivers,
+  defaults,
+  notificationOptions,
+  timerInputDefaults,
+  alarms,
+  constants,
 }

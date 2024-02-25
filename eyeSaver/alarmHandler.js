@@ -1,18 +1,8 @@
-import { defaults, messages, constants } from './enums.js'
+import enums from './enums.js'
+import { StorageManager } from './storageManager.js'
 
-async function getFromStorage(defaults, keys = null) {
-  const requestedDefaults = keys
-    ? Object.fromEntries(
-        Object.entries(defaults).filter(([key]) => keys.includes(key))
-      )
-    : defaults
-
-  return new Promise((resolve) => {
-    chrome.storage.sync.get(requestedDefaults, (result) => {
-      resolve(result)
-    })
-  })
-}
+const storage = new StorageManager(chrome, false, enums)
+const { defaults, messages, constants, receivers } = enums
 
 async function storeCurrentAlarm() {
   const alarm = await chrome.alarms.get(constants.ALARM_NAME)
@@ -33,14 +23,27 @@ function createNewAlarm(length) {
   })
 }
 
+async function showOverlay(tabId, totalRestDuration, restDurationRemaining) {
+  try {
+    await chrome.tabs.sendMessage(tabId, {
+      key: messages.SHOW_OVERLAY,
+      receiver: receivers.OVERLAY,
+      payload: {
+        totalRestDuration,
+        restDurationRemaining,
+      },
+    })
+  } catch (err) {
+    console.log('No connection, could not send message')
+  }
+}
+
 function pushNotification() {
   chrome.notifications.create(constants.PUSH_NOTIFICATION)
 }
 
 async function playSound() {
-  console.log('playing sound...')
   const offscreenExists = await chrome.offscreen.hasDocument()
-  console.log('offscreenExists', offscreenExists)
   if (!offscreenExists) {
     await chrome.offscreen.createDocument({
       url: 'offscreen.html',
@@ -73,8 +76,15 @@ async function stopTimer() {
   chrome.alarms.clearAll()
 }
 
+async function getCurrentTab() {
+  let queryOptions = { active: true, lastFocusedWindow: true }
+  let [tab] = await chrome.tabs.query(queryOptions)
+  return tab
+}
+
 async function onInstall() {
-  const { isRunning, timerDuration } = await getFromStorage(defaults)
+  const isRunning = await storage.getIsRunning()
+  const timerDuration = await storage.getTimerDuration()
 
   if (!isRunning) return
 
@@ -82,36 +92,26 @@ async function onInstall() {
   createNewAlarm(alarmLength)
 }
 
-async function getCurrentTab() {
-  let queryOptions = { active: true, lastFocusedWindow: true }
-  // `tab` will either be a `tabs.Tab` instance or `undefined`.
-  let [tab] = await chrome.tabs.query(queryOptions)
-  return tab
-}
 async function onAlarm(alarm) {
-  console.log('alarm fired...', alarm)
+  if (!(await storage.getIsRunning())) return
 
-  console.log('current tab', await getCurrentTab())
-  chrome.storage.sync.get(defaults, (result) => {
-    const {
-      isRunning,
-      timerDuration,
-      restDuration,
-      pushDesktopNotification,
-      playSoundNotification,
-    } = result
+  const timerDuration = await storage.getTimerDuration()
+  const restDuration = await storage.getRestDuration()
+  const pushDesktopNotification = await storage.getPushDesktopNotification()
+  const playSoundNotification = await storage.getPlaySoundNotification()
+  const currentTab = await getCurrentTab()
+  const currentTabId = currentTab?.id
 
-    if (!isRunning) return
+  createNewAlarm(timerDuration + restDuration)
 
-    const alarmLength = Number(timerDuration) + Number(restDuration)
-    createNewAlarm(alarmLength)
+  if (currentTab === null || currentTabId === null) return
 
-    if (pushDesktopNotification) pushNotification()
-    if (playSoundNotification) playSound()
-  })
+  showOverlay(currentTabId, restDuration, restDuration)
+  if (pushDesktopNotification) pushNotification()
+  if (playSoundNotification) playSound()
 }
 
-async function handleMessage(message) {
+async function onMessage(message) {
   // messages for offscreen.js only
   if (message.offscreen) return
 
@@ -135,7 +135,16 @@ async function handleMessage(message) {
       break
   }
 }
-chrome.tabs.onActivated.addListener(() => console.log('new tab'))
+
+async function onTabActivated(currentTab) {
+  const restDurationRemaining = await storage.getRestDurationRemaining()
+  const totalRestDuration = await storage.getRestDuration()
+
+  if (restDurationRemaining > 0)
+    showOverlay(currentTab?.tabId, totalRestDuration, restDurationRemaining)
+}
+
+chrome.tabs.onActivated.addListener(onTabActivated)
 chrome.runtime.onInstalled.addListener(onInstall)
 chrome.alarms.onAlarm.addListener(onAlarm)
-chrome.runtime.onMessage.addListener(handleMessage)
+chrome.runtime.onMessage.addListener(onMessage)
