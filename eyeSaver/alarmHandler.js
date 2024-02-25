@@ -1,13 +1,7 @@
-import enums from './enums.js'
+import enums, { defaults, messages, constants, receivers } from './enums.js'
 import { StorageManager } from './storageManager.js'
 
 const storage = new StorageManager(chrome, false, enums)
-const { defaults, messages, constants, receivers } = enums
-
-async function storeCurrentAlarm() {
-  const alarm = await chrome.alarms.get(constants.ALARM_NAME)
-  chrome.storage.sync.set({ alarm: alarm })
-}
 
 /**
  * Clears existing alarms and create and stores a new one
@@ -19,7 +13,8 @@ function createNewAlarm(length) {
     await chrome.alarms.create(constants.ALARM_NAME, {
       when: Date.now() + length,
     })
-    await storeCurrentAlarm()
+    const alarm = await chrome.alarms.get(constants.ALARM_NAME)
+    storage.setAlarm(alarm)
   })
 }
 

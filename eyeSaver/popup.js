@@ -43,13 +43,17 @@ const main = async () => {
     }
   }
 
-  // TODO: reproduce bug -- popup timer restarts on finish
   const onFinish = async () => {
+    const restDuration = await storage.getRestDuration()
     const restDurationRemaining = await storage.getRestDurationRemaining()
+    const restartDelay =
+      restDurationRemaining > 0 ? restDurationRemaining : restDuration
+
+    // TODO: message service_worker to trigger alarm
 
     setTimeout(
       async () => (await storage.getIsRunning()) && timer.start(),
-      restDurationRemaining
+      restartDelay
     )
   }
 
