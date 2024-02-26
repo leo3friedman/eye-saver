@@ -1,11 +1,10 @@
 const main = async () => {
-  const timerSrc = await import(chrome.runtime.getURL('templates/timer.js'))
-
+  const { Timer } = await import(chrome.runtime.getURL('templates/timer.js'))
+  const { injectFonts } = await import(chrome.runtime.getURL('fonts.js'))
   const { StorageManager } = await import(
     chrome.runtime.getURL('storageManager.js')
   )
 
-  const { injectFonts } = await import(chrome.runtime.getURL('fonts.js'))
   injectFonts()
 
   /**
@@ -57,7 +56,7 @@ const main = async () => {
     )
   }
 
-  const timer = new timerSrc.Timer(
+  const timer = new Timer(
     timerDuration,
     timeRemaining,
     isRunning,
@@ -116,35 +115,11 @@ const main = async () => {
   soundNotificationCheckbox.onclick = async (event) => {
     storage.setPlaySoundNotification(event.target.checked)
   }
+
   /**
-   *  INITIALIZING ELEMENTS USED FOR TESTING (DEV PURPOSES ONLY)
+   * INITIALIZING DEV/TESTING UI
    */
-
-  const timerDurationInput = document.querySelector(
-    '#test-timer-duration-input'
-  )
-  timerDurationInput.value = await storage.getTimerDuration()
-  timerDurationInput.onchange = (event) => {
-    storage.setTimerDuration(event.target.value)
-    timer.setTimerDuration(event.target.value)
-  }
-  const restDurationInput = document.querySelector('#test-rest-duration-input')
-  restDurationInput.value = await storage.getRestDuration()
-
-  restDurationInput.onchange = (event) => {
-    storage.setRestDuration(event.target.value)
-  }
-
-  document.querySelector('.send-desktop-notification-button').onclick = () => {
-    chrome.runtime.sendMessage({ key: messages.PUSH_DESKTOP_NOTIFICATION })
-  }
-
-  document.querySelector('.play-sound-button').onclick = () => {
-    chrome.runtime.sendMessage({ key: messages.PLAY_SOUND })
-  }
-
-  // toggle testing on and off here (TODO: make better system for managing this)
-  if (false) document.querySelector('.testing-section').style.display = 'none'
+  loadTestingUI()
 }
 
 const disableDurationInputs = () => {
@@ -196,6 +171,18 @@ const timeToText = (time) => {
     minutes: date.getMinutes(),
     seconds: date.getSeconds(),
   }
+}
+
+async function loadTestingUI() {
+  const { injectDevUI } = await import(
+    chrome.runtime.getURL('templates/devUI.js')
+  )
+
+  chrome.management.getSelf((info) => {
+    if (info.installType !== 'development') return
+    const devUIURL = chrome.runtime.getURL('templates/devUI.html')
+    injectDevUI(devUIURL)
+  })
 }
 
 window.onload = main
