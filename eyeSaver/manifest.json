@@ -1,6 +1,6 @@
 {
   "name": "Eye Saver - Break Reminder",
-  "version": "0.7",
+  "version": "0.7.1",
   "description": "Eye Saver helps remind you to look away from the screen to prevent eye strain.",
   "permissions": ["storage", "notifications", "offscreen"],
   "background": {
@@ -24,7 +24,8 @@
         "sounds/look_away_sound.wav",
         "fonts/Roboto/*.ttf",
         "enums.js",
-        "eyeSaver.js"
+        "eyeSaver.js",
+        "storage.js"
       ],
       "matches": ["<all_urls>"]
     }
