@@ -1,19 +1,55 @@
-let eyeSaver
-
 const main = async () => {
-  const eyeSaverSrc = await import(chrome.runtime.getURL('eyeSaver.js'))
-  eyeSaver = new eyeSaverSrc.EyeSaver(chrome, onResting, onBreaking)
-  eyeSaver.handleCurrentState()
+  const { getTimerProperties } = await import(
+    chrome.runtime.getURL('storage.js')
+  )
+
+  const { state, sessionStart, timerDuration, restDuration } =
+    await getTimerProperties()
+
+  if (state !== 0) return // TODO: fix hardcoding
+
+  const periodLength = timerDuration + restDuration
+  const currentPeriodProgress = (Date.now() - sessionStart) % periodLength
+  const timeUntilNextAlarm = timerDuration - currentPeriodProgress
+
+  console.log('page load!', {
+    currentPeriodProgress,
+    timeUntilNextAlarm,
+  })
+
+  setTimeout(onAlarm, Math.max(timeUntilNextAlarm, 0))
 }
 
-const onResting = () => {
-  if (!isOverlayOn()) {
-    addOverlay()
-  }
-}
+async function onAlarm() {
+  const { getTimerProperties } = await import(
+    chrome.runtime.getURL('storage.js')
+  )
 
-const onBreaking = () => {
-  removeCanvas()
+  const { state, sessionStart, timerDuration, restDuration } =
+    await getTimerProperties()
+
+  if (state !== 0) return // TODO: fix hardcoding
+
+  const periodLength = timerDuration + restDuration
+  const currentPeriodProgress = (Date.now() - sessionStart) % periodLength
+  const timeUntilNextAlarm = timerDuration - currentPeriodProgress
+  const restTimePassed = timeUntilNextAlarm < 0 ? timeUntilNextAlarm * -1 : 0
+
+  console.log('onAlarm!', {
+    currentPeriodProgress,
+    timeUntilNextAlarm,
+    restTimePassed,
+  })
+
+  const dropzone = addOverlay()
+  renderClock(dropzone, timerDuration, restDuration, restTimePassed)
+  const restDurationRemaining = Math.max(restDuration - restTimePassed, 0)
+
+  setTimeout(removeCanvas, restDurationRemaining) // destroy overlay on restDuration end
+  setTimeout(
+    () => onAlarm(timerDuration, restDuration, 0),
+    timerDuration + restDurationRemaining
+  )
 }
 
 const removeCanvas = () => {
@@ -33,6 +69,8 @@ const applyStyles = (node, styles) => {
 }
 
 const addOverlay = () => {
+  if (isOverlayOn()) return
+
   const overlay = document.createElement('div')
   overlay.className = 'eye-saver__overlay'
   applyStyles(overlay, {
@@ -72,35 +110,30 @@ const addOverlay = () => {
   }
   skipButton.onclick = async () => {
     removeCanvas()
-    await eyeSaver.setSessionStart()
+    // TODO: add synchronization with rest of extension (message to service worker?)
   }
 
   overlay.appendChild(overlayContents)
   overlayContents.appendChild(dropzone)
   overlayContents.appendChild(skipButton)
   document.body.appendChild(overlay)
-  renderClock(dropzone)
+
+  return dropzone
 }
 
-const renderClock = async (dropzone) => {
-  const eyeSaverSrc = await import(chrome.runtime.getURL('eyeSaver.js'))
+const renderClock = async (
+  dropzone,
+  timerDuration,
+  restDuration,
+  timePassed
+) => {
   const timerSrc = await import(chrome.runtime.getURL('templates/timer.js'))
-  const eyeSaver = new eyeSaverSrc.EyeSaver(
-    chrome,
-    () => {},
-    () => {}
-  )
-
-  const timerDuration = await eyeSaver.getTimerDuration()
-  const restDuration = await eyeSaver.getRestDuration()
-  const running = await eyeSaver.isExtensionRunning()
-  const timePassed = restDuration - (await eyeSaver.getRestDurationRemaining())
 
   const timer = new timerSrc.Timer(
     restDuration,
     timerDuration,
     timePassed,
-    running,
+    true,
     false,
     null,
     null

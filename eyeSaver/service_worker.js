@@ -4,7 +4,6 @@ self.onmessage = (e) => {} // Keep the service worker alive
 
 async function createAlarm(duration) {
   console.log('nextAlarmIn:', duration)
-  setSessionStart(Date.now())
   setTimeout(onAlarm, duration)
 }
 
