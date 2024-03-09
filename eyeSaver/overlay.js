@@ -1,4 +1,4 @@
-const main = async () => {
+const onPageLoad = async () => {
   const { getTimerProperties } = await import(
     chrome.runtime.getURL('storage.js')
   )
@@ -6,7 +6,9 @@ const main = async () => {
   const { state, sessionStart, timerDuration, restDuration } =
     await getTimerProperties()
 
-  if (state !== 0) return // TODO: fix hardcoding
+  const { states } = await import(chrome.runtime.getURL('enums.js'))
+
+  if (state !== states.RUNNING) return // TODO: fix hardcoding
 
   const periodLength = timerDuration + restDuration
   const currentPeriodProgress = (Date.now() - sessionStart) % periodLength
@@ -24,11 +26,12 @@ async function onAlarm() {
   const { getTimerProperties } = await import(
     chrome.runtime.getURL('storage.js')
   )
+  const { states } = await import(chrome.runtime.getURL('enums.js'))
 
   const { state, sessionStart, timerDuration, restDuration } =
     await getTimerProperties()
 
-  if (state !== 0) return // TODO: fix hardcoding
+  if (state !== states.RUNNING) return // TODO: fix hardcoding
 
   const periodLength = timerDuration + restDuration
   const currentPeriodProgress = (Date.now() - sessionStart) % periodLength
@@ -46,10 +49,7 @@ async function onAlarm() {
   const restDurationRemaining = Math.max(restDuration - restTimePassed, 0)
 
   setTimeout(removeCanvas, restDurationRemaining) // destroy overlay on restDuration end
-  setTimeout(
-    () => onAlarm(timerDuration, restDuration, 0),
-    timerDuration + restDurationRemaining
-  )
+  setTimeout(onAlarm, timerDuration + restDurationRemaining)
 }
 
 const removeCanvas = () => {
@@ -62,48 +62,21 @@ const isOverlayOn = () => {
   return document.querySelectorAll('.eye-saver__overlay').length > 0
 }
 
-const applyStyles = (node, styles) => {
-  Object.keys(styles).forEach((key) => {
-    node.style[key] = styles[key]
-  })
-}
-
 const addOverlay = () => {
   if (isOverlayOn()) return
 
   const overlay = document.createElement('div')
   overlay.className = 'eye-saver__overlay'
-  applyStyles(overlay, {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100vh',
-    width: '100vw',
-    position: 'fixed',
-    top: '0',
-    left: '0',
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    zIndex: Number.MAX_SAFE_INTEGER,
-    pointerEvents: 'all',
-  })
 
   const overlayContents = document.createElement('div')
-  applyStyles(overlayContents, {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '32px',
-  })
+  overlayContents.className = 'eye-saver__overlay-contents'
 
   const dropzone = document.createElement('dropzone')
   dropzone.className = 'timer__dropzone'
 
   const skipButton = document.createElement('div')
-  applyStyles(skipButton, {
-    color: '#eae9eb',
-    textAlign: 'center',
-    fontSize: '18px',
-    fontFamily: 'system-ui',
-  })
+  skipButton.className = 'eye-saver__skip-button'
+
   skipButton.innerText = 'Skip'
   skipButton.onmouseover = (event) => {
     event.target.style.cursor = 'pointer'
@@ -142,4 +115,4 @@ const renderClock = async (
   timer.renderTimer(dropzone)
 }
 
-window.onload = main
+window.onload = onPageLoad
