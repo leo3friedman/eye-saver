@@ -16,9 +16,20 @@ export async function getTimerProperties(defaults) {
   })
 }
 
+export async function isExtensionRunning(defaults) {
+  defaults =
+    defaults || (await import(chrome.runtime.getURL('enums.js'))).defaults
+
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(defaults, (result) => {
+      resolve(Number(result.sessionStart) >= 0)
+    })
+  })
+}
+
 export async function setSessionStart(time) {
-  if (typeof time !== 'number' || time < 0)
-    throw new Error('sessionStart must be a positive number!')
+  if (typeof time !== 'number')
+    throw new Error('sessionStart must be a number!')
 
   chrome.storage.sync.set({ sessionStart: time })
 }

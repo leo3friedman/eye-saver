@@ -1,37 +1,16 @@
-const onPageLoad = async () => {
-  const { getTimerProperties } = await import(
-    chrome.runtime.getURL('storage.js')
-  )
-
-  const { state, sessionStart, timerDuration, restDuration } =
-    await getTimerProperties()
-
-  const { states } = await import(chrome.runtime.getURL('enums.js'))
-
-  if (state !== states.RUNNING) return // TODO: fix hardcoding
-
-  const periodLength = timerDuration + restDuration
-  const currentPeriodProgress = (Date.now() - sessionStart) % periodLength
-  const timeUntilNextAlarm = timerDuration - currentPeriodProgress
-
-  console.log('page load!', {
-    currentPeriodProgress,
-    timeUntilNextAlarm,
-  })
-
-  setTimeout(onAlarm, Math.max(timeUntilNextAlarm, 0))
-}
+const timeouts = []
 
 async function onAlarm() {
+  timeouts.map((timeout) => clearTimeout(timeout))
+
   const { getTimerProperties } = await import(
     chrome.runtime.getURL('storage.js')
   )
-  const { states } = await import(chrome.runtime.getURL('enums.js'))
 
-  const { state, sessionStart, timerDuration, restDuration } =
+  const { sessionStart, timerDuration, restDuration } =
     await getTimerProperties()
 
-  if (state !== states.RUNNING) return // TODO: fix hardcoding
+  if (sessionStart < 0) return
 
   const periodLength = timerDuration + restDuration
   const currentPeriodProgress = (Date.now() - sessionStart) % periodLength
@@ -48,21 +27,26 @@ async function onAlarm() {
   renderClock(dropzone, timerDuration, restDuration, restTimePassed)
   const restDurationRemaining = Math.max(restDuration - restTimePassed, 0)
 
-  setTimeout(removeCanvas, restDurationRemaining) // destroy overlay on restDuration end
-  setTimeout(onAlarm, timerDuration + restDurationRemaining)
+  const removeOverlayTimeout = setTimeout(removeOverlay, restDurationRemaining) // destroy overlay on restDuration end
+  const alarmTimeout = setTimeout(
+    onAlarm,
+    timerDuration + restDurationRemaining
+  )
+
+  timeouts.push(removeOverlayTimeout, alarmTimeout)
 }
 
-const removeCanvas = () => {
+function removeOverlay() {
   document
     .querySelectorAll('.eye-saver__overlay')
     .forEach((canvas) => document.body.removeChild(canvas))
 }
 
-const isOverlayOn = () => {
+function isOverlayOn() {
   return document.querySelectorAll('.eye-saver__overlay').length > 0
 }
 
-const addOverlay = () => {
+function addOverlay() {
   if (isOverlayOn()) return
 
   const overlay = document.createElement('div')
@@ -78,11 +62,8 @@ const addOverlay = () => {
   skipButton.className = 'eye-saver__skip-button'
 
   skipButton.innerText = 'Skip'
-  skipButton.onmouseover = (event) => {
-    event.target.style.cursor = 'pointer'
-  }
   skipButton.onclick = async () => {
-    removeCanvas()
+    removeOverlay()
     // TODO: add synchronization with rest of extension (message to service worker?)
   }
 
@@ -94,12 +75,7 @@ const addOverlay = () => {
   return dropzone
 }
 
-const renderClock = async (
-  dropzone,
-  timerDuration,
-  restDuration,
-  timePassed
-) => {
+async function renderClock(dropzone, timerDuration, restDuration, timePassed) {
   const timerSrc = await import(chrome.runtime.getURL('templates/timer.js'))
 
   const timer = new timerSrc.Timer(
@@ -115,4 +91,41 @@ const renderClock = async (
   timer.renderTimer(dropzone)
 }
 
+const onPageLoad = async () => {
+  timeouts.map((timeout) => clearTimeout(timeout))
+
+  const { getTimerProperties } = await import(
+    chrome.runtime.getURL('storage.js')
+  )
+
+  const { sessionStart, timerDuration, restDuration } =
+    await getTimerProperties()
+
+  if (sessionStart < 0) return
+
+  const periodLength = timerDuration + restDuration
+  const currentPeriodProgress = (Date.now() - sessionStart) % periodLength
+  const timeUntilNextAlarm = timerDuration - currentPeriodProgress
+
+  console.log('page load!', {
+    currentPeriodProgress,
+    timeUntilNextAlarm,
+  })
+
+  const alarmTimeout = setTimeout(onAlarm, Math.max(timeUntilNextAlarm, 0))
+  timeouts.push(alarmTimeout)
+}
+
+function onStorageChange(changes) {
+  if (!changes.sessionStart) return
+
+  if (changes.sessionStart.newValue < 0) {
+    timeouts.map((timeout) => clearTimeout(timeout))
+    removeOverlay()
+  } else {
+    onPageLoad()
+  }
+}
+
+chrome.storage.onChanged.addListener(onStorageChange)
 window.onload = onPageLoad

@@ -1,7 +1,27 @@
+async function startExtension() {
+  const { messages } = await import(chrome.runtime.getURL('enums.js'))
+  chrome.runtime.sendMessage({ key: messages.START_EXTENSION })
+}
+
+async function stopExtension() {
+  const { messages } = await import(chrome.runtime.getURL('enums.js'))
+  chrome.runtime.sendMessage({ key: messages.STOP_EXTENSION })
+}
+
 const main = async () => {
+  const { getTimerProperties, isExtensionRunning } = await import(
+    chrome.runtime.getURL('storage.js')
+  )
+
   const timerSrc = await import(chrome.runtime.getURL('templates/timer.js'))
   const eyeSaverSrc = await import(chrome.runtime.getURL('eyeSaver.js'))
   const enums = await import(chrome.runtime.getURL('enums.js'))
+
+  const { sessionStart, timerDuration, restDuration } =
+    await getTimerProperties()
+
+  const running = sessionStart > 0
+
   /**
    * RENDERING THE TIMER
    */
@@ -12,10 +32,9 @@ const main = async () => {
     () => {}
   )
   const dropzone = document.querySelector('.timer__dropzone')
-  const timerDuration = await eyeSaver.getTimerDuration()
-  const restDuration = await eyeSaver.getRestDuration()
-  const running = await eyeSaver.isExtensionRunning()
-  const timePassed = await eyeSaver.getCurrentProgress()
+
+  const periodLength = timerDuration + restDuration
+  const currentPeriodProgress = (Date.now() - sessionStart) % periodLength
 
   const startStopButton = document.createElement('div')
   startStopButton.onmouseover = (event) => {
@@ -23,40 +42,35 @@ const main = async () => {
   }
 
   startStopButton.innerText = running ? 'Cancel' : 'Start'
+
   startStopButton.onclick = async (event) => {
-    if (await eyeSaver.isExtensionRunning()) {
+    const running = await isExtensionRunning()
+
+    if (running) {
       timer.cancel()
-      await eyeSaver.stopExtension()
+      stopExtension()
       enableDurationInputs()
+      event.target.innerText = 'Start'
     } else {
       timer.start()
-      await eyeSaver.startExtension()
+      startExtension()
       disableDurationInputs()
+      event.target.innerText = 'Cancel'
     }
-    event.target.innerText = (await eyeSaver.isExtensionRunning())
-      ? 'Cancel'
-      : 'Start'
   }
 
   const onFinish = async () => {
-    const restDurationRemaining = await eyeSaver.getRestDurationRemaining()
-    const timerDurationRemaining = await eyeSaver.getTimerDurationRemaining()
-    const restDuration = await eyeSaver.getRestDuration()
-    const timeout =
-      restDurationRemaining > 0
-        ? restDurationRemaining
-        : timerDurationRemaining + restDuration
+    const { restDuration } = await getTimerProperties()
 
     setTimeout(async () => {
-      const running = await eyeSaver.isExtensionRunning()
-      if (running) timer.start()
-    }, timeout)
+      if (await isExtensionRunning()) timer.start() // TODO: replace with alarms array?
+    }, restDuration)
   }
 
   const timer = new timerSrc.Timer(
     timerDuration,
     restDuration,
-    timePassed,
+    currentPeriodProgress,
     running,
     true,
     onFinish,

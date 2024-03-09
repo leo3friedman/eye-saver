@@ -1,22 +1,29 @@
 import { defaults, states, messages, notificationOptions } from './enums.js'
-import { getTimerProperties, setSessionStart } from './storage.js'
+import {
+  getTimerProperties,
+  setSessionStart,
+  isExtensionRunning,
+} from './storage.js'
 self.onmessage = (e) => {} // Keep the service worker alive
 
+const alarms = []
+
 async function createAlarm(duration) {
+  alarms.map((timeout) => clearTimeout(timeout))
+  const alarmTimeout = setTimeout(onAlarm, duration)
   console.log('nextAlarmIn:', duration)
-  setTimeout(onAlarm, duration)
+  alarms.push(alarmTimeout)
 }
 
 async function onAlarm() {
+  if (!(await isExtensionRunning(defaults))) return
+
   const {
     timerDuration,
     restDuration,
-    state,
     pushDesktopNotification,
     playSoundNotification,
   } = await getTimerProperties(defaults)
-
-  if (state !== states.RUNNING) return
 
   if (pushDesktopNotification) createNotification()
   if (playSoundNotification) playSound()
@@ -53,25 +60,29 @@ async function playSound() {
 }
 
 async function onInstall() {
-  const { state, timerDuration } = await getTimerProperties(defaults)
+  if (!(await isExtensionRunning(defaults))) return
 
-  if (state !== states.RUNNING) return
+  const { timerDuration } = await getTimerProperties(defaults)
 
   createOffscreen()
   createAlarm(timerDuration)
   setSessionStart(Date.now())
 }
 
+async function onMessage(message) {
+  switch (message.key) {
+    case messages.START_EXTENSION:
+      console.log('start!!')
+      const { timerDuration } = await getTimerProperties(defaults)
+      createAlarm(timerDuration)
+      setSessionStart(Date.now())
+      break
+    case messages.STOP_EXTENSION:
+      alarms.map((timeout) => clearTimeout(timeout))
+      setSessionStart(-1)
+      break
+  }
+}
+
 chrome.runtime.onInstalled.addListener(onInstall)
-
-// chrome.runtime.onMessage.addListener(async (message) => {
-//   if (message.key === messages.PUSH_DESKTOP_NOTIFICATION) {
-//     chrome.notifications.create(message.payload)
-//   }
-
-//   if (message.key === messages.PLAY_SOUND && !message.offscreen) {
-//     await createOffscreen()
-//     message.offscreen = true
-//     await chrome.runtime.sendMessage(message)
-//   }
-// })
+chrome.runtime.onMessage.addListener(onMessage)
