@@ -11,12 +11,14 @@ async function playAudio(source, volume) {
 }
 
 async function onMessage(message) {
-  const { messages, defaults } = await import(chrome.runtime.getURL('src/enums.js'))
+  const { messages, defaults } = await import(
+    chrome.runtime.getURL('src/enums.js')
+  )
   if (!message?.offscreen || message?.key !== messages.PLAY_SOUND) return
   playAudio(defaults.soundSource, defaults.soundVolume)
 }
 
-function keeepWorkerAlive() {
+function keepWorkerAlive() {
   setInterval(async () => {
     const serviceWorker = await navigator.serviceWorker.ready
     serviceWorker.active.postMessage('keepAlive')
@@ -24,4 +26,4 @@ function keeepWorkerAlive() {
 }
 
 chrome.runtime.onMessage.addListener(onMessage)
-window.onload = keeepWorkerAlive
+window.onload = keepWorkerAlive

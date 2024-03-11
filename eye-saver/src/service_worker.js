@@ -33,7 +33,7 @@ async function createOffscreen() {
   const offscreenExists = await chrome.offscreen.hasDocument()
   if (!offscreenExists) {
     await chrome.offscreen.createDocument({
-      url: 'offscreen.html',
+      url: 'src/offscreen.html',
       reasons: ['BLOBS', 'AUDIO_PLAYBACK'],
       justification: 'notification',
     })
@@ -72,6 +72,7 @@ async function onMessage(message) {
   switch (message.key) {
     case messages.START_EXTENSION:
       const { timerDuration } = await getTimerProperties(defaults)
+      createOffscreen()
       createAlarm(timerDuration)
       setSessionStart(Date.now())
       break

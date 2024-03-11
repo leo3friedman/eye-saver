@@ -11,10 +11,8 @@ async function stopExtension() {
 const main = async () => {
   const { Timer } = await import(chrome.runtime.getURL('src/timer.js'))
   const { storage } = await import(chrome.runtime.getURL('src/storage.js'))
+  const { createDevUI } = await import(chrome.runtime.getURL('src/util.js'))
   const enums = await import(chrome.runtime.getURL('src/enums.js'))
-
-  console.log(enums)
-  console.log(Timer)
 
   const running = await storage.isExtensionRunning()
 
@@ -175,30 +173,11 @@ const main = async () => {
   soundNotificationCheckbox.onclick = (event) =>
     storage.setPlaySoundNotification(event.target.checked)
 
-  /**
-   *  INITIALIZING ELEMENTS USED FOR TESTING (DEV PURPOSES ONLY)
-   */
-
-  const inputs = {
-    timerDurationInput: document.querySelector('#test-timer-duration-input'),
-    restDurationInput: document.querySelector('#test-rest-duration-input'),
-  }
-
-  inputs.timerDurationInput.value = timerDuration
-  inputs.restDurationInput.value = restDuration
-
-  inputs.timerDurationInput.onchange = (event) => {
-    storage.setTimerDuration(Number(event.target.value))
-    timer.setTimerDuration(event.target.value)
-  }
-
-  inputs.restDurationInput.onchange = (event) => {
-    storage.setRestDuration(Number(event.target.value))
-    timer.setRestDuration(event.target.value)
-  }
-
-  // toggle testing on and off here (TODO: make better system for managing this)
-  if (false) document.querySelector('.testing-section').style.display = 'none'
+  // open testing popup in dev environment
+  chrome.management.getSelf((info) => {
+    if (info.installType !== 'development') return
+    createDevUI()
+  })
 }
 
 const disableDurationInputs = () => {
