@@ -91,6 +91,9 @@ async function renderClock(dropzone, timerDuration, restDuration, timePassed) {
 const onPageLoad = async () => {
   timeouts.map((timeout) => clearTimeout(timeout))
 
+  const { injectFonts } = await import(chrome.runtime.getURL('src/fonts.js'))
+  if (!document.querySelector('.eye-saver-fonts')) injectFonts()
+
   const { getTimerProperties } = await import(
     chrome.runtime.getURL('src/storage.js')
   )
