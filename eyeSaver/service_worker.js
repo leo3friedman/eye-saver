@@ -11,7 +11,6 @@ const alarms = []
 async function createAlarm(duration) {
   alarms.map((timeout) => clearTimeout(timeout))
   const alarmTimeout = setTimeout(onAlarm, duration)
-  console.log('nextAlarmIn:', duration)
   alarms.push(alarmTimeout)
 }
 
@@ -72,7 +71,6 @@ async function onInstall() {
 async function onMessage(message) {
   switch (message.key) {
     case messages.START_EXTENSION:
-      console.log('start!!')
       const { timerDuration } = await getTimerProperties(defaults)
       createAlarm(timerDuration)
       setSessionStart(Date.now())
@@ -80,6 +78,10 @@ async function onMessage(message) {
     case messages.STOP_EXTENSION:
       alarms.map((timeout) => clearTimeout(timeout))
       setSessionStart(-1)
+      break
+    case messages.SKIP_REST:
+      alarms.map((timeout) => clearTimeout(timeout))
+      setSessionStart(Date.now())
       break
   }
 }

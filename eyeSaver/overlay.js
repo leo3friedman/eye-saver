@@ -1,5 +1,11 @@
 const timeouts = []
 
+async function skipRest() {
+  removeOverlay()
+  const { messages } = await import(chrome.runtime.getURL('enums.js'))
+  chrome.runtime.sendMessage({ key: messages.SKIP_REST })
+}
+
 async function onAlarm() {
   timeouts.map((timeout) => clearTimeout(timeout))
 
@@ -16,12 +22,6 @@ async function onAlarm() {
   const currentPeriodProgress = (Date.now() - sessionStart) % periodLength
   const timeUntilNextAlarm = timerDuration - currentPeriodProgress
   const restTimePassed = timeUntilNextAlarm < 0 ? timeUntilNextAlarm * -1 : 0
-
-  console.log('onAlarm!', {
-    currentPeriodProgress,
-    timeUntilNextAlarm,
-    restTimePassed,
-  })
 
   const dropzone = addOverlay()
   renderClock(dropzone, timerDuration, restDuration, restTimePassed)
@@ -62,10 +62,7 @@ function addOverlay() {
   skipButton.className = 'eye-saver__skip-button'
 
   skipButton.innerText = 'Skip'
-  skipButton.onclick = async () => {
-    removeOverlay()
-    // TODO: add synchronization with rest of extension (message to service worker?)
-  }
+  skipButton.onclick = skipRest
 
   overlay.appendChild(overlayContents)
   overlayContents.appendChild(dropzone)
@@ -107,11 +104,6 @@ const onPageLoad = async () => {
   const currentPeriodProgress = (Date.now() - sessionStart) % periodLength
   const timeUntilNextAlarm = timerDuration - currentPeriodProgress
 
-  console.log('page load!', {
-    currentPeriodProgress,
-    timeUntilNextAlarm,
-  })
-
   const alarmTimeout = setTimeout(onAlarm, Math.max(timeUntilNextAlarm, 0))
   timeouts.push(alarmTimeout)
 }
@@ -119,12 +111,10 @@ const onPageLoad = async () => {
 function onStorageChange(changes) {
   if (!changes.sessionStart) return
 
-  if (changes.sessionStart.newValue < 0) {
-    timeouts.map((timeout) => clearTimeout(timeout))
-    removeOverlay()
-  } else {
-    onPageLoad()
-  }
+  timeouts.map((timeout) => clearTimeout(timeout))
+  removeOverlay()
+
+  if (changes.sessionStart.newValue > 0) onPageLoad() // set up new alarm
 }
 
 chrome.storage.onChanged.addListener(onStorageChange)

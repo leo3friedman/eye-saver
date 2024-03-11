@@ -105,7 +105,6 @@ export class Timer {
 
     // TODO: make more robust
     if (this.UI) {
-      // const { button, icon } = this.UI
       document
         .querySelector('.timer-ui')
         .insertAdjacentElement('afterbegin', this.UI)
