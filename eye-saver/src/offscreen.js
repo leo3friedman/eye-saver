@@ -11,7 +11,7 @@ async function playAudio(source, volume) {
 }
 
 async function onMessage(message) {
-  const { messages, defaults } = await import(chrome.runtime.getURL('enums.js'))
+  const { messages, defaults } = await import(chrome.runtime.getURL('src/enums.js'))
   if (!message?.offscreen || message?.key !== messages.PLAY_SOUND) return
   playAudio(defaults.soundSource, defaults.soundVolume)
 }

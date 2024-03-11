@@ -37,7 +37,7 @@ export class Timer {
   }
 
   renderTimer(container) {
-    const timerTemplateUrl = chrome.runtime.getURL('templates/timer.html')
+    const timerTemplateUrl = chrome.runtime.getURL('src/timer.html')
     const xhr = new XMLHttpRequest()
 
     xhr.onload = () => {

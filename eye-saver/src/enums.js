@@ -32,7 +32,7 @@ export const defaults = {
   playSoundNotification: true,
   hasNotifiedLookAway: false,
   hasNotifiedLookBack: false,
-  soundSource: 'sounds/look_back_sound.wav',
+  soundSource: '../sounds/sound-notification.wav',
   soundVolume: 0.5,
   lastLookAway: 0,
   lastLookBack: 0,
@@ -41,7 +41,7 @@ export const defaults = {
 export const notificationOptions = {
   title: 'Eye Saver',
   type: 'basic',
-  iconUrl: 'assets/64icon.png',
+  iconUrl: '../images/icon-64.png',
   lookAwayMessage: 'Look away from the screen!',
   lookBackMessage: 'Rest time over!',
 }

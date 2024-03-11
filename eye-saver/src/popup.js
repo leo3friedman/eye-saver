@@ -1,17 +1,20 @@
 async function startExtension() {
-  const { messages } = await import(chrome.runtime.getURL('enums.js'))
+  const { messages } = await import(chrome.runtime.getURL('src/enums.js'))
   chrome.runtime.sendMessage({ key: messages.START_EXTENSION })
 }
 
 async function stopExtension() {
-  const { messages } = await import(chrome.runtime.getURL('enums.js'))
+  const { messages } = await import(chrome.runtime.getURL('src/enums.js'))
   chrome.runtime.sendMessage({ key: messages.STOP_EXTENSION })
 }
 
 const main = async () => {
-  const { Timer } = await import(chrome.runtime.getURL('templates/timer.js'))
-  const { storage } = await import(chrome.runtime.getURL('storage.js'))
-  const enums = await import(chrome.runtime.getURL('enums.js'))
+  const { Timer } = await import(chrome.runtime.getURL('src/timer.js'))
+  const { storage } = await import(chrome.runtime.getURL('src/storage.js'))
+  const enums = await import(chrome.runtime.getURL('src/enums.js'))
+
+  console.log(enums)
+  console.log(Timer)
 
   const running = await storage.isExtensionRunning()
 

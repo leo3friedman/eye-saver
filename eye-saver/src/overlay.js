@@ -2,7 +2,7 @@ const timeouts = []
 
 async function skipRest() {
   removeOverlay()
-  const { messages } = await import(chrome.runtime.getURL('enums.js'))
+  const { messages } = await import(chrome.runtime.getURL('src/enums.js'))
   chrome.runtime.sendMessage({ key: messages.SKIP_REST })
 }
 
@@ -10,7 +10,7 @@ async function onAlarm() {
   timeouts.map((timeout) => clearTimeout(timeout))
 
   const { getTimerProperties } = await import(
-    chrome.runtime.getURL('storage.js')
+    chrome.runtime.getURL('src/storage.js')
   )
 
   const { sessionStart, timerDuration, restDuration } =
@@ -73,7 +73,7 @@ function addOverlay() {
 }
 
 async function renderClock(dropzone, timerDuration, restDuration, timePassed) {
-  const timerSrc = await import(chrome.runtime.getURL('templates/timer.js'))
+  const timerSrc = await import(chrome.runtime.getURL('src/timer.js'))
 
   const timer = new timerSrc.Timer(
     restDuration,
@@ -92,7 +92,7 @@ const onPageLoad = async () => {
   timeouts.map((timeout) => clearTimeout(timeout))
 
   const { getTimerProperties } = await import(
-    chrome.runtime.getURL('storage.js')
+    chrome.runtime.getURL('src/storage.js')
   )
 
   const { sessionStart, timerDuration, restDuration } =

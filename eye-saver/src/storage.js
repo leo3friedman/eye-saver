@@ -1,6 +1,6 @@
 export async function getTimerProperties(defaults) {
   defaults =
-    defaults || (await import(chrome.runtime.getURL('enums.js'))).defaults
+    defaults || (await import(chrome.runtime.getURL('src/enums.js'))).defaults
 
   return new Promise((resolve) => {
     chrome.storage.sync.get(defaults, (result) => {
@@ -18,7 +18,7 @@ export async function getTimerProperties(defaults) {
 
 export async function isExtensionRunning(defaults) {
   defaults =
-    defaults || (await import(chrome.runtime.getURL('enums.js'))).defaults
+    defaults || (await import(chrome.runtime.getURL('src/enums.js'))).defaults
 
   return new Promise((resolve) => {
     chrome.storage.sync.get(defaults, (result) => {
