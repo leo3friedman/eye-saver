@@ -1,3 +1,17 @@
+/**
+ *
+ * @param {number} time time in milliseconds to convert
+ * @returns {Object} An object representing the time in hours, minutes, and seconds
+ */
+function timeToText(time) {
+  const date = new Date(0, 0, 0, 0, 0, 0, time)
+  return {
+    hours: date.getHours(),
+    minutes: date.getMinutes(),
+    seconds: date.getSeconds(),
+  }
+}
+
 async function startExtension() {
   const { messages } = await import(chrome.runtime.getURL('src/enums.js'))
   chrome.runtime.sendMessage({ key: messages.START_EXTENSION })
@@ -8,7 +22,45 @@ async function stopExtension() {
   chrome.runtime.sendMessage({ key: messages.STOP_EXTENSION })
 }
 
-const main = async () => {
+function disableDurationInputs() {
+  const container = document.querySelector(
+    '.settings-subsection__content.timer-settings'
+  )
+  container.style.pointerEvents = 'none'
+  container.style.opacity = '.4'
+  const warningText = document.querySelector('.duration-input-warning')
+  warningText.style.display = 'inline'
+}
+
+function enableDurationInputs() {
+  const container = document.querySelector(
+    '.settings-subsection__content.timer-settings'
+  )
+  container.style.pointerEvents = 'auto'
+  container.style.opacity = '1'
+  const warningText = document.querySelector('.duration-input-warning')
+  warningText.style.display = 'none'
+}
+
+function setTimerDurationInputText(time) {
+  const hours = timeToText(time).hours
+  const minutes = ('0' + timeToText(time).minutes).slice(-2)
+  document.querySelector('.__time-input.timer-duration__hours').innerText =
+    hours
+  document.querySelector('.__time-input.timer-duration__minutes').innerText =
+    minutes
+}
+
+function setRestDurationInputText(time) {
+  const minutes = timeToText(time).minutes
+  const seconds = ('0' + timeToText(time).seconds).slice(-2)
+  document.querySelector('.__time-input.rest-duration__minutes').innerText =
+    minutes
+  document.querySelector('.__time-input.rest-duration__seconds').innerText =
+    seconds
+}
+
+async function onPopupLoad() {
   const { Timer } = await import(chrome.runtime.getURL('src/timer.js'))
   const { storage } = await import(chrome.runtime.getURL('src/storage.js'))
   const { createDevUI } = await import(chrome.runtime.getURL('src/util.js'))
@@ -180,55 +232,4 @@ const main = async () => {
   })
 }
 
-const disableDurationInputs = () => {
-  const container = document.querySelector(
-    '.settings-subsection__content.timer-settings'
-  )
-  container.style.pointerEvents = 'none'
-  container.style.opacity = '.4'
-  const warningText = document.querySelector('.duration-input-warning')
-  warningText.style.display = 'inline'
-}
-const enableDurationInputs = () => {
-  const container = document.querySelector(
-    '.settings-subsection__content.timer-settings'
-  )
-  container.style.pointerEvents = 'auto'
-  container.style.opacity = '1'
-  const warningText = document.querySelector('.duration-input-warning')
-  warningText.style.display = 'none'
-}
-
-const setTimerDurationInputText = (time) => {
-  const hours = timeToText(time).hours
-  const minutes = ('0' + timeToText(time).minutes).slice(-2)
-  document.querySelector('.__time-input.timer-duration__hours').innerText =
-    hours
-  document.querySelector('.__time-input.timer-duration__minutes').innerText =
-    minutes
-}
-
-const setRestDurationInputText = (time) => {
-  const minutes = timeToText(time).minutes
-  const seconds = ('0' + timeToText(time).seconds).slice(-2)
-  document.querySelector('.__time-input.rest-duration__minutes').innerText =
-    minutes
-  document.querySelector('.__time-input.rest-duration__seconds').innerText =
-    seconds
-}
-
-/**
- *
- * @param {number} time time in milliseconds to convert
- * @returns {Object} An object representing the time in hours, minutes, and seconds
- */
-const timeToText = (time) => {
-  const date = new Date(0, 0, 0, 0, 0, 0, time)
-  return {
-    hours: date.getHours(),
-    minutes: date.getMinutes(),
-    seconds: date.getSeconds(),
-  }
-}
-
-window.onload = main
+window.onload = onPopupLoad
