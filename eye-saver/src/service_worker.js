@@ -1,4 +1,4 @@
-import { defaults, states, messages, notificationOptions } from './enums.js'
+import { defaults, messages, notificationOptions } from './enums.js'
 import {
   getTimerProperties,
   setSessionStart,
