@@ -39,13 +39,12 @@ export class Timer {
   }
 
   renderTimer(container) {
+    if (!container) throw Error('Container needed to render timer!')
+    
     const timerTemplateUrl = chrome.runtime.getURL('src/timer.html')
     const xhr = new XMLHttpRequest()
 
     xhr.onload = () => {
-      console.log(container)
-      // if (!container) throw Error('Container needed to render timer!')
-
       container.insertAdjacentHTML('afterbegin', xhr.response)
 
       this.circle = document.querySelector('.progress-ring__circle')

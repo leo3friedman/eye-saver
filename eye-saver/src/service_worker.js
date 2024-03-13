@@ -69,9 +69,10 @@ async function onInstall() {
 }
 
 async function onMessage(message) {
+  const { timerDuration } = await getTimerProperties(defaults)
   switch (message.key) {
     case messages.START_EXTENSION:
-      const { timerDuration } = await getTimerProperties(defaults)
+      alarms.map((timeout) => clearTimeout(timeout))
       createOffscreen()
       createAlarm(timerDuration)
       setSessionStart(Date.now())
@@ -82,6 +83,8 @@ async function onMessage(message) {
       break
     case messages.SKIP_REST:
       alarms.map((timeout) => clearTimeout(timeout))
+      createOffscreen()
+      createAlarm(timerDuration)
       setSessionStart(Date.now())
       break
   }
