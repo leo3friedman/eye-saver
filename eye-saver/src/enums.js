@@ -9,17 +9,10 @@ export const modes = {
 }
 
 export const messages = {
-  INITIATE_REST: 0,
-  INITIATE_REST_RECIEVED: 1,
-  INITIATE_REST_END: 2,
-  RESTART_POPUP_TIMER: 3,
-  START_EXTENSION: 4,
-  STOP_EXTENSION: 5,
-  RESTING: 6,
-  ACTIVATE: 7,
-  PUSH_DESKTOP_NOTIFICATION: 8,
-  PLAY_SOUND: 9,
-  SKIP_REST: 10,
+  START_EXTENSION: 0,
+  STOP_EXTENSION: 1,
+  PLAY_SOUND: 2,
+  SKIP_REST: 3,
 }
 
 export const defaults = {
@@ -53,8 +46,4 @@ export const timerInputDefaults = {
   minTimerDuration: 10 * 60 * 1000,
   maxRestDuration: 2 * 60 * 1000,
   minRestDuration: 10 * 1000,
-}
-
-export const alarms = {
-  REST_ON_ALARM: 'restAlarm',
 }

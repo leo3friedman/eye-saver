@@ -12,7 +12,9 @@ const main = async () => {
   const { Timer } = await import(chrome.runtime.getURL('src/timer.js'))
   const { storage } = await import(chrome.runtime.getURL('src/storage.js'))
   const { createDevUI } = await import(chrome.runtime.getURL('src/util.js'))
-  const enums = await import(chrome.runtime.getURL('src/enums.js'))
+  const { timerInputDefaults } = await import(
+    chrome.runtime.getURL('src/enums.js')
+  )
 
   const running = await storage.isExtensionRunning()
 
@@ -34,7 +36,7 @@ const main = async () => {
   const currentPeriodProgress = (Date.now() - sessionStart) % periodLength
 
   const startStopButton = document.createElement('div')
-  
+
   startStopButton.innerText = running ? 'Cancel' : 'Start'
 
   startStopButton.onclick = async (event) => {
@@ -82,18 +84,25 @@ const main = async () => {
 
   running ? disableDurationInputs() : enableDurationInputs()
 
+  const {
+    maxTimerDuration,
+    minTimerDuration,
+    timerDurationIncrement,
+    maxRestDuration,
+    minRestDuration,
+    restDurationIncrement,
+  } = timerInputDefaults
+
   document.querySelector('.timer-duration-increment-up').onclick = async () => {
-    const defaults = enums.timerInputDefaults
     const { timerDuration } = await storage.getTimerProperties()
 
     const newDuration = Math.min(
-      defaults.maxTimerDuration,
-      timerDuration + defaults.timerDurationIncrement
+      maxTimerDuration,
+      timerDuration + timerDurationIncrement
     )
 
     const rounded =
-      Math.ceil(newDuration / defaults.timerDurationIncrement) *
-      defaults.timerDurationIncrement
+      Math.ceil(newDuration / timerDurationIncrement) * timerDurationIncrement
 
     setTimerDurationInputText(rounded)
     timer.setTimerDuration(rounded)
@@ -102,17 +111,15 @@ const main = async () => {
 
   document.querySelector('.timer-duration-increment-down').onclick =
     async () => {
-      const defaults = enums.timerInputDefaults
       const { timerDuration } = await storage.getTimerProperties()
 
       const newDuration = Math.max(
-        defaults.minTimerDuration,
-        timerDuration - defaults.timerDurationIncrement
+        minTimerDuration,
+        timerDuration - timerDurationIncrement
       )
 
       const rounded =
-        Math.ceil(newDuration / defaults.timerDurationIncrement) *
-        defaults.timerDurationIncrement
+        Math.ceil(newDuration / timerDurationIncrement) * timerDurationIncrement
 
       setTimerDurationInputText(rounded)
       timer.setTimerDuration(rounded)
@@ -120,17 +127,15 @@ const main = async () => {
     }
 
   document.querySelector('.rest-duration-increment-up').onclick = async () => {
-    const defaults = enums.timerInputDefaults
     const { restDuration } = await storage.getTimerProperties()
 
     const newDuration = Math.min(
-      defaults.maxRestDuration,
-      restDuration + defaults.restDurationIncrement
+      maxRestDuration,
+      restDuration + restDurationIncrement
     )
 
     const rounded =
-      Math.ceil(newDuration / defaults.restDurationIncrement) *
-      defaults.restDurationIncrement
+      Math.ceil(newDuration / restDurationIncrement) * restDurationIncrement
 
     setRestDurationInputText(rounded)
     storage.setRestDuration(rounded)
@@ -138,17 +143,15 @@ const main = async () => {
 
   document.querySelector('.rest-duration-increment-down').onclick =
     async () => {
-      const defaults = enums.timerInputDefaults
       const { restDuration } = await storage.getTimerProperties()
 
       const newDuration = Math.max(
-        defaults.minRestDuration,
-        restDuration - defaults.restDurationIncrement
+        minRestDuration,
+        restDuration - restDurationIncrement
       )
 
       const rounded =
-        Math.ceil(newDuration / defaults.restDurationIncrement) *
-        defaults.restDurationIncrement
+        Math.ceil(newDuration / restDurationIncrement) * restDurationIncrement
 
       setRestDurationInputText(rounded)
       storage.setRestDuration(rounded)
