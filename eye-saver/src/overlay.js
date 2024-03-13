@@ -9,6 +9,8 @@ async function skipRest() {
 async function onAlarm() {
   timeouts.map((timeout) => clearTimeout(timeout))
 
+  console.log('alarm! ', Date.now())
+
   const { getTimerProperties } = await import(
     chrome.runtime.getURL('src/storage.js')
   )
@@ -24,6 +26,8 @@ async function onAlarm() {
   const restTimePassed = timeUntilNextAlarm < 0 ? timeUntilNextAlarm * -1 : 0
 
   const dropzone = addOverlay()
+  console.log(dropzone)
+
   renderClock(dropzone, timerDuration, restDuration, restTimePassed)
   const restDurationRemaining = Math.max(restDuration - restTimePassed, 0)
 
@@ -33,10 +37,13 @@ async function onAlarm() {
     timerDuration + restDurationRemaining
   )
 
+  console.log({ restDurationRemaining })
+
   timeouts.push(removeOverlayTimeout, alarmTimeout)
 }
 
 function removeOverlay() {
+  console.log('remove overlay!')
   document
     .querySelectorAll('.eye-saver__overlay')
     .forEach((canvas) => document.body.removeChild(canvas))
@@ -107,12 +114,16 @@ const onPageLoad = async () => {
   const currentPeriodProgress = (Date.now() - sessionStart) % periodLength
   const timeUntilNextAlarm = timerDuration - currentPeriodProgress
 
+  console.log({ periodLength, currentPeriodProgress, timeUntilNextAlarm })
+
   const alarmTimeout = setTimeout(onAlarm, Math.max(timeUntilNextAlarm, 0))
   timeouts.push(alarmTimeout)
 }
 
 function onStorageChange(changes) {
   if (!changes.sessionStart) return
+
+  console.log('storage changed!')
 
   timeouts.map((timeout) => clearTimeout(timeout))
   removeOverlay()

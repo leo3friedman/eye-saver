@@ -34,10 +34,7 @@ const main = async () => {
   const currentPeriodProgress = (Date.now() - sessionStart) % periodLength
 
   const startStopButton = document.createElement('div')
-  startStopButton.onmouseover = (event) => {
-    event.target.style.cursor = 'pointer'
-  }
-
+  
   startStopButton.innerText = running ? 'Cancel' : 'Start'
 
   startStopButton.onclick = async (event) => {

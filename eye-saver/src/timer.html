@@ -6,13 +6,18 @@
       src: url(../fonts/Roboto/Roboto-Thin.ttf);
     }
 
+    :root {
+      --timer-width: 200px;
+      --circumfrence: calc(3.14159 * var(--timer-width));
+    }
+
     .timer {
+      width: var(--timer-width);
       position: relative;
       display: flex;
       align-items: center;
-      width: fit-content;
+      justify-content: center;
       aspect-ratio: 1 / 1;
-      padding: 20px;
       color: #eae9eb;
     }
 
@@ -25,25 +30,43 @@
 
     .timer-duration {
       display: flex;
+      user-select: none;
       gap: 4px;
       font-family: roboto-thin, 'Roboto', 'open-sans' !important;
       font-weight: 100 !important;
       font-size: 48px;
     }
 
-    .timer-ui {
+    .action-button-dropzone {
+      user-select: none;
       position: absolute;
       top: 70%;
+    }
+
+    .action-button-dropzone *:hover {
+      cursor: pointer;
     }
 
     .progress-ring {
       position: absolute;
       overflow: visible !important;
+      width: var(--timer-width);
+      height: var(--timer-width);
     }
 
     .progress-ring__circle {
       transform: rotate(-90deg);
       transform-origin: 50% 50%;
+      stroke: #f1a33b;
+      fill: transparent;
+      stroke-width: 3px;
+      stroke-dasharray: var(--circumfrence) var(--circumfrence);
+    }
+
+    .progress-ring__background {
+      fill: transparent;
+      stroke: #29252d;
+      stroke-width: 3;
     }
 
     .blink {
@@ -63,28 +86,23 @@
     }
   </style>
   <body>
-    <svg class="progress-ring">
-      <circle
-        class="progress-ring__background"
-        stroke="#29252D"
-        fill="transparent" />
-      <circle
-        class="progress-ring__circle"
-        stroke="#F1A33B"
-        fill="transparent" />
-    </svg>
-    <div class="timer">
-      <div class="timer-content">
-        <div class="timer-duration">
-          <div class="timer-duration__hours">0</div>
-          <div>:</div>
-          <div class="timer-duration__minutes">00</div>
-          <div>:</div>
-          <div class="timer-duration__seconds">00</div>
+    <div class="eye-saver-chrome-extension-wrapper">
+      <div class="timer">
+        <svg class="progress-ring">
+          <circle class="progress-ring__background" r="100" cx="100" cy="100" />
+          <circle class="progress-ring__circle" r="100" cx="100" cy="100" />
+        </svg>
+        <div class="timer-content">
+          <div class="timer-duration">
+            <div class="timer-duration__hours">0</div>
+            <div>:</div>
+            <div class="timer-duration__minutes">00</div>
+            <div>:</div>
+            <div class="timer-duration__seconds">00</div>
+          </div>
+          <div class="action-button-dropzone"></div>
         </div>
-        <div class="timer-ui"></div>
       </div>
     </div>
   </body>
-  <script src="timer.js"></script>
 </html>
