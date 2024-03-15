@@ -1,40 +1,29 @@
-const timeouts = []
+let alarmHandler = null
 
 async function skipRest() {
   removeOverlay()
+  alarmHandler.clearAlarms()
+  alarmHandler.createTimerAlarm(onAlarm)
+
   const { messages } = await import(chrome.runtime.getURL('src/enums.js'))
   chrome.runtime.sendMessage({ key: messages.SKIP_REST })
 }
 
 async function onAlarm() {
-  timeouts.map((timeout) => clearTimeout(timeout))
-
   const { getTimerProperties } = await import(
     chrome.runtime.getURL('src/storage.js')
   )
 
-  const { sessionStart, timerDuration, restDuration } =
-    await getTimerProperties()
+  const { timerDuration, restDuration } = await getTimerProperties()
 
-  if (sessionStart < 0) return
+  const restDurationRemaining = await alarmHandler.getRestDurationRemaining()
+  const restDurationPassed = restDuration - restDurationRemaining
 
-  const periodLength = timerDuration + restDuration
-  const currentPeriodProgress = (Date.now() - sessionStart) % periodLength
-  const timeUntilNextAlarm = timerDuration - currentPeriodProgress
-  const restTimePassed = timeUntilNextAlarm < 0 ? timeUntilNextAlarm * -1 : 0
+  const clockDropzone = addOverlay()
 
-  const dropzone = addOverlay()
+  renderClock(clockDropzone, timerDuration, restDuration, restDurationPassed)
 
-  renderClock(dropzone, timerDuration, restDuration, restTimePassed)
-  const restDurationRemaining = Math.max(restDuration - restTimePassed, 0)
-
-  const removeOverlayTimeout = setTimeout(removeOverlay, restDurationRemaining) // destroy overlay on restDuration end
-  const alarmTimeout = setTimeout(
-    onAlarm,
-    timerDuration + restDurationRemaining
-  )
-
-  timeouts.push(removeOverlayTimeout, alarmTimeout)
+  alarmHandler.createSimpleAlarm(removeOverlay, restDurationRemaining)
 }
 
 function removeOverlay() {
@@ -95,30 +84,22 @@ const onPageLoad = async () => {
   const { injectFonts } = await import(chrome.runtime.getURL('src/fonts.js'))
   if (!document.querySelector('.eye-saver-fonts')) injectFonts()
 
-  const { getTimerProperties } = await import(
-    chrome.runtime.getURL('src/storage.js')
-  )
+  const { storage } = await import(chrome.runtime.getURL('src/storage.js'))
 
-  const { sessionStart, timerDuration, restDuration } =
-    await getTimerProperties()
+  const { AlarmHandler } = await import(chrome.runtime.getURL('src/alarms.js'))
 
-  if (sessionStart < 0) return
+  alarmHandler = new AlarmHandler(storage)
 
-  const periodLength = timerDuration + restDuration
-  const currentPeriodProgress = (Date.now() - sessionStart) % periodLength
-  const timeUntilNextAlarm = timerDuration - currentPeriodProgress
-
-  const alarmTimeout = setTimeout(onAlarm, Math.max(timeUntilNextAlarm, 0))
-  timeouts.push(alarmTimeout)
+  alarmHandler.createTimerAlarm(onAlarm)
 }
 
 function onStorageChange(changes) {
   if (!changes.sessionStart) return
 
-  timeouts.map((timeout) => clearTimeout(timeout))
   removeOverlay()
+  alarmHandler.clearAlarms()
 
-  if (changes.sessionStart.newValue > 0) onPageLoad() // set up new alarm
+  if (changes.sessionStart.newValue > 0) alarmHandler.createTimerAlarm(onAlarm)
 }
 
 chrome.storage.onChanged.addListener(onStorageChange)
