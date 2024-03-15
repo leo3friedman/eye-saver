@@ -27,11 +27,11 @@ export async function isExtensionRunning(defaults) {
   })
 }
 
-export async function setSessionStart(time) {
+export async function setSessionStart(time, callback = () => {}) {
   if (typeof time !== 'number')
     throw new Error('sessionStart must be a number!')
 
-  chrome.storage.sync.set({ sessionStart: time })
+  chrome.storage.sync.set({ sessionStart: time }).then(callback)
 }
 
 export async function setTimerDuration(duration) {

@@ -3,30 +3,20 @@ import {
   getTimerProperties,
   setSessionStart,
   isExtensionRunning,
+  storage,
 } from './storage.js'
+import { AlarmHandler } from './alarms.js'
+
 self.onmessage = (e) => {} // Keep the service worker alive
 
-const alarms = []
-
-async function createAlarm(duration) {
-  alarms.map((timeout) => clearTimeout(timeout))
-  const alarmTimeout = setTimeout(onAlarm, duration)
-  alarms.push(alarmTimeout)
-}
+let alarmHandler = null
 
 async function onAlarm() {
-  if (!(await isExtensionRunning(defaults))) return
-
-  const {
-    timerDuration,
-    restDuration,
-    pushDesktopNotification,
-    playSoundNotification,
-  } = await getTimerProperties(defaults)
+  const { pushDesktopNotification, playSoundNotification } =
+    await getTimerProperties(defaults)
 
   if (pushDesktopNotification) createNotification()
   if (playSoundNotification) playSound()
-  createAlarm(timerDuration + restDuration)
 }
 
 async function createOffscreen() {
@@ -61,33 +51,30 @@ async function playSound() {
 async function onInstall() {
   if (!(await isExtensionRunning(defaults))) return
 
-  const { timerDuration } = await getTimerProperties(defaults)
+  alarmHandler && alarmHandler.clearAlarms()
+  alarmHandler = new AlarmHandler(storage, defaults)
 
   createOffscreen()
-  createAlarm(timerDuration)
-  setSessionStart(Date.now())
+  setSessionStart(Date.now(), () => alarmHandler.createTimerAlarm(onAlarm))
+}
+
+function startExtension() {
+  alarmHandler && alarmHandler.clearAlarms()
+  alarmHandler = new AlarmHandler(storage, defaults)
+
+  createOffscreen()
+  setSessionStart(Date.now(), () => alarmHandler.createTimerAlarm(onAlarm))
+}
+
+function stopExtension() {
+  setSessionStart(-1)
+  alarmHandler && alarmHandler.clearAlarms()
 }
 
 async function onMessage(message) {
-  const { timerDuration } = await getTimerProperties(defaults)
-  switch (message.key) {
-    case messages.START_EXTENSION:
-      alarms.map((timeout) => clearTimeout(timeout))
-      createOffscreen()
-      createAlarm(timerDuration)
-      setSessionStart(Date.now())
-      break
-    case messages.STOP_EXTENSION:
-      alarms.map((timeout) => clearTimeout(timeout))
-      setSessionStart(-1)
-      break
-    case messages.SKIP_REST:
-      alarms.map((timeout) => clearTimeout(timeout))
-      createOffscreen()
-      createAlarm(timerDuration)
-      setSessionStart(Date.now())
-      break
-  }
+  if (message.key === messages.START_EXTENSION) startExtension()
+  if (message.key === messages.SKIP_REST) startExtension()
+  if (message.key === messages.STOP_EXTENSION) stopExtension()
 }
 
 chrome.runtime.onInstalled.addListener(onInstall)
