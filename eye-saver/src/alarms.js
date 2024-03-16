@@ -6,12 +6,21 @@ export class AlarmHandler {
     this.alarmThreshold = 1000 * 10
   }
 
-  async getTimeUntilNextAlarm() {
+  async getCurrentPeriodProgress() {
     const { timerDuration, restDuration, sessionStart } =
       await this.storage.getTimerProperties(this.defaults)
 
     const periodLength = timerDuration + restDuration
     const periodProgress = (Date.now() - sessionStart) % periodLength
+
+    return periodProgress
+  }
+
+  async getTimeUntilNextAlarm() {
+    const { timerDuration, restDuration, sessionStart } =
+      await this.storage.getTimerProperties(this.defaults)
+
+    const periodProgress = await this.getCurrentPeriodProgress()
     const restDurationRemaining = await this.getRestDurationRemaining()
 
     const timeUntilNextAlarm =
@@ -26,8 +35,7 @@ export class AlarmHandler {
     const { timerDuration, restDuration, sessionStart } =
       await this.storage.getTimerProperties(this.defaults)
 
-    const periodLength = timerDuration + restDuration
-    const periodProgress = (Date.now() - sessionStart) % periodLength
+    const periodProgress = await this.getCurrentPeriodProgress()
 
     const restDurationRemaining = Math.max(
       timerDuration + restDuration - periodProgress,

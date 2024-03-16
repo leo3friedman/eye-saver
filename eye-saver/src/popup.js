@@ -67,11 +67,13 @@ async function onPopupLoad() {
   const { timerInputDefaults } = await import(
     chrome.runtime.getURL('src/enums.js')
   )
+  const { AlarmHandler } = await import(chrome.runtime.getURL('src/alarms.js'))
+  const alarmHandler = new AlarmHandler(storage)
 
   const running = await storage.isExtensionRunning()
+  const currentPeriodProgress = await alarmHandler.getCurrentPeriodProgress()
 
   const {
-    sessionStart,
     timerDuration,
     restDuration,
     pushDesktopNotification,
@@ -83,9 +85,6 @@ async function onPopupLoad() {
    */
 
   const dropzone = document.querySelector('.timer__dropzone')
-
-  const periodLength = timerDuration + restDuration
-  const currentPeriodProgress = (Date.now() - sessionStart) % periodLength
 
   const startStopButton = document.createElement('div')
 
@@ -108,11 +107,11 @@ async function onPopupLoad() {
   }
 
   const onFinish = async () => {
-    const { restDuration } = await storage.getTimerProperties()
+    const restDurationRemaining = await alarmHandler.getRestDurationRemaining()
 
     setTimeout(async () => {
-      if (await storage.isExtensionRunning()) timer.start() // TODO: replace with alarms array?
-    }, restDuration)
+      if (await storage.isExtensionRunning()) timer.start()
+    }, restDurationRemaining)
   }
 
   const timer = new Timer(

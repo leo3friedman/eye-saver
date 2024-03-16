@@ -22,7 +22,7 @@ export const defaults = {
   mode: modes.SCREEN_TIME,
   sessionStart: Date.now(),
   pushDesktopNotification: true,
-  playSoundNotification: true,
+  playSoundNotification: false,
   hasNotifiedLookAway: false,
   hasNotifiedLookBack: false,
   soundSource: '../sounds/sound-notification.wav',
