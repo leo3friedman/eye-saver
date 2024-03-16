@@ -1,11 +1,19 @@
-export async function getTimerProperties(defaults) {
-  defaults =
-    defaults || (await import(chrome.runtime.getURL('src/enums.js'))).defaults
+const defaults = {
+  timerDuration: 20 * 60 * 1000,
+  restDuration: 20 * 1000,
+  sessionStart: Date.now(),
+  pushDesktopNotification: true,
+  playSoundNotification: false,
+  hasNotifiedLookAway: false,
+  hasNotifiedLookBack: false,
+  lastLookAway: 0,
+  lastLookBack: 0,
+}
 
+export async function getTimerProperties() {
   return new Promise((resolve) => {
     chrome.storage.sync.get(defaults, (result) => {
       resolve({
-        state: result.state,
         sessionStart: Number(result.sessionStart),
         timerDuration: Number(result.timerDuration),
         restDuration: Number(result.restDuration),
@@ -16,10 +24,7 @@ export async function getTimerProperties(defaults) {
   })
 }
 
-export async function isExtensionRunning(defaults) {
-  defaults =
-    defaults || (await import(chrome.runtime.getURL('src/enums.js'))).defaults
-
+export async function isExtensionRunning() {
   return new Promise((resolve) => {
     chrome.storage.sync.get(defaults, (result) => {
       resolve(Number(result.sessionStart) >= 0)

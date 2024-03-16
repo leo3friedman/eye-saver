@@ -5,8 +5,8 @@ async function skipRest() {
   alarmHandler.clearAlarms()
   alarmHandler.createTimerAlarm(onAlarm)
 
-  const { messages } = await import(chrome.runtime.getURL('src/enums.js'))
-  chrome.runtime.sendMessage({ key: messages.SKIP_REST })
+  const { messageKeys } = await import(chrome.runtime.getURL('src/messages.js'))
+  chrome.runtime.sendMessage({ key: messageKeys.SKIP_REST })
 }
 
 async function onAlarm() {

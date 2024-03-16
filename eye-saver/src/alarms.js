@@ -1,14 +1,13 @@
 export class AlarmHandler {
-  constructor(storage = null, defaults = null) {
+  constructor(storage = null) {
     this.storage = storage
-    this.defaults = defaults
     this.alarms = []
     this.alarmThreshold = 1000 * 10
   }
 
   async getCurrentPeriodProgress() {
     const { timerDuration, restDuration, sessionStart } =
-      await this.storage.getTimerProperties(this.defaults)
+      await this.storage.getTimerProperties()
 
     const periodLength = timerDuration + restDuration
     const periodProgress = (Date.now() - sessionStart) % periodLength
@@ -17,9 +16,7 @@ export class AlarmHandler {
   }
 
   async getTimeUntilNextAlarm() {
-    const { timerDuration, restDuration, sessionStart } =
-      await this.storage.getTimerProperties(this.defaults)
-
+    const { timerDuration } = await this.storage.getTimerProperties()
     const periodProgress = await this.getCurrentPeriodProgress()
     const restDurationRemaining = await this.getRestDurationRemaining()
 
@@ -32,8 +29,8 @@ export class AlarmHandler {
   }
 
   async getRestDurationRemaining() {
-    const { timerDuration, restDuration, sessionStart } =
-      await this.storage.getTimerProperties(this.defaults)
+    const { timerDuration, restDuration } =
+      await this.storage.getTimerProperties()
 
     const periodProgress = await this.getCurrentPeriodProgress()
 
@@ -86,7 +83,7 @@ export class AlarmHandler {
   }
 
   async onTimerAlarm(alarmId, callback) {
-    const isRunning = await this.storage.isExtensionRunning(this.defaults)
+    const isRunning = await this.storage.isExtensionRunning()
 
     if (!isRunning) return
 

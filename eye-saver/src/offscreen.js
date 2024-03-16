@@ -11,14 +11,16 @@ async function playAudio(source, volume) {
 }
 
 async function onMessage(message) {
-  const { messages, defaults } = await import(
-    chrome.runtime.getURL('src/enums.js')
-  )
-  if (!message?.offscreen || message?.key !== messages.PLAY_SOUND) return
-  playAudio(defaults.soundSource, defaults.soundVolume)
+  const soundSource = '../sounds/sound-notification.wav'
+  const soundVolume = 0.5
+
+  const { messageKeys } = await import(chrome.runtime.getURL('src/messages.js'))
+
+  if (!message?.offscreen || message?.key !== messageKeys?.PLAY_SOUND) return
+  playAudio(soundSource, soundVolume)
 }
 
-function keepWorkerAlive() {
+async function keepWorkerAlive() {
   setInterval(async () => {
     const serviceWorker = await navigator.serviceWorker.ready
     serviceWorker.active.postMessage('keepAlive')

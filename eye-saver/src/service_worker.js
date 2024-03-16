@@ -1,4 +1,4 @@
-import { defaults, messages, notificationOptions } from './enums.js'
+import { messageKeys } from './messages.js'
 import {
   getTimerProperties,
   setSessionStart,
@@ -13,7 +13,7 @@ let alarmHandler = null
 
 async function onAlarm() {
   const { pushDesktopNotification, playSoundNotification } =
-    await getTimerProperties(defaults)
+    await getTimerProperties()
 
   if (pushDesktopNotification) createNotification()
   if (playSoundNotification) playSound()
@@ -32,10 +32,10 @@ async function createOffscreen() {
 
 function createNotification() {
   const notification = {
-    type: notificationOptions.type,
-    iconUrl: notificationOptions.iconUrl,
-    title: notificationOptions.title,
-    message: notificationOptions.lookAwayMessage,
+    title: 'Eye Saver',
+    type: 'basic',
+    iconUrl: '../images/icon-64.png',
+    message: 'Look away from the screen!',
   }
   chrome.notifications.create(notification)
 }
@@ -43,16 +43,16 @@ function createNotification() {
 async function playSound() {
   await createOffscreen()
   await chrome.runtime.sendMessage({
-    key: messages.PLAY_SOUND,
+    key: messageKeys.PLAY_SOUND,
     offscreen: true,
   })
 }
 
 async function onInstall() {
-  if (!(await isExtensionRunning(defaults))) return
+  if (!(await isExtensionRunning())) return
 
   alarmHandler && alarmHandler.clearAlarms()
-  alarmHandler = new AlarmHandler(storage, defaults)
+  alarmHandler = new AlarmHandler(storage)
 
   createOffscreen()
   setSessionStart(Date.now(), () => alarmHandler.createTimerAlarm(onAlarm))
@@ -60,7 +60,7 @@ async function onInstall() {
 
 function startExtension() {
   alarmHandler && alarmHandler.clearAlarms()
-  alarmHandler = new AlarmHandler(storage, defaults)
+  alarmHandler = new AlarmHandler(storage)
 
   createOffscreen()
   setSessionStart(Date.now(), () => alarmHandler.createTimerAlarm(onAlarm))
@@ -72,9 +72,9 @@ function stopExtension() {
 }
 
 async function onMessage(message) {
-  if (message.key === messages.START_EXTENSION) startExtension()
-  if (message.key === messages.SKIP_REST) startExtension()
-  if (message.key === messages.STOP_EXTENSION) stopExtension()
+  if (message.key === messageKeys.START_EXTENSION) startExtension()
+  if (message.key === messageKeys.SKIP_REST) startExtension()
+  if (message.key === messageKeys.STOP_EXTENSION) stopExtension()
 }
 
 chrome.runtime.onInstalled.addListener(onInstall)

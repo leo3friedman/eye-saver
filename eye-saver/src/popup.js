@@ -1,7 +1,14 @@
+const timerDurationIncrement = 10 * 60 * 1000
+const restDurationIncrement = 10 * 1000
+const maxTimerDuration = 2 * 60 * 60 * 1000
+const minTimerDuration = 10 * 60 * 1000
+const maxRestDuration = 2 * 60 * 1000
+const minRestDuration = 10 * 1000
+
 /**
  *
- * @param {number} time time in milliseconds to convert
- * @returns {Object} An object representing the time in hours, minutes, and seconds
+ * @param {number} time (ms)
+ * @returns {Object}
  */
 function timeToText(time) {
   const date = new Date(0, 0, 0, 0, 0, 0, time)
@@ -13,13 +20,17 @@ function timeToText(time) {
 }
 
 async function startExtension() {
-  const { messages } = await import(chrome.runtime.getURL('src/enums.js'))
-  chrome.runtime.sendMessage({ key: messages.START_EXTENSION })
+  const { messageKeys } = await import(
+    chrome.runtime.getURL('src/messages.js')
+  )
+  chrome.runtime.sendMessage({ key: messageKeys.START_EXTENSION })
 }
 
 async function stopExtension() {
-  const { messages } = await import(chrome.runtime.getURL('src/enums.js'))
-  chrome.runtime.sendMessage({ key: messages.STOP_EXTENSION })
+  const { messageKeys } = await import(
+    chrome.runtime.getURL('src/messages.js')
+  )
+  chrome.runtime.sendMessage({ key: messageKeys.STOP_EXTENSION })
 }
 
 function disableDurationInputs() {
@@ -64,9 +75,6 @@ async function onPopupLoad() {
   const { Timer } = await import(chrome.runtime.getURL('src/timer.js'))
   const { storage } = await import(chrome.runtime.getURL('src/storage.js'))
   const { createDevUI } = await import(chrome.runtime.getURL('src/util.js'))
-  const { timerInputDefaults } = await import(
-    chrome.runtime.getURL('src/enums.js')
-  )
   const { AlarmHandler } = await import(chrome.runtime.getURL('src/alarms.js'))
   const alarmHandler = new AlarmHandler(storage)
 
@@ -134,15 +142,6 @@ async function onPopupLoad() {
   setRestDurationInputText(restDuration)
 
   running ? disableDurationInputs() : enableDurationInputs()
-
-  const {
-    maxTimerDuration,
-    minTimerDuration,
-    timerDurationIncrement,
-    maxRestDuration,
-    minRestDuration,
-    restDurationIncrement,
-  } = timerInputDefaults
 
   document.querySelector('.timer-duration-increment-up').onclick = async () => {
     const { timerDuration } = await storage.getTimerProperties()
