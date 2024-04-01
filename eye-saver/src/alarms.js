@@ -28,6 +28,15 @@ export class AlarmHandler {
     return timeUntilNextAlarm
   }
 
+  async isResting() {
+    const running = await this.storage.isExtensionRunning()
+
+    const { restDuration } = await this.storage.getTimerProperties()
+    const restDurationRemaining = await this.getRestDurationRemaining()
+
+    return running && restDuration - restDurationRemaining >= 0
+  }
+
   async getRestDurationRemaining() {
     const { timerDuration, restDuration } =
       await this.storage.getTimerProperties()

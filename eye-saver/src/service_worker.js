@@ -14,7 +14,6 @@ let alarmHandler = null
 async function onAlarm() {
   const { pushDesktopNotification, playSoundNotification } =
     await getTimerProperties()
-
   if (pushDesktopNotification) createNotification()
   if (playSoundNotification) playSound()
 }

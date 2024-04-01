@@ -18,7 +18,7 @@ async function onAlarm() {
 
   const restDurationRemaining = await alarmHandler.getRestDurationRemaining()
   const restDurationPassed = restDuration - restDurationRemaining
-
+  
   const clockDropzone = addOverlay()
 
   renderClock(clockDropzone, timerDuration, restDuration, restDurationPassed)
@@ -82,16 +82,26 @@ async function renderClock(dropzone, timerDuration, restDuration, timePassed) {
 }
 
 const onPageLoad = async () => {
+
+  const { storage } = await import(
+    chrome.runtime.getURL('src/storage.js')
+  )
+
+  
+
   const { injectFonts } = await import(chrome.runtime.getURL('src/fonts.js'))
   if (!document.querySelector('.eye-saver-fonts')) injectFonts()
-
-  const { storage } = await import(chrome.runtime.getURL('src/storage.js'))
 
   const { AlarmHandler } = await import(chrome.runtime.getURL('src/alarms.js'))
 
   alarmHandler = new AlarmHandler(storage)
 
   alarmHandler.createTimerAlarm(onAlarm)
+  
+  // Render clock if already resting
+  const isResting = await alarmHandler.isResting()
+  
+  if (isResting) onAlarm()
 }
 
 function onStorageChange(changes) {
