@@ -103,13 +103,6 @@ export class AlarmHandler {
 
     if (withinThreshold) callback()
 
-    if (!withinThreshold)
-      console.log('NOT IN THRESHOLD!!', {
-        expectedTime,
-        currentTime: Date.now(),
-        difference: Date.now() - expectedTime,
-      })
-
     this.removeAlarm(alarmId)
     this.createTimerAlarm(callback)
   }

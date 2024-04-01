@@ -47,7 +47,13 @@ async function playSound() {
   })
 }
 
-async function onInstall() {
+async function onInstall({ reason }) {
+  if (reason === 'install' || reason === 'update') {
+    chrome.tabs.create({
+      url: 'src/onboarding.html',
+    })
+  }
+
   if (!(await isExtensionRunning())) return
 
   alarmHandler && alarmHandler.clearAlarms()
