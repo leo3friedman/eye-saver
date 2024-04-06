@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    @font-face {
+      font-family: roboto-bold;
+      src: url(../fonts/Roboto/Roboto-Bold.ttf);
+    }
+    @font-face {
+      font-family: roboto-regular;
+      src: url(../fonts/Roboto/Roboto-Regular.ttf);
+    }
+    @font-face {
+      font-family: roboto-light;
+      src: url(../fonts/Roboto/Roboto-Light.ttf);
+    }
+    @font-face {
+      font-family: roboto-thin;
+      src: url(../fonts/Roboto/Roboto-Thin.ttf);
+    }
+
+    :root {
+      --section-padding: 0px 24px;
+      --padding-top: 24px;
+      --background: #141216;
+      --secondary: #29252d;
+      --text: #eae9eb;
+      --accent: #f29221;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--accent);
+    }
+    .banner {
+      width: 100%;
+      padding: 1rem 0;
+      top: 0;
+      background-color: var(--background);
+      color: var(--text);
+      text-align: center;
+
+      font-family: roboto-light;
+      font-size: 1rem;
+    }
+
+    .content-container {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .content {
+      padding: 0 4rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .content .header {
+      font-family: roboto-bold;
+      font-size: 2.5rem;
+      padding: 2.5rem 0;
+      margin: 0;
+    }
+
+    .content .disclaimer {
+      font-family: roboto-regular;
+      font-size: 1rem;
+    }
+
+    .refresh-demo {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .demo-content * {
+      width: fit-content;
+    }
+
+    .demo-instructions {
+      margin: 0;
+      padding: 0;
+      padding-top: 3rem;
+      list-style-position: inside;
+      padding-bottom: 2rem;
+    }
+
+    .demo-instructions li {
+      padding: 0.75rem 0;
+      font-family: roboto-regular;
+      font-size: 1.25rem;
+    }
+
+    .demo-instructions li .bold-roboto {
+      font-family: roboto-bold;
+    }
+
+    .refresh-icon {
+      width: 1rem;
+    }
+
+    .refresh-demo-gif {
+      width: 80%;
+      max-width: 800px;
+      min-width: 400px;
+    }
+  </style>
+  <body>
+    <div class="content-container">
+      <div class="banner">Eye Saver - Break Reminder has updated!</div>
+      <div class="content">
+        <h1 class="header">Please refresh all existing tabs</h1>
+        <div class="disclaimer">
+          Eye Saver will automatically run on newly created tabs
+        </div>
+        <div class="refresh-demo">
+          <div class="demo-content">
+            <ol class="demo-instructions">
+              <li>Ensure right most tab is selected</li>
+              <li>
+                <b class="bold-roboto">Shift + Click</b> on the left most tab to
+                select all tabs
+              </li>
+              <li>
+                <b class="bold-roboto"
+                  >Click
+                  <img
+                    class="refresh-icon"
+                    src="../images/refresh.svg"
+                    alt="Refresh Icon" />
+                  icon
+                </b>
+                to trigger refresh
+              </li>
+            </ol>
+            <img
+              class="refresh-demo-gif"
+              src="../images/tab-refresh.gif"
+              alt="Tab Refresh Demo" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

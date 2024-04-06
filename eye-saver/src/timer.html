@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <style>
+    :root {
+      --timer-width: 200px;
+      --circumfrence: calc(3.14159 * var(--timer-width));
+    }
+
+    .timer {
+      width: var(--timer-width);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 1 / 1;
+      color: #eae9eb;
+    }
+
+    .timer-content {
+      display: flex;
+      width: fit-content;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .timer-duration {
+      display: flex;
+      user-select: none;
+      gap: 4px;
+      font-family: roboto-thin, 'Roboto', 'open-sans' !important;
+      font-weight: 100 !important;
+      font-size: 48px;
+    }
+
+    .action-button-dropzone {
+      user-select: none;
+      position: absolute;
+      top: 70%;
+    }
+
+    .action-button-dropzone *:hover {
+      cursor: pointer;
+    }
+
+    .progress-ring {
+      position: absolute;
+      overflow: visible !important;
+      width: var(--timer-width);
+      height: var(--timer-width);
+    }
+
+    .progress-ring__circle {
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+      stroke: #f1a33b;
+      fill: transparent;
+      stroke-width: 3px;
+      stroke-dasharray: var(--circumfrence) var(--circumfrence);
+    }
+
+    .progress-ring__background {
+      fill: transparent;
+      stroke: #29252d;
+      stroke-width: 3;
+    }
+
+    .blink {
+      animation: blinker 1s infinite;
+    }
+
+    @keyframes blinker {
+      from {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+  <body>
+    <div class="eye-saver-chrome-extension-wrapper">
+      <div class="timer">
+        <svg class="progress-ring">
+          <circle class="progress-ring__background" r="100" cx="100" cy="100" />
+          <circle class="progress-ring__circle" r="100" cx="100" cy="100" />
+        </svg>
+        <div class="timer-content">
+          <div class="timer-duration">
+            <div class="timer-duration__hours">0</div>
+            <div>:</div>
+            <div class="timer-duration__minutes">00</div>
+            <div>:</div>
+            <div class="timer-duration__seconds">00</div>
+          </div>
+          <div class="action-button-dropzone"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

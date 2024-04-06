@@ -6,15 +6,19 @@
   <style>
     @font-face {
       font-family: roboto-bold;
-      src: url(fonts/Roboto/Roboto-Bold.ttf);
+      src: url(../fonts/Roboto/Roboto-Bold.ttf);
     }
     @font-face {
       font-family: roboto-regular;
-      src: url(fonts/Roboto/Roboto-Regular.ttf);
+      src: url(../fonts/Roboto/Roboto-Regular.ttf);
     }
     @font-face {
       font-family: roboto-light;
-      src: url(fonts/Roboto/Roboto-Light.ttf);
+      src: url(../fonts/Roboto/Roboto-Light.ttf);
+    }
+    @font-face {
+      font-family: roboto-thin;
+      src: url(../fonts/Roboto/Roboto-Thin.ttf);
     }
 
     :root {
@@ -23,7 +27,7 @@
       --background: #141216;
       --secondary: #29252d;
       --text: #eae9eb;
-      --accent: #f1a33b;
+      --accent: #f29221;
     }
 
     body {
@@ -44,6 +48,11 @@
       justify-content: center;
       padding: var(--section-padding);
       padding: var(--padding-top);
+    }
+
+    .timer__dropzone {
+      height: 204.43px;
+      width: 204.43px;
     }
 
     .settings-section {
@@ -158,10 +167,10 @@
                 <div class="duration-increment">
                   <img
                     class="svg-icon timer-duration-increment-up"
-                    src="assets/increment-up.svg" />
+                    src="../images/increment-up.svg" />
                   <img
                     class="svg-icon timer-duration-increment-down"
-                    src="assets/increment-down.svg" />
+                    src="../images/increment-down.svg" />
                 </div>
               </div>
               <label for="timer-duration-input">Screen Time</label>
@@ -181,10 +190,10 @@
                 <div class="duration-increment">
                   <img
                     class="svg-icon rest-duration-increment-up"
-                    src="assets/increment-up.svg" />
+                    src="../images/increment-up.svg" />
                   <img
                     class="svg-icon rest-duration-increment-down"
-                    src="assets/increment-down.svg" />
+                    src="../images/increment-down.svg" />
                 </div>
               </div>
               <label for="timer-duration-input">Break Length</label>
@@ -213,31 +222,6 @@
           </div>
         </div>
       </section>
-      <section class="testing-section">
-        <h3>TESTING SECTION</h3>
-        <div class="settings-subsection__content">
-          <div class="settings-subsection__field">
-            <input
-              id="test-timer-duration-input"
-              type="number"
-              step="1000"
-              min="1000" />
-            <label for="test-timer-duration-input">Screen Time</label>
-          </div>
-          <div class="settings-subsection__field">
-            <input
-              id="test-rest-duration-input"
-              type="number"
-              step="1000"
-              min="1000" />
-            <label for="test-rest-duration-input">Break Length </label>
-          </div>
-          <button class="send-desktop-notification-button">
-            Push Desktop Notifications
-          </button>
-          <button class="play-sound-button">Play Sound</button>
-        </div>
-      </section>
     </div>
     <footer class="footer">
       <a
@@ -245,7 +229,7 @@
         >Request Feature</a
       >
       <a
-        href="https://chromewebstore.google.com/detail/eye-saver-20-20-20-break/mhfodjdadffkgglbjdlnfakpohhemdga"
+        href="https://chromewebstore.google.com/detail/eye-saver-break-reminder/mhfodjdadffkgglbjdlnfakpohhemdga/reviews"
         target="_blank"
         >Rate</a
       >
