@@ -41,7 +41,7 @@ export class Timer {
     this.rootSelector = rootSelector || document.body
   }
 
-  renderTimer() {
+  async renderTimer() {
     if (!this.rootSelector) throw Error('rootSelector needed to render timer!')
 
     const dropzone = this.rootSelector.querySelector(
@@ -50,48 +50,44 @@ export class Timer {
 
     if (!dropzone) throw Error('No dropzone found! Cannot render timer!')
 
-    const timerTemplateUrl = chrome.runtime.getURL('src/timer.html')
-    const xhr = new XMLHttpRequest()
+    const response = await fetch(chrome.runtime.getURL('src/timer.html'))
+    const html = await response.text()
 
-    xhr.onload = () => {
-      dropzone.insertAdjacentHTML('afterbegin', xhr.response)
+    dropzone.insertAdjacentHTML('afterbegin', html)
 
-      this.circle = this.rootSelector.querySelector('.progress-ring__circle')
+    this.circle = this.rootSelector.querySelector('.progress-ring__circle')
 
-      const timer = this.rootSelector.querySelector('.timer')
-      const { width } = timer ? timer.getBoundingClientRect() : DEFAULTS
-      this.circumference = width * Math.PI
+    const timer = this.rootSelector.querySelector('.timer')
+    const { width } = timer ? timer.getBoundingClientRect() : DEFAULTS
+    this.circumference = width * Math.PI
 
-      this.hoursDisplay = this.rootSelector.querySelector(
-        '.timer-duration__hours'
+    this.hoursDisplay = this.rootSelector.querySelector(
+      '.timer-duration__hours'
+    )
+    this.minutesDisplay = this.rootSelector.querySelector(
+      '.timer-duration__minutes'
+    )
+    this.secondsDisplay = this.rootSelector.querySelector(
+      '.timer-duration__seconds'
+    )
+
+    const actionButtonDropzone = this.rootSelector.querySelector(
+      '.action-button-dropzone'
+    )
+
+    if (actionButtonDropzone && this.actionButton)
+      actionButtonDropzone.insertAdjacentElement(
+        'afterbegin',
+        this.actionButton
       )
-      this.minutesDisplay = this.rootSelector.querySelector(
-        '.timer-duration__minutes'
-      )
-      this.secondsDisplay = this.rootSelector.querySelector(
-        '.timer-duration__seconds'
-      )
 
-      const actionButtonDropzone = this.rootSelector.querySelector(
-        '.action-button-dropzone'
-      )
+    this.setTimerText()
+    this.setProgress()
 
-      if (actionButtonDropzone && this.actionButton)
-        actionButtonDropzone.insertAdjacentElement(
-          'afterbegin',
-          this.actionButton
-        )
-
-      this.setTimerText()
-      this.setProgress()
-
-      if (this.state == states.RUNNING) {
-        this.timestamp = Date.now()
-        this.tick()
-      }
+    if (this.state == states.RUNNING) {
+      this.timestamp = Date.now()
+      this.tick()
     }
-    xhr.open('GET', timerTemplateUrl)
-    xhr.send()
   }
 
   start() {
