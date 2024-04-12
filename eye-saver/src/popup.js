@@ -20,16 +20,12 @@ function timeToText(time) {
 }
 
 async function startExtension() {
-  const { messageKeys } = await import(
-    chrome.runtime.getURL('src/messages.js')
-  )
+  const { messageKeys } = await import(chrome.runtime.getURL('src/messages.js'))
   chrome.runtime.sendMessage({ key: messageKeys.START_EXTENSION })
 }
 
 async function stopExtension() {
-  const { messageKeys } = await import(
-    chrome.runtime.getURL('src/messages.js')
-  )
+  const { messageKeys } = await import(chrome.runtime.getURL('src/messages.js'))
   chrome.runtime.sendMessage({ key: messageKeys.STOP_EXTENSION })
 }
 
@@ -92,8 +88,6 @@ async function onPopupLoad() {
    * RENDERING THE TIMER
    */
 
-  const dropzone = document.querySelector('.timer__dropzone')
-
   const startStopButton = document.createElement('div')
 
   startStopButton.innerText = running ? 'Cancel' : 'Start'
@@ -125,6 +119,7 @@ async function onPopupLoad() {
   const timer = new Timer(
     timerDuration,
     restDuration,
+    document.body,
     currentPeriodProgress,
     running,
     true,
@@ -132,7 +127,7 @@ async function onPopupLoad() {
     startStopButton
   )
 
-  timer.renderTimer(dropzone)
+  timer.renderTimer()
 
   /**
    * INITIALIZING UI ELEMENTS

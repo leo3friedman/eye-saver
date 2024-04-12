@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <style>
-    :root {
+    .timer {
       --timer-width: 200px;
       --circumfrence: calc(3.14159 * var(--timer-width));
-    }
 
-    .timer {
       width: var(--timer-width);
       position: relative;
       display: flex;
@@ -81,22 +79,20 @@
     }
   </style>
   <body>
-    <div class="eye-saver-chrome-extension-wrapper">
-      <div class="timer">
-        <svg class="progress-ring">
-          <circle class="progress-ring__background" r="100" cx="100" cy="100" />
-          <circle class="progress-ring__circle" r="100" cx="100" cy="100" />
-        </svg>
-        <div class="timer-content">
-          <div class="timer-duration">
-            <div class="timer-duration__hours">0</div>
-            <div>:</div>
-            <div class="timer-duration__minutes">00</div>
-            <div>:</div>
-            <div class="timer-duration__seconds">00</div>
-          </div>
-          <div class="action-button-dropzone"></div>
+    <div class="timer">
+      <svg class="progress-ring">
+        <circle class="progress-ring__background" r="100" cx="100" cy="100" />
+        <circle class="progress-ring__circle" r="100" cx="100" cy="100" />
+      </svg>
+      <div class="timer-content">
+        <div class="timer-duration">
+          <div class="timer-duration__hours">0</div>
+          <div>:</div>
+          <div class="timer-duration__minutes">00</div>
+          <div>:</div>
+          <div class="timer-duration__seconds">00</div>
         </div>
+        <div class="action-button-dropzone"></div>
       </div>
     </div>
   </body>

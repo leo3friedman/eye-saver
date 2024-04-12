@@ -10,7 +10,6 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "css": ["src/overlay.css"],
       "js": ["src/overlay.js"]
     }
   ],

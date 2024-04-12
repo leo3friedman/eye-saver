@@ -18,56 +18,55 @@ async function onAlarm() {
 
   const restDurationRemaining = await alarmHandler.getRestDurationRemaining()
   const restDurationPassed = restDuration - restDurationRemaining
-  
-  const clockDropzone = addOverlay()
 
-  renderClock(clockDropzone, timerDuration, restDuration, restDurationPassed)
+  const rootSelector = await addOverlay()
+
+  renderClock(rootSelector, timerDuration, restDuration, restDurationPassed)
 
   alarmHandler.createSimpleAlarm(removeOverlay, restDurationRemaining)
 }
 
 function removeOverlay() {
   document
-    .querySelectorAll('.eye-saver__overlay')
-    .forEach((canvas) => document.body.removeChild(canvas))
+    .querySelectorAll('.eye-saver-overlay-host')
+    .forEach((overlay) => document.body.removeChild(overlay))
 }
 
 function isOverlayOn() {
-  return document.querySelectorAll('.eye-saver__overlay').length > 0
+  return document.querySelectorAll('.eye-saver-overlay-host').length > 0
 }
 
-function addOverlay() {
+async function addOverlay() {
   if (isOverlayOn()) return
 
-  const overlay = document.createElement('div')
-  overlay.className = 'eye-saver__overlay'
+  const host = document.createElement('div')
+  host.className = 'eye-saver-overlay-host'
 
-  const overlayContents = document.createElement('div')
-  overlayContents.className = 'eye-saver__overlay-contents'
+  const shadow = host.attachShadow({ mode: 'open' })
 
-  const dropzone = document.createElement('dropzone')
-  dropzone.className = 'timer__dropzone'
+  document.body.appendChild(host)
 
-  const skipButton = document.createElement('div')
-  skipButton.className = 'eye-saver__skip-button'
+  const response = await fetch(chrome.runtime.getURL('src/overlay.html'))
+  const html = await response.text()
+  shadow.innerHTML = html
 
-  skipButton.innerText = 'Skip'
-  skipButton.onclick = skipRest
+  host.shadowRoot.querySelector('.eye-saver-skip-button').onclick = skipRest
 
-  overlay.appendChild(overlayContents)
-  overlayContents.appendChild(dropzone)
-  overlayContents.appendChild(skipButton)
-  document.body.appendChild(overlay)
-
-  return dropzone
+  return host.shadowRoot
 }
 
-async function renderClock(dropzone, timerDuration, restDuration, timePassed) {
+async function renderClock(
+  rootSelector,
+  timerDuration,
+  restDuration,
+  timePassed
+) {
   const timerSrc = await import(chrome.runtime.getURL('src/timer.js'))
 
   const timer = new timerSrc.Timer(
     restDuration,
     timerDuration,
+    rootSelector,
     timePassed,
     true,
     false,
@@ -75,19 +74,14 @@ async function renderClock(dropzone, timerDuration, restDuration, timePassed) {
     null
   )
   try {
-    timer.renderTimer(dropzone)
+    timer.renderTimer()
   } catch (err) {
     console.error(err)
   }
 }
 
 const onPageLoad = async () => {
-
-  const { storage } = await import(
-    chrome.runtime.getURL('src/storage.js')
-  )
-
-  
+  const { storage } = await import(chrome.runtime.getURL('src/storage.js'))
 
   const { injectFonts } = await import(chrome.runtime.getURL('src/fonts.js'))
   if (!document.querySelector('.eye-saver-fonts')) injectFonts()
@@ -97,10 +91,10 @@ const onPageLoad = async () => {
   alarmHandler = new AlarmHandler(storage)
 
   alarmHandler.createTimerAlarm(onAlarm)
-  
+
   // Render clock if already resting
   const isResting = await alarmHandler.isResting()
-  
+
   if (isResting) onAlarm()
 }
 

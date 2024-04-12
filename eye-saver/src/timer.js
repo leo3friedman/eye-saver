@@ -13,6 +13,7 @@ export class Timer {
    *
    * @param {Number} timerDuration timer duration in milliseconds
    * @param {Number} restDuration rest duration in milliseconds
+   * @param {Object} rootSelector selector to use to query select timer node elements (needed to use shadow dom)
    * @param {Number} timePassed time passed since timer start in milliseconds
    * @param {boolean} running true if the timer should be running by default
    * @param {boolean} countdown true if the timer should count from duration down to 0
@@ -22,6 +23,7 @@ export class Timer {
   constructor(
     timerDuration,
     restDuration,
+    rootSelector,
     timePassed = 0,
     running = true,
     countdown = true,
@@ -36,28 +38,41 @@ export class Timer {
     this.callback = callback
     this.actionButton = actionButton
     this.timestamp = -1
+    this.rootSelector = rootSelector || document.body
   }
 
-  renderTimer(container) {
-    if (!container) throw Error('Container needed to render timer!')
-    
+  renderTimer() {
+    if (!this.rootSelector) throw Error('rootSelector needed to render timer!')
+
+    const dropzone = this.rootSelector.querySelector(
+      '.eye-saver-timer-dropzone'
+    )
+
+    if (!dropzone) throw Error('No dropzone found! Cannot render timer!')
+
     const timerTemplateUrl = chrome.runtime.getURL('src/timer.html')
     const xhr = new XMLHttpRequest()
 
     xhr.onload = () => {
-      container.insertAdjacentHTML('afterbegin', xhr.response)
+      dropzone.insertAdjacentHTML('afterbegin', xhr.response)
 
-      this.circle = document.querySelector('.progress-ring__circle')
+      this.circle = this.rootSelector.querySelector('.progress-ring__circle')
 
-      const timer = document.querySelector('.timer')
+      const timer = this.rootSelector.querySelector('.timer')
       const { width } = timer ? timer.getBoundingClientRect() : DEFAULTS
       this.circumference = width * Math.PI
 
-      this.hoursDisplay = document.querySelector('.timer-duration__hours')
-      this.minutesDisplay = document.querySelector('.timer-duration__minutes')
-      this.secondsDisplay = document.querySelector('.timer-duration__seconds')
+      this.hoursDisplay = this.rootSelector.querySelector(
+        '.timer-duration__hours'
+      )
+      this.minutesDisplay = this.rootSelector.querySelector(
+        '.timer-duration__minutes'
+      )
+      this.secondsDisplay = this.rootSelector.querySelector(
+        '.timer-duration__seconds'
+      )
 
-      const actionButtonDropzone = document.querySelector(
+      const actionButtonDropzone = this.rootSelector.querySelector(
         '.action-button-dropzone'
       )
 
@@ -166,12 +181,12 @@ export class Timer {
   }
 
   startBlinking() {
-    const timerText = document.querySelector('.timer-duration')
+    const timerText = this.rootSelector.querySelector('.timer-duration')
     if (timerText) timerText.classList.add('blink')
   }
 
   stopBlinking() {
-    const timerText = document.querySelector('.timer-duration')
+    const timerText = this.rootSelector.querySelector('.timer-duration')
     if (timerText) timerText.classList.remove('blink')
   }
 }

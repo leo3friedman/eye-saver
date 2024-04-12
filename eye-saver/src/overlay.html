@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <style>
+    .eye-saver-overlay {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      width: 100vw;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: calc(9e999);
+      pointer-events: all;
+    }
+
+    .eye-saver-overlay-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .eye-saver-skip-button {
+      all: unset;
+      color: #eae9eb;
+      text-align: center;
+      font-size: 18px;
+      font-family: system-ui;
+      padding: 0 0.5rem;
+      width: fit-content;
+      cursor: pointer;
+    }
+  </style>
+  <body>
+    <div class="eye-saver-overlay">
+      <div class="eye-saver-overlay-content">
+        <div class="eye-saver-timer-dropzone"></div>
+        <button class="eye-saver-skip-button">Skip</button>
+      </div>
+    </div>
+    <script src="overlay.js"></script>
+  </body>
+</html>
