@@ -45,18 +45,21 @@ export async function setTimerDuration(duration) {
 
   await chrome.storage.sync.set({ timerDuration: duration })
 }
+
 export async function setRestDuration(duration) {
   if (typeof duration !== 'number' || duration <= 0)
     throw new Error('restDuration must be a number greater than 0!')
 
   await chrome.storage.sync.set({ restDuration: duration })
 }
+
 export async function setPushDesktopNotification(boolean) {
   if (typeof boolean !== 'boolean')
     throw new Error('pushDesktopNotification must be a boolean!')
 
   await chrome.storage.sync.set({ pushDesktopNotification: boolean })
 }
+
 export async function setPlaySoundNotification(boolean) {
   if (typeof boolean !== 'boolean')
     throw new Error('playSoundNotification must be a boolean!')

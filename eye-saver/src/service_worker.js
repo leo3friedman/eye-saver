@@ -16,6 +16,16 @@ async function onAlarm() {
     await getTimerProperties()
   if (pushDesktopNotification) createNotification()
   if (playSoundNotification) playSound()
+
+  async function onRestTimeOver() {
+    const { playSoundNotification } = await getTimerProperties()
+    if (playSoundNotification) playSound()
+  }
+
+  const restDurationRemaining = await alarmHandler.getRestDurationRemaining()
+
+  // play sound when rest is over
+  alarmHandler.createSimpleAlarm(onRestTimeOver, restDurationRemaining)
 }
 
 async function createOffscreen() {
