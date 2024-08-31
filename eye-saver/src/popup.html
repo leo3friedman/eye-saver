@@ -73,7 +73,7 @@
     .settings-subsection__content {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 16px;
       padding: 16px;
       background-color: var(--secondary);
       border-radius: 16px;
@@ -196,7 +196,30 @@
                     src="../images/increment-down.svg" />
                 </div>
               </div>
-              <label for="timer-duration-input">Break Length</label>
+              <label for="snooze-duration-input">Break Length</label>
+            </div>
+            <div class="settings-subsection__field">
+              <div id="snooze-duration-input" class="duration-input">
+                <div class="duration-input-text">
+                  <div class="__duration-group">
+                    <div class="__time-input snooze-duration__minutes">0</div>
+                    <div class="__sub">m</div>
+                  </div>
+                  <div class="__duration-group">
+                    <div class="__time-input snooze-duration__seconds">00</div>
+                    <div class="__sub">s</div>
+                  </div>
+                </div>
+                <div class="duration-increment">
+                  <img
+                    class="svg-icon snooze-duration-increment-up"
+                    src="../images/increment-up.svg" />
+                  <img
+                    class="svg-icon snooze-duration-increment-down"
+                    src="../images/increment-down.svg" />
+                </div>
+              </div>
+              <label for="snooze-duration-input">Snooze Length</label>
             </div>
           </div>
         </div>

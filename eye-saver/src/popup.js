@@ -1,9 +1,12 @@
 const timerDurationIncrement = 10 * 60 * 1000
 const restDurationIncrement = 10 * 1000
+const snoozeDurationIncrement = 30 * 1000
 const maxTimerDuration = 2 * 60 * 60 * 1000
 const minTimerDuration = 10 * 60 * 1000
 const maxRestDuration = 2 * 60 * 1000
 const minRestDuration = 10 * 1000
+const maxSnoozeDuration = 5 * 60 * 1000
+const minSnoozeDuration = 30 * 1000
 
 /**
  *
@@ -67,6 +70,15 @@ function setRestDurationInputText(time) {
     seconds
 }
 
+function setSnoozeDurationInputText(time) {
+  const minutes = timeToText(time).minutes
+  const seconds = ('0' + timeToText(time).seconds).slice(-2)
+  document.querySelector('.__time-input.snooze-duration__minutes').innerText =
+    minutes
+  document.querySelector('.__time-input.snooze-duration__seconds').innerText =
+    seconds
+}
+
 async function onPopupLoad() {
   const { Timer } = await import(chrome.runtime.getURL('src/timer.js'))
   const { storage } = await import(chrome.runtime.getURL('src/storage.js'))
@@ -80,6 +92,7 @@ async function onPopupLoad() {
   const {
     timerDuration,
     restDuration,
+    snoozeDuration,
     pushDesktopNotification,
     playSoundNotification,
   } = await storage.getTimerProperties()
@@ -135,6 +148,7 @@ async function onPopupLoad() {
 
   setTimerDurationInputText(timerDuration)
   setRestDurationInputText(restDuration)
+  setSnoozeDurationInputText(snoozeDuration)
 
   running ? disableDurationInputs() : enableDurationInputs()
 
@@ -200,6 +214,40 @@ async function onPopupLoad() {
 
       setRestDurationInputText(rounded)
       storage.setRestDuration(rounded)
+    }
+
+  document.querySelector('.snooze-duration-increment-up').onclick =
+    async () => {
+      const { snoozeDuration } = await storage.getTimerProperties()
+
+      const newDuration = Math.min(
+        maxSnoozeDuration,
+        snoozeDuration + snoozeDurationIncrement
+      )
+
+      const rounded =
+        Math.ceil(newDuration / snoozeDurationIncrement) *
+        snoozeDurationIncrement
+
+      setSnoozeDurationInputText(rounded)
+      storage.setSnoozeDuration(rounded)
+    }
+
+  document.querySelector('.snooze-duration-increment-down').onclick =
+    async () => {
+      const { snoozeDuration } = await storage.getTimerProperties()
+
+      const newDuration = Math.max(
+        minSnoozeDuration,
+        snoozeDuration - snoozeDurationIncrement
+      )
+
+      const rounded =
+        Math.ceil(newDuration / snoozeDurationIncrement) *
+        snoozeDurationIncrement
+
+      setSnoozeDurationInputText(rounded)
+      storage.setSnoozeDuration(rounded)
     }
 
   const desktopNotificationCheckbox = document.querySelector(

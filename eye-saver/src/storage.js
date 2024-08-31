@@ -1,7 +1,7 @@
 const defaults = {
   timerDuration: 20 * 60 * 1000,
   restDuration: 20 * 1000,
-  snoozeDuration: 10 * 1000,
+  snoozeDuration: 2 * 60 * 1000,
   sessionStart: Date.now(),
   pushDesktopNotification: true,
   playSoundNotification: false,
@@ -55,6 +55,13 @@ export async function setRestDuration(duration) {
   await chrome.storage.sync.set({ restDuration: duration })
 }
 
+export async function setSnoozeDuration(duration) {
+  if (typeof duration !== 'number' || duration <= 0)
+    throw new Error('restDuration must be a number greater than 0!')
+
+  await chrome.storage.sync.set({ snoozeDuration: duration })
+}
+
 export async function setPushDesktopNotification(boolean) {
   if (typeof boolean !== 'boolean')
     throw new Error('pushDesktopNotification must be a boolean!')
@@ -75,6 +82,7 @@ export const storage = {
   setSessionStart,
   setTimerDuration,
   setRestDuration,
+  setSnoozeDuration,
   setPushDesktopNotification,
   setPlaySoundNotification,
 }

@@ -13,7 +13,9 @@ async function snoozeRest() {
   removeOverlay()
   alarmHandler.clearAlarms()
 
-  const snoozeDuration = 10 * 1000
+  const { storage } = await import(chrome.runtime.getURL('src/storage.js'))
+  const { snoozeDuration } = storage.getTimerProperties()
+
   alarmHandler.createAlarm(onAlarm, snoozeDuration, false, true)
 
   const { messageKeys } = await import(chrome.runtime.getURL('src/messages.js'))
