@@ -3,4 +3,5 @@ export const messageKeys = {
   STOP_EXTENSION: 1,
   PLAY_SOUND: 2,
   SKIP_REST: 3,
+  SNOOZE_REST: 4,
 }

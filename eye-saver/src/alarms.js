@@ -82,6 +82,33 @@ export class AlarmHandler {
     this.alarms.push(alarm)
   }
 
+  createAlarm(callback, duration, autoCreate = false, enforceThreshold = true) {
+    const alarmId = Math.random().toString(16).slice(2)
+    const expectedTime = Date.now() + duration
+
+    const alarm = {
+      id: alarmId,
+      timeout: setTimeout(async () => {
+        const isRunning = await this.storage.isExtensionRunning()
+
+        if (!isRunning) return
+
+        const withinThreshold =
+          Math.abs(Date.now() - expectedTime) < this.alarmThreshold
+
+        if (!enforceThreshold || withinThreshold) callback()
+
+        this.removeAlarm(alarmId)
+
+        if (autoCreate)
+          this.createAlarm(callback, duration, autoCreate, enforceThreshold)
+      }, duration),
+      expectedTime: expectedTime,
+    }
+
+    this.alarms.push(alarm)
+  }
+
   clearAlarms() {
     this.alarms.map(({ timeout }) => clearTimeout(timeout))
     this.alarms = []

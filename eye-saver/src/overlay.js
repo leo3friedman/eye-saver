@@ -9,6 +9,17 @@ async function skipRest() {
   chrome.runtime.sendMessage({ key: messageKeys.SKIP_REST })
 }
 
+async function snoozeRest() {
+  removeOverlay()
+  alarmHandler.clearAlarms()
+
+  const snoozeDuration = 10 * 1000
+  alarmHandler.createAlarm(onAlarm, snoozeDuration, false, true)
+
+  const { messageKeys } = await import(chrome.runtime.getURL('src/messages.js'))
+  chrome.runtime.sendMessage({ key: messageKeys.SNOOZE_REST })
+}
+
 async function onAlarm() {
   const { getTimerProperties } = await import(
     chrome.runtime.getURL('src/storage.js')
@@ -51,6 +62,7 @@ async function addOverlay() {
   shadow.innerHTML = html
 
   host.shadowRoot.querySelector('.eye-saver-skip-button').onclick = skipRest
+  host.shadowRoot.querySelector('.eye-saver-snooze-button').onclick = snoozeRest
 
   return host.shadowRoot
 }

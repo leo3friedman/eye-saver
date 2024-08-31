@@ -1,6 +1,7 @@
 const defaults = {
   timerDuration: 20 * 60 * 1000,
   restDuration: 20 * 1000,
+  snoozeDuration: 10 * 1000,
   sessionStart: Date.now(),
   pushDesktopNotification: true,
   playSoundNotification: false,
@@ -17,6 +18,7 @@ export async function getTimerProperties() {
         sessionStart: Number(result.sessionStart),
         timerDuration: Number(result.timerDuration),
         restDuration: Number(result.restDuration),
+        snoozeDuration: Number(result.snoozeDuration),
         pushDesktopNotification: result.pushDesktopNotification,
         playSoundNotification: result.playSoundNotification,
       })

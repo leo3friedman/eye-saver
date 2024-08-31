@@ -86,10 +86,20 @@ function stopExtension() {
   alarmHandler && alarmHandler.clearAlarms()
 }
 
+async function snoozeExtension() {
+  alarmHandler && alarmHandler.clearAlarms()
+  const { timerDuration, snoozeDuration } = await getTimerProperties()
+
+  setSessionStart(Date.now() - timerDuration + snoozeDuration, () =>
+    alarmHandler.createTimerAlarm(onAlarm)
+  )
+}
+
 async function onMessage(message) {
   if (message.key === messageKeys.START_EXTENSION) startExtension()
   if (message.key === messageKeys.SKIP_REST) startExtension()
   if (message.key === messageKeys.STOP_EXTENSION) stopExtension()
+  if (message.key === messageKeys.SNOOZE_REST) snoozeExtension()
 }
 
 chrome.runtime.onInstalled.addListener(onInstall)
