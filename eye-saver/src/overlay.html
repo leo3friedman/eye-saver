@@ -22,14 +22,22 @@
       gap: 32px;
     }
 
-    .eye-saver-skip-button {
+    .overlay-buttons {
+      display: flex;
+      gap: 48px;
+    }
+
+    .overlay-button {
       all: unset;
+      width: 72px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background-color: #29252d;
       color: #eae9eb;
       text-align: center;
       font-size: 18px;
-      font-family: system-ui;
-      padding: 0 0.5rem;
-      width: fit-content;
+      font-family: roboto-light, 'Roboto', 'open-sans' !important;
+      font-weight: 400 !important;
       cursor: pointer;
     }
   </style>
@@ -37,8 +45,10 @@
     <div class="eye-saver-overlay">
       <div class="eye-saver-overlay-content">
         <div class="eye-saver-timer-dropzone"></div>
-        <button class="eye-saver-skip-button">Skip</button>
-        <button class="eye-saver-snooze-button">Snooze</button>
+        <div class="overlay-buttons">
+          <button class="eye-saver-skip-button overlay-button">Skip</button>
+          <button class="eye-saver-snooze-button overlay-button">Snooze</button>
+        </div>
       </div>
     </div>
     <script src="overlay.js"></script>
