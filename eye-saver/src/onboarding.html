@@ -21,126 +21,221 @@
     :root {
       --section-padding: 0px 24px;
       --padding-top: 24px;
-      --background: #141216;
+
+      --orange-gradient: linear-gradient(113deg, #efe4d5 0%, #f2ad50 86%);
+      --primary-black: #141216;
+      --secondary-black: #29252d;
       --secondary: #29252d;
       --text: #eae9eb;
       --accent: #f29221;
+      --light-orange: #f0e0ca;
+      --primary-orange: #f1a33b;
     }
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: var(--accent);
+
+    .gradient-text {
+      background: var(--orange-gradient);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
-    .banner {
+
+    html {
+      height: 100%;
       width: 100%;
-      padding: 1rem 0;
-      top: 0;
-      background-color: var(--background);
-      color: var(--text);
-      text-align: center;
-
-      font-family: roboto-light;
-      font-size: 1rem;
+      background: var(--orange-gradient);
     }
 
-    .content-container {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    .content {
-      padding: 0 4rem;
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-    }
-
-    .content .header {
-      font-family: roboto-bold;
-      font-size: 2.5rem;
-      padding: 2.5rem 0;
-      margin: 0;
-    }
-
-    .content .disclaimer {
-      font-family: roboto-regular;
-      font-size: 1rem;
-    }
-
-    .refresh-demo {
+    body {
       display: flex;
       align-items: center;
-      flex-direction: column;
-      flex-grow: 1;
-    }
-
-    .demo-content * {
-      width: fit-content;
-    }
-
-    .demo-instructions {
+      justify-content: center;
       margin: 0;
       padding: 0;
-      padding-top: 3rem;
-      list-style-position: inside;
-      padding-bottom: 2rem;
+      height: 100%;
+      width: 100%;
     }
 
-    .demo-instructions li {
-      padding: 0.75rem 0;
+    .content-card {
+      width: 940px;
+      height: 600px;
+      background: var(--primary-black);
+      border-radius: 64px;
+      box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+      display: flex;
+      flex-direction: row;
+    }
+
+    .content-card .card-subsection {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 64px;
+    }
+
+    .subsection-content {
+      width: 75%;
+    }
+
+    .card-header {
+      margin-bottom: 24px;
+      font-family: roboto-bold;
+      font-size: 48px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+    }
+
+    .card-subheader {
       font-family: roboto-regular;
-      font-size: 1.25rem;
+      font-size: 32px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
     }
 
-    .demo-instructions li .bold-roboto {
+    .card-subsection.card-info {
+      background: var(--secondary-black);
+      border-radius: 0 64px 64px 0;
+    }
+
+    .todo-list {
+      padding: 0px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .todo-item {
+      list-style: none;
+      padding: 0px;
+      margin: 0px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .todo-item:not(:last-child) {
+      border-bottom: 1px solid var(--light-orange);
+      padding-bottom: 24px;
+    }
+
+    .todo-item .todo-header {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-family: roboto-regular;
+      font-size: 18px;
+      font-style: normal;
+      line-height: normal;
+      color: var(--light-orange);
+    }
+
+    .todo-header .item-title.completed {
+      color: var(--primary-orange);
       font-family: roboto-bold;
     }
 
-    .refresh-icon {
-      width: 1rem;
+    .todo-content {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      color: #efe4d5;
+      font-family: roboto-regular;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      padding-left: 16px;
     }
 
-    .refresh-demo-gif {
+    .complete-todo-item-button {
+      all: unset;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: #000;
+      font-family: roboto-bold;
+      font-size: 14px;
+      font-style: normal;
+      line-height: normal;
+      background-color: var(--light-orange);
+    }
+
+    .complete-todo-item-button:hover {
+      cursor: pointer;
+    }
+
+    .complete-todo-item-button.last-step {
+      background-color: var(--primary-orange);
+    }
+
+    .pin-tutorial {
       width: 80%;
-      max-width: 800px;
-      min-width: 400px;
+    }
+
+    .pin-instructions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 0;
+      padding-left: 16px;
     }
   </style>
   <body>
-    <div class="content-container">
-      <div class="banner">Eye Saver - Break Reminder has updated!</div>
-      <div class="content">
-        <h1 class="header">Please refresh all existing tabs</h1>
-        <div class="disclaimer">
-          Eye Saver will automatically run on newly created tabs
+    <div class="content-card">
+      <section class="card-subsection card-greeting">
+        <div class="subsection-content">
+          <div class="card-header gradient-text">Welcome to EyeSaver!</div>
+          <div class="card-subheader gradient-text">Let's get you set up.</div>
         </div>
-        <div class="refresh-demo">
-          <div class="demo-content">
-            <ol class="demo-instructions">
-              <li>Ensure right most tab is selected</li>
-              <li>
-                <b class="bold-roboto">Shift + Click</b> on the left most tab to
-                select all tabs
-              </li>
-              <li>
-                <b class="bold-roboto"
-                  >Click
-                  <img
-                    class="refresh-icon"
-                    src="../images/refresh.svg"
-                    alt="Refresh Icon" />
-                  icon
-                </b>
-                to trigger refresh
-              </li>
-            </ol>
-            <img
-              class="refresh-demo-gif"
-              src="../images/tab-refresh.gif"
-              alt="Tab Refresh Demo" />
-          </div>
-        </div>
-      </div>
+      </section>
+      <section class="card-subsection card-info">
+        <ul class="todo-list">
+          <li class="todo-item">
+            <div class="todo-header">
+              <img
+                class="item-status"
+                src="../images/onboarding-item-completed.svg" />
+              <div class="item-title completed">Add EyeSaver to Chrome</div>
+            </div>
+            <div class="todo-content" style="display: none"></div>
+          </li>
+          <li class="todo-item">
+            <div class="todo-header">
+              <img
+                class="item-status"
+                src="../images/onboarding-item-incomplete.svg" />
+              <div class="item-title">Keep EyeSaver in easy reach</div>
+            </div>
+            <div class="todo-content">
+              <img class="pin-tutorial" src="../images/pin-tutorial.svg" />
+              <ol class="pin-instructions">
+                <li>
+                  Click&nbsp
+                  <img src="../images/extension-puzzle-piece.svg" />&nbsp in the
+                  Chrome toolbar.
+                </li>
+                <li>
+                  Click&nbsp
+                  <img src="../images/extension-pin.svg" />&nbsp next to
+                  EyeSaver to pin it.
+                </li>
+              </ol>
+              <button class="complete-todo-item-button last-step">Done</button>
+            </div>
+          </li>
+          <li class="todo-item">
+            <div class="todo-header">
+              <img
+                class="item-status"
+                src="../images/onboarding-item-incomplete.svg" />
+              <div class="item-title">Learn the basics</div>
+            </div>
+            <div class="todo-content"></div>
+          </li>
+        </ul>
+      </section>
     </div>
   </body>
 </html>
