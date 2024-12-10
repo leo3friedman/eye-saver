@@ -170,11 +170,11 @@
       background-color: var(--primary-orange);
     }
 
-    .pin-tutorial {
+    .content-img {
       width: 80%;
     }
 
-    .pin-instructions {
+    .instructions {
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -191,51 +191,72 @@
         </div>
       </section>
       <section class="card-subsection card-info">
-        <ul class="todo-list">
-          <li class="todo-item">
-            <div class="todo-header">
-              <img
-                class="item-status"
-                src="../images/onboarding-item-completed.svg" />
-              <div class="item-title completed">Add EyeSaver to Chrome</div>
-            </div>
-            <div class="todo-content" style="display: none"></div>
-          </li>
-          <li class="todo-item">
-            <div class="todo-header">
-              <img
-                class="item-status"
-                src="../images/onboarding-item-incomplete.svg" />
-              <div class="item-title">Keep EyeSaver in easy reach</div>
-            </div>
-            <div class="todo-content">
-              <img class="pin-tutorial" src="../images/pin-tutorial.svg" />
-              <ol class="pin-instructions">
-                <li>
-                  Click&nbsp
-                  <img src="../images/extension-puzzle-piece.svg" />&nbsp in the
-                  Chrome toolbar.
-                </li>
-                <li>
-                  Click&nbsp
-                  <img src="../images/extension-pin.svg" />&nbsp next to
-                  EyeSaver to pin it.
-                </li>
-              </ol>
-              <button class="complete-todo-item-button last-step">Done</button>
-            </div>
-          </li>
-          <li class="todo-item">
-            <div class="todo-header">
-              <img
-                class="item-status"
-                src="../images/onboarding-item-incomplete.svg" />
-              <div class="item-title">Learn the basics</div>
-            </div>
-            <div class="todo-content"></div>
-          </li>
-        </ul>
+        <div class="subsection-content">
+          <ul class="todo-list">
+            <li class="todo-item">
+              <div class="todo-header">
+                <img
+                  class="item-status"
+                  src="../images/onboarding-item-completed.svg" />
+                <div class="item-title completed">Add EyeSaver to Chrome</div>
+              </div>
+              <div class="todo-content" style="display: none"></div>
+            </li>
+            <li class="todo-item pin-tutorial-item">
+              <div class="todo-header">
+                <img
+                  class="item-status"
+                  src="../images/onboarding-item-incomplete.svg" />
+                <div class="item-title">Keep EyeSaver in easy reach</div>
+              </div>
+              <div class="todo-content">
+                <img
+                  class="pin-tutorial content-img"
+                  src="../images/pin-tutorial.png" />
+                <ol class="instructions">
+                  <li>
+                    Click&nbsp
+                    <img src="../images/extension-puzzle-piece.svg" />&nbsp in
+                    the Chrome toolbar.
+                  </li>
+                  <li>
+                    Click&nbsp
+                    <img src="../images/extension-pin.svg" />&nbsp next to
+                    EyeSaver to pin it.
+                  </li>
+                </ol>
+                <button class="complete-todo-item-button last-step">
+                  Done
+                </button>
+              </div>
+            </li>
+            <li class="customize-experience-item todo-item">
+              <div class="todo-header">
+                <img
+                  class="item-status"
+                  src="../images/onboarding-item-incomplete.svg" />
+                <div class="item-title">Customize your experience</div>
+              </div>
+              <div class="todo-content" style="display: none">
+                <img
+                  class="customize-experience-tutorial content-img"
+                  src="../images/customize-experience-tutorial.png" />
+                <ol class="instructions">
+                  <li>
+                    Click&nbsp
+                    <img src="../images/icon.svg" />&nbsp in the Chrome toolbar.
+                  </li>
+                  <li>Adjust timer and notification settings.</li>
+                </ol>
+                <button class="complete-todo-item-button last-step">
+                  Done
+                </button>
+              </div>
+            </li>
+          </ul>
+        </div>
       </section>
     </div>
   </body>
+  <script src="onboarding.js"></script>
 </html>
