@@ -53,6 +53,8 @@
       padding: 0;
       height: 100%;
       width: 100%;
+      min-height: 100%;
+      min-width: 100%;
     }
 
     .content-card {
@@ -180,6 +182,65 @@
       gap: 12px;
       margin: 0;
       padding-left: 16px;
+    }
+
+    @media (max-width: 975px) or (max-height: 650px) {
+      .content-card {
+        min-height: 100%;
+        width: 100%;
+        border-radius: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      .card-subsection {
+        border-radius: 0 !important;
+      }
+    }
+
+    @media (max-width: 750px) {
+      .card-header {
+        font-family: roboto-bold;
+        font-size: 40px;
+      }
+
+      .card-subheader {
+        font-size: 24px;
+      }
+
+      .card-subsection.card-greeting {
+        flex: 0.7;
+      }
+    }
+
+    @media (max-width: 690px) {
+      .card-header {
+        font-family: roboto-bold;
+        font-size: 32px;
+      }
+
+      .card-subheader {
+        font-size: 20px;
+      }
+
+      .card-subsection.card-greeting {
+        flex: 0.6;
+      }
+    }
+    @media (max-width: 615px) {
+      .card-header {
+        font-family: roboto-bold;
+        font-size: 32px;
+      }
+
+      .card-subheader {
+        font-size: 20px;
+      }
+
+      .card-subsection.card-greeting {
+        flex: 0.6;
+      }
     }
   </style>
   <body>
