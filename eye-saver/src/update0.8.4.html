@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    @font-face {
+      font-family: roboto-bold;
+      src: url(../fonts/Roboto/Roboto-Bold.ttf);
+    }
+    @font-face {
+      font-family: roboto-regular;
+      src: url(../fonts/Roboto/Roboto-Regular.ttf);
+    }
+    @font-face {
+      font-family: roboto-light;
+      src: url(../fonts/Roboto/Roboto-Light.ttf);
+    }
+    @font-face {
+      font-family: roboto-thin;
+      src: url(../fonts/Roboto/Roboto-Thin.ttf);
+    }
+
+    :root {
+      --section-padding: 0px 24px;
+      --padding-top: 24px;
+
+      --orange-gradient: linear-gradient(113deg, #efe4d5 0%, #f2ad50 86%);
+      --primary-black: #141216;
+      --secondary-black: #29252d;
+      --secondary: #29252d;
+      --text: #eae9eb;
+      --accent: #f29221;
+      --light-orange: #f0e0ca;
+      --primary-orange: #f1a33b;
+    }
+
+    .gradient-text {
+      background: var(--orange-gradient);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    html {
+      height: 100%;
+      width: 100%;
+      background: var(--orange-gradient);
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      min-height: 100%;
+      min-width: 100%;
+    }
+
+    .content-card {
+      width: 940px;
+      height: 600px;
+      background: var(--primary-black);
+      border-radius: 64px;
+      box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+      display: flex;
+      flex-direction: row;
+    }
+
+    .content-card .card-subsection {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 64px;
+    }
+
+    .subsection-content {
+      width: 75%;
+    }
+
+    .card-header {
+      font-family: roboto-bold;
+      font-size: 48px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+      margin: 0 0 24px 0;
+    }
+
+    .card-subheader {
+      font-family: roboto-regular;
+      font-size: 32px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      margin: 0;
+    }
+
+    .card-subsection.card-info {
+      background: var(--secondary-black);
+      border-radius: 0 64px 64px 0;
+    }
+
+    .todo-list {
+      padding: 0px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .todo-item {
+      list-style: none;
+      padding: 0px;
+      margin: 0px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .todo-item:not(:last-child) {
+      border-bottom: 1px solid var(--light-orange);
+      padding-bottom: 24px;
+    }
+
+    .todo-item .todo-header {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-family: roboto-regular;
+      font-size: 18px;
+      font-style: normal;
+      line-height: normal;
+      color: var(--light-orange);
+    }
+
+    .todo-header .item-title.completed {
+      color: var(--primary-orange);
+      font-family: roboto-bold;
+    }
+
+    .todo-content {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      color: #efe4d5;
+      font-family: roboto-regular;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      padding-left: 16px;
+    }
+
+    .complete-todo-item-button {
+      all: unset;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: #000;
+      font-family: roboto-bold;
+      font-size: 14px;
+      font-style: normal;
+      line-height: normal;
+      background-color: var(--light-orange);
+    }
+
+    .complete-todo-item-button:hover {
+      cursor: pointer;
+    }
+
+    .complete-todo-item-button.last-step {
+      background-color: var(--primary-orange);
+    }
+
+    .content-img {
+      width: 80%;
+    }
+
+    .instructions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 0;
+      padding-left: 16px;
+    }
+
+    p.instructions {
+      padding-left: 0;
+    }
+
+    @media (max-width: 975px) or (max-height: 650px) {
+      .content-card {
+        min-height: 100%;
+        width: 100%;
+        border-radius: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      .card-subsection {
+        border-radius: 0 !important;
+      }
+    }
+
+    @media (max-width: 750px) {
+      .card-header {
+        font-family: roboto-bold;
+        font-size: 40px;
+      }
+
+      .card-subheader {
+        font-size: 24px;
+      }
+
+      .card-subsection.card-greeting {
+        flex: 0.7;
+      }
+    }
+
+    @media (max-width: 690px) {
+      .card-header {
+        font-family: roboto-bold;
+        font-size: 32px;
+      }
+
+      .card-subheader {
+        font-size: 20px;
+      }
+
+      .card-subsection.card-greeting {
+        flex: 0.6;
+      }
+    }
+    @media (max-width: 615px) {
+      .card-header {
+        font-family: roboto-bold;
+        font-size: 32px;
+      }
+
+      .card-subheader {
+        font-size: 20px;
+      }
+
+      .card-subsection.card-greeting {
+        flex: 0.6;
+      }
+    }
+
+    .version-update-list {
+      all: unset;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .version-update-item-header {
+      color: var(--primary-orange);
+      font-family: roboto-bold;
+      font-size: 14px;
+      font-style: normal;
+      line-height: normal;
+      margin: 0 0 4px 0;
+    }
+
+    .version-update-item-description {
+      color: var(--secondary-orange);
+      font-family: roboto-regular;
+      font-size: 14px;
+      font-style: normal;
+      line-height: normal;
+      margin: 0;
+    }
+  </style>
+  <body>
+    <div class="content-card">
+      <section class="card-subsection card-greeting">
+        <div class="subsection-content">
+          <h1 class="card-header gradient-text">EyeSaver just Updated!</h1>
+          <h2 class="card-subheader gradient-text">Let's get you caught up.</h2>
+        </div>
+      </section>
+      <section class="card-subsection card-info">
+        <div class="subsection-content">
+          <ul class="todo-list">
+            <li class="todo-item">
+              <div class="todo-header">
+                <img
+                  class="item-status"
+                  src="../images/onboarding-item-completed.svg" />
+                <div class="item-title completed">Update EyeSaver</div>
+              </div>
+              <div class="todo-content" style="display: none"></div>
+            </li>
+            <li class="todo-item refresh-tutorial-item">
+              <div class="todo-header">
+                <img
+                  class="item-status"
+                  src="../images/onboarding-item-incomplete.svg" />
+                <div class="item-title">Refresh all tabs</div>
+              </div>
+              <div class="todo-content">
+                <img
+                  class="pin-tutorial content-img"
+                  src="../images/refresh-tutorial.png" />
+
+                <p class="instructions">
+                  Please refresh all existing tabs. EyeSaver automatically runs
+                  on all new tabs.
+                </p>
+
+                <button class="complete-todo-item-button last-step">
+                  Done
+                </button>
+              </div>
+            </li>
+            <li class="learn-whats-new todo-item">
+              <div class="todo-header">
+                <img
+                  class="item-status"
+                  src="../images/onboarding-item-incomplete.svg" />
+                <div class="item-title">Learn what's knew in version 0.8.4</div>
+              </div>
+              <div class="todo-content" style="display: none">
+                <ul class="version-update-list">
+                  <li class="version-update-item">
+                    <h4 class="version-update-item-header">Snooze</h4>
+                    <p class="version-update-item-description">
+                      You can now snooze when the timer goes off to delay your
+                      break. You can customize the snooze duration via Timer
+                      Settings.
+                    </p>
+                  </li>
+                  <li class="version-update-item">
+                    <h4 class="version-update-item-header">Bug Fixes</h4>
+                    <p class="version-update-item-description">
+                      Improved timer rendering reliability via shadow DOM.
+                    </p>
+                  </li>
+                </ul>
+                <button class="complete-todo-item-button last-step">
+                  Done
+                </button>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </body>
+  <script src="update0.8.4.js"></script>
+</html>
