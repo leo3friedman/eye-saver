@@ -80,12 +80,12 @@
     }
 
     .card-header {
-      margin-bottom: 24px;
       font-family: roboto-bold;
       font-size: 48px;
       font-style: normal;
       font-weight: 700;
       line-height: normal;
+      margin: 0 0 24px 0;
     }
 
     .card-subheader {
@@ -94,6 +94,7 @@
       font-style: normal;
       font-weight: 400;
       line-height: normal;
+      margin: 0;
     }
 
     .card-subsection.card-info {
@@ -184,6 +185,10 @@
       padding-left: 16px;
     }
 
+    p.instructions {
+      padding-left: 0;
+    }
+
     @media (max-width: 975px) or (max-height: 650px) {
       .content-card {
         min-height: 100%;
@@ -242,13 +247,38 @@
         flex: 0.6;
       }
     }
+
+    .version-update-list {
+      all: unset;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .version-update-item-header {
+      color: var(--primary-orange);
+      font-family: roboto-bold;
+      font-size: 14px;
+      font-style: normal;
+      line-height: normal;
+      margin: 0 0 4px 0;
+    }
+
+    .version-update-item-description {
+      color: var(--secondary-orange);
+      font-family: roboto-regular;
+      font-size: 14px;
+      font-style: normal;
+      line-height: normal;
+      margin: 0;
+    }
   </style>
   <body>
     <div class="content-card">
       <section class="card-subsection card-greeting">
         <div class="subsection-content">
-          <div class="card-header gradient-text">Welcome to EyeSaver!</div>
-          <div class="card-subheader gradient-text">Let's get you set up.</div>
+          <h1 class="card-header gradient-text">EyeSaver just Updated!</h1>
+          <h2 class="card-subheader gradient-text">Let's get you caught up.</h2>
         </div>
       </section>
       <section class="card-subsection card-info">
@@ -259,56 +289,56 @@
                 <img
                   class="item-status"
                   src="../images/onboarding-item-completed.svg" />
-                <div class="item-title completed">Add EyeSaver to Chrome</div>
+                <div class="item-title completed">Update EyeSaver</div>
               </div>
               <div class="todo-content" style="display: none"></div>
             </li>
-            <li class="todo-item pin-tutorial-item">
+            <li class="todo-item refresh-tutorial-item">
               <div class="todo-header">
                 <img
                   class="item-status"
                   src="../images/onboarding-item-incomplete.svg" />
-                <div class="item-title">Keep EyeSaver in easy reach</div>
+                <div class="item-title">Refresh all tabs</div>
               </div>
               <div class="todo-content">
                 <img
                   class="pin-tutorial content-img"
-                  src="../images/pin-tutorial.png" />
-                <ol class="instructions">
-                  <li>
-                    Click&nbsp
-                    <img src="../images/extension-puzzle-piece.svg" />&nbsp in
-                    the Chrome toolbar.
-                  </li>
-                  <li>
-                    Click&nbsp
-                    <img src="../images/extension-pin.svg" />&nbsp next to
-                    EyeSaver to pin it.
-                  </li>
-                </ol>
+                  src="../images/refresh-tutorial.png" />
+
+                <p class="instructions">
+                  Please refresh all existing tabs. EyeSaver automatically runs
+                  on all new tabs.
+                </p>
+
                 <button class="complete-todo-item-button last-step">
                   Done
                 </button>
               </div>
             </li>
-            <li class="customize-experience-item todo-item">
+            <li class="learn-whats-new todo-item">
               <div class="todo-header">
                 <img
                   class="item-status"
                   src="../images/onboarding-item-incomplete.svg" />
-                <div class="item-title">Customize your experience</div>
+                <div class="item-title">Learn what's knew in version 0.8.4</div>
               </div>
               <div class="todo-content" style="display: none">
-                <img
-                  class="customize-experience-tutorial content-img"
-                  src="../images/popup-tutorial.png" />
-                <ol class="instructions">
-                  <li>
-                    Click&nbsp
-                    <img src="../images/icon.svg" />&nbsp in the Chrome toolbar.
+                <ul class="version-update-list">
+                  <li class="version-update-item">
+                    <h4 class="version-update-item-header">Snooze</h4>
+                    <p class="version-update-item-description">
+                      You can now snooze when the timer goes off to delay your
+                      break. You can customize the snooze duration via Timer
+                      Settings.
+                    </p>
                   </li>
-                  <li>Adjust timer and notification settings.</li>
-                </ol>
+                  <li class="version-update-item">
+                    <h4 class="version-update-item-header">Bug Fixes</h4>
+                    <p class="version-update-item-description">
+                      Improved timer rendering reliability via shadow DOM.
+                    </p>
+                  </li>
+                </ul>
                 <button class="complete-todo-item-button last-step">
                   Done
                 </button>
@@ -319,5 +349,5 @@
       </section>
     </div>
   </body>
-  <script src="onboarding.js"></script>
+  <script src="update0.8.4.js"></script>
 </html>

@@ -58,10 +58,17 @@ async function playSound() {
 }
 
 async function onInstall({ reason }) {
-  if (reason === 'install' || reason === 'update') {
+  if (reason === 'install') {
     chrome.tabs.create({
       url: 'src/onboarding.html',
     })
+  } else if (reason === 'update') {
+    const version = chrome.runtime.getManifest()?.version
+    if (['0.8.4'].includes(version)) {
+      chrome.tabs.create({
+        url: `src/update${version}.html`,
+      })
+    }
   }
 
   if (!(await isExtensionRunning())) return
