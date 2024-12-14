@@ -1,6 +1,6 @@
 {
   "name": "Eye Saver - Break Reminder",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "Eye Saver helps remind you to look away from the screen to prevent eye strain.",
   "permissions": ["storage", "notifications", "offscreen"],
   "background": {

@@ -19,4 +19,27 @@ window.onload = async () => {
   inputs.restDurationInput.onchange = (event) => {
     storage.setRestDuration(Number(event.target.value))
   }
+
+  const openInstallOnboardingButton = document.querySelector(
+    '.open-install-onboarding-button'
+  )
+  const openUpdateOnboardingButton = document.querySelector(
+    '.open-update-onboarding-button'
+  )
+  openInstallOnboardingButton.onclick = () => {
+    chrome.tabs.create({
+      url: 'src/onboarding.html',
+    })
+  }
+
+  openUpdateOnboardingButton.onclick = () => {
+    const version = chrome.runtime.getManifest()?.version
+    if (['0.8.4'].includes(version)) {
+      chrome.tabs.create({
+        url: `src/update${version}.html`,
+      })
+    } else {
+      alert('wrong version!')
+    }
+  }
 }
