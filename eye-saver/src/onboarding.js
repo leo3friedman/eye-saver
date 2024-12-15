@@ -13,26 +13,45 @@ window.onload = () => {
     pinTutorialStatusIcon.src = '../images/onboarding-item-completed.svg'
     pinTutorialContent.style.display = 'none'
 
-    const customizeExperienceItem = document.querySelector(
-      '.customize-experience-item'
+    const refreshTutorialItem = document.querySelector('.refresh-tutorial-item')
+    const refreshTutorialContent =
+      refreshTutorialItem.querySelector('.todo-content')
+    const refreshTutorialTitle =
+      refreshTutorialItem.querySelector('.item-title')
+    const refreshTutorialStatusIcon =
+      refreshTutorialItem.querySelector('.item-status')
+    const completeRefreshTutorialButton = refreshTutorialItem.querySelector(
+      '.complete-todo-item-button'
     )
 
-    customizeExperienceItem.querySelector('.todo-content').style.display =
-      'flex'
+    refreshTutorialContent.style.display = 'flex'
 
-    const completeCustomizeExperienceButton =
-      customizeExperienceItem.querySelector('.complete-todo-item-button')
+    completeRefreshTutorialButton.onclick = () => {
+      refreshTutorialTitle.classList.add('completed')
+      refreshTutorialStatusIcon.src = '../images/onboarding-item-completed.svg'
+      refreshTutorialContent.style.display = 'none'
 
-    completeCustomizeExperienceButton.onclick = () => {
-      customizeExperienceItem
-        .querySelector('.item-title')
-        .classList.add('completed')
-
-      customizeExperienceItem.querySelector('.item-status').src =
-        '../images/onboarding-item-completed.svg'
+      const customizeExperienceItem = document.querySelector(
+        '.customize-experience-item'
+      )
 
       customizeExperienceItem.querySelector('.todo-content').style.display =
-        'none'
+        'flex'
+
+      const completeCustomizeExperienceButton =
+        customizeExperienceItem.querySelector('.complete-todo-item-button')
+
+      completeCustomizeExperienceButton.onclick = () => {
+        customizeExperienceItem
+          .querySelector('.item-title')
+          .classList.add('completed')
+
+        customizeExperienceItem.querySelector('.item-status').src =
+          '../images/onboarding-item-completed.svg'
+
+        customizeExperienceItem.querySelector('.todo-content').style.display =
+          'none'
+      }
     }
   }
 }
